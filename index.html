@@ -1431,7 +1431,7 @@
     }
 
     // ============================================================
-    // 9. RENDERIZAÇÃO
+    // 9. RENDERIZAÇÃO - CORRIGIDA
     // ============================================================
     function renderBeats() {
       container.innerHTML = '';
@@ -1472,38 +1472,22 @@
         card.appendChild(deleteBtn);
       }
 
-      // PLAYER
-// Dentro do createBeatCard, substitua o playlistBtn:
-
-const playlistBtn = document.createElement('button');
-playlistBtn.className = 'btn-playlist';
-playlistBtn.innerHTML = '<i class="fas fa-plus"></i> Add';
-playlistBtn.addEventListener('click', (e) => {
-  e.stopPropagation();
-  
-  // Salva no localStorage
-  let saved = JSON.parse(localStorage.getItem('favoriteBeats') || '[]');
-  
-  if (!saved.includes(beat.id)) {
-    saved.push(beat.id);
-    localStorage.setItem('favoriteBeats', JSON.stringify(saved));
-    showToast('Adicionado', `${beat.title} foi adicionado à sua playlist.`, 'success');
-    playlistBtn.innerHTML = '<i class="fas fa-check"></i> Added';
-  } else {
-    // Remove da playlist
-    saved = saved.filter(id => id !== beat.id);
-    localStorage.setItem('favoriteBeats', JSON.stringify(saved));
-    showToast('Removido', `${beat.title} foi removido da sua playlist.`, 'info');
-    playlistBtn.innerHTML = '<i class="fas fa-plus"></i> Add';
-  }
-});
+      // ============================================================
+      // PLAYER - CORRIGIDO
+      // ============================================================
       
+      // 1. CRIAR O playerWrapper PRIMEIRO
+      const playerWrapper = document.createElement('div');
+      playerWrapper.className = 'player-wrapper';
+      
+      // 2. IMAGEM DE FUNDO
       const bgImg = document.createElement('img');
       bgImg.className = 'player-bg';
       bgImg.src = beat.cover || 'https://picsum.photos/seed/default/400/400';
       bgImg.alt = `${beat.title} cover`;
       bgImg.loading = 'lazy';
 
+      // 3. OVERLAY
       const overlay = document.createElement('div');
       overlay.className = 'player-overlay';
       
@@ -1515,6 +1499,7 @@ playlistBtn.addEventListener('click', (e) => {
       titleSpan.className = 'player-title';
       titleSpan.textContent = beat.title;
 
+      // 4. CONTROLES
       const controls = document.createElement('div');
       controls.className = 'player-controls';
       
@@ -1527,14 +1512,33 @@ playlistBtn.addEventListener('click', (e) => {
       nextBtn.className = 'btn-next';
       nextBtn.innerHTML = '<i class="fas fa-forward"></i>';
       
+      // 5. BOTÃO PLAYLIST - CRIADO APENAS UMA VEZ
       const playlistBtn = document.createElement('button');
       playlistBtn.className = 'btn-playlist';
       playlistBtn.innerHTML = '<i class="fas fa-plus"></i> Add';
+      playlistBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        
+        let saved = JSON.parse(localStorage.getItem('favoriteBeats') || '[]');
+        
+        if (!saved.includes(beat.id)) {
+          saved.push(beat.id);
+          localStorage.setItem('favoriteBeats', JSON.stringify(saved));
+          showToast('Adicionado', `${beat.title} foi adicionado à sua playlist.`, 'success');
+          playlistBtn.innerHTML = '<i class="fas fa-check"></i> Added';
+        } else {
+          saved = saved.filter(id => id !== beat.id);
+          localStorage.setItem('favoriteBeats', JSON.stringify(saved));
+          showToast('Removido', `${beat.title} foi removido da sua playlist.`, 'info');
+          playlistBtn.innerHTML = '<i class="fas fa-plus"></i> Add';
+        }
+      });
       
       controls.appendChild(playBtn);
       controls.appendChild(nextBtn);
       controls.appendChild(playlistBtn);
 
+      // 6. PROGRESSO
       const progressArea = document.createElement('div');
       progressArea.className = 'progress-area';
       
@@ -1552,6 +1556,7 @@ playlistBtn.addEventListener('click', (e) => {
       progressArea.appendChild(progress);
       progressArea.appendChild(timeDisplay);
 
+      // 7. VOLUME
       const volumeWrap = document.createElement('div');
       volumeWrap.className = 'volume-wrap';
       const volIcon = document.createElement('i');
@@ -1566,10 +1571,12 @@ playlistBtn.addEventListener('click', (e) => {
       volumeWrap.appendChild(volIcon);
       volumeWrap.appendChild(volSlider);
 
+      // 8. BADGE GÊNERO
       const genreBadge = document.createElement('span');
       genreBadge.className = 'badge-genre';
       genreBadge.textContent = beat.genre;
 
+      // 9. MONTAR OVERLAY
       overlay.appendChild(artistSpan);
       overlay.appendChild(titleSpan);
       overlay.appendChild(controls);
@@ -1577,10 +1584,13 @@ playlistBtn.addEventListener('click', (e) => {
       overlay.appendChild(volumeWrap);
       overlay.appendChild(genreBadge);
       
+      // 10. MONTAR PLAYER
       playerWrapper.appendChild(bgImg);
       playerWrapper.appendChild(overlay);
 
+      // ============================================================
       // INFO
+      // ============================================================
       const infoDiv = document.createElement('div');
       infoDiv.className = 'beat-info';
       
@@ -1637,10 +1647,15 @@ playlistBtn.addEventListener('click', (e) => {
       infoDiv.appendChild(exclusivo);
       infoDiv.appendChild(actionsDiv);
 
+      // ============================================================
+      // MONTAR CARD - playerWrapper agora existe!
+      // ============================================================
       card.appendChild(playerWrapper);
       card.appendChild(infoDiv);
 
+      // ============================================================
       // ÁUDIO
+      // ============================================================
       const audio = new Audio(beat.audio || '');
       audio.volume = 0.7;
       let isPlaying = false;
