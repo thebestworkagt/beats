@@ -153,7 +153,42 @@
     .user-info-display .admin-avatar { width: 36px; height: 36px; border-radius: 50%; object-fit: cover; border: 2px solid var(--gold); }
     .user-info-display .user-details { display: flex; flex-direction: column; }
     .user-info-display .user-name { font-weight: 600; font-size: 0.85rem; color: var(--text-primary); }
-    .user-info-display .user-email { font-size: 0.7rem; color: var(--text-muted); }
+    .user-info-display .user-email { 
+      font-size: 0.7rem; 
+      color: var(--text-muted);
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+    .user-info-display .user-email.hidden {
+      filter: blur(8px);
+      user-select: none;
+      pointer-events: none;
+      opacity: 0.5;
+    }
+    .user-info-display .user-email .email-text {
+      transition: all 0.3s ease;
+    }
+    .user-info-display .user-email .email-toggle-btn {
+      background: none;
+      border: none;
+      color: var(--gold);
+      cursor: pointer;
+      font-size: 0.7rem;
+      padding: 0.1rem 0.3rem;
+      border-radius: 4px;
+      transition: 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.2rem;
+    }
+    .user-info-display .user-email .email-toggle-btn:hover {
+      background: var(--gold-glow);
+    }
+    .user-info-display .user-email .email-toggle-btn i {
+      font-size: 0.6rem;
+    }
 
     /* ----- HEADER ----- */
     .header {
@@ -1122,7 +1157,12 @@
         <img src="eu.jpg" alt="Admin" class="admin-avatar" id="adminAvatar">
         <div class="user-details">
           <span class="user-name" id="userNameDisplay">Administrador</span>
-          <span class="user-email" id="userEmailDisplay">usuario@email.com</span>
+          <div class="user-email" id="userEmailDisplay">
+            <span class="email-text" id="emailText">usuario@email.com</span>
+            <button class="email-toggle-btn" id="toggleEmailBtn" title="Ocultar/Mostrar email">
+              <i class="fas fa-eye" id="emailEyeIcon"></i>
+            </button>
+          </div>
         </div>
       </div>
       <div class="dropdown-divider" id="dividerAfterUser" style="display:none;"></div>
@@ -1457,6 +1497,9 @@
     
     // Ratings
     let userRatings = {};
+    
+    // Email visibility
+    let emailVisible = true;
 
     // ============================================================
     // 3. TOAST
@@ -1484,7 +1527,37 @@
     }
 
     // ============================================================
-    // 4. PLAYLIST
+    // 4. EMAIL TOGGLE
+    // ============================================================
+    function toggleEmailVisibility() {
+      emailVisible = !emailVisible;
+      const emailText = document.getElementById('emailText');
+      const eyeIcon = document.getElementById('emailEyeIcon');
+      
+      if (emailVisible) {
+        emailText.classList.remove('hidden');
+        eyeIcon.className = 'fas fa-eye';
+        localStorage.setItem('bestBeatsEmailVisible', 'true');
+      } else {
+        emailText.classList.add('hidden');
+        eyeIcon.className = 'fas fa-eye-slash';
+        localStorage.setItem('bestBeatsEmailVisible', 'false');
+      }
+    }
+
+    function loadEmailVisibility() {
+      const saved = localStorage.getItem('bestBeatsEmailVisible');
+      if (saved === 'false') {
+        emailVisible = false;
+        const emailText = document.getElementById('emailText');
+        const eyeIcon = document.getElementById('emailEyeIcon');
+        emailText.classList.add('hidden');
+        eyeIcon.className = 'fas fa-eye-slash';
+      }
+    }
+
+    // ============================================================
+    // 5. PLAYLIST
     // ============================================================
     function getPlaylist() {
       try { return JSON.parse(localStorage.getItem('favoriteBeats') || '[]'); } catch { return []; }
@@ -1507,7 +1580,7 @@
     }
 
     // ============================================================
-    // 5. CART
+    // 6. CART
     // ============================================================
     function updateCart() {
       localStorage.setItem('bestBeatsCart', JSON.stringify(cart));
@@ -1529,7 +1602,7 @@
     }
 
     // ============================================================
-    // 6. RATING
+    // 7. RATING
     // ============================================================
     async function loadRatings() {
       try {
@@ -1580,7 +1653,7 @@
     }
 
     // ============================================================
-    // 7. SHARE
+    // 8. SHARE
     // ============================================================
     function showShareToast(message) {
       const toast = document.getElementById('shareToast');
@@ -1610,7 +1683,7 @@
     }
 
     // ============================================================
-    // 8. THEME
+    // 9. THEME
     // ============================================================
     function toggleTheme() {
       const html = document.documentElement;
@@ -1627,7 +1700,7 @@
     }
 
     // ============================================================
-    // 9. PLAYS
+    // 10. PLAYS
     // ============================================================
     async function incrementPlays(beatId) {
       try {
@@ -1686,7 +1759,7 @@
     }
 
     // ============================================================
-    // 10. CRUD - CORRIGIDO
+    // 11. CRUD
     // ============================================================
     async function loadBeats() {
       try {
@@ -1726,7 +1799,6 @@
         let coverUrl = beatData.cover || null;
         let audioUrl = beatData.audio || null;
         
-        // Só faz upload se houver um arquivo novo
         if (coverFile) {
           const timestamp = Date.now();
           coverUrl = await uploadFile(coverFile, 'covers', `beat-cover-${timestamp}`);
@@ -1751,7 +1823,6 @@
         };
         
         if (editingId) {
-          // Na edição, mantém os valores antigos se não houver novos arquivos
           const { error } = await supabase
             .from('beats')
             .update(newBeat)
@@ -1760,7 +1831,6 @@
           if (error) throw error;
           showToast('Sucesso', 'O beat foi atualizado.', 'success');
         } else {
-          // Novo beat - áudio é obrigatório
           if (!selectedAudioFile) {
             showToast('Áudio obrigatório', 'Para lançar um novo beat, você precisa enviar um arquivo de áudio.', 'error');
             return;
@@ -1788,14 +1858,10 @@
       return urlData.publicUrl;
     }
 
-    // ============================================================
-    // deleteBeat CORRIGIDO - APAGA ARQUIVOS DO STORAGE
-    // ============================================================
     async function deleteBeat(id) {
       if (!confirm('Tem certeza que deseja excluir este beat?')) return;
       
       try {
-        // Busca o beat para pegar as URLs dos arquivos
         const { data: beat, error: fetchError } = await supabase
           .from('beats')
           .select('cover, audio')
@@ -1804,7 +1870,6 @@
         
         if (fetchError) throw fetchError;
         
-        // Apaga o registro da tabela
         const { error } = await supabase
           .from('beats')
           .delete()
@@ -1812,7 +1877,6 @@
         
         if (error) throw error;
         
-        // Apaga a imagem (cover) do Storage se existir
         if (beat?.cover) {
           const coverPath = beat.cover.split('/').pop();
           if (coverPath) {
@@ -1821,7 +1885,6 @@
           }
         }
         
-        // Apaga o áudio do Storage se existir
         if (beat?.audio) {
           const audioPath = beat.audio.split('/').pop();
           if (audioPath) {
@@ -1839,7 +1902,7 @@
     }
 
     // ============================================================
-    // 11. FILTERS
+    // 12. FILTERS
     // ============================================================
     function applyFilters() {
       const search = document.getElementById('searchInput').value.toLowerCase();
@@ -1864,7 +1927,7 @@
     }
 
     // ============================================================
-    // 12. RENDER
+    // 13. RENDER
     // ============================================================
     function renderBeats() {
       const container = document.getElementById('beatsContainer');
@@ -2087,7 +2150,7 @@
       card.appendChild(playerWrapper);
       card.appendChild(infoDiv);
 
-      // ÁUDIO - PLAYER NO CARD
+      // ÁUDIO
       let audio = null;
       let isPlaying = false;
 
@@ -2168,7 +2231,7 @@
     }
 
     // ============================================================
-    // 13. MODALS
+    // 14. MODALS
     // ============================================================
     function openFormModal(beat = null) {
       if (!isLoggedIn) return;
@@ -2203,13 +2266,13 @@
     function openEditModal(id) { const beat = beatsData.find(b => b.id === id); if (beat) openFormModal(beat); }
 
     // ============================================================
-    // 14. UI UPDATE
+    // 15. UI UPDATE
     // ============================================================
     function updateUI() {
       if (isLoggedIn && currentUser) {
         document.getElementById('userInfoDisplay').style.display = 'flex';
         document.getElementById('userNameDisplay').textContent = currentUser.user_metadata?.name || 'Administrador';
-        document.getElementById('userEmailDisplay').textContent = currentUser.email || 'usuario@email.com';
+        document.getElementById('emailText').textContent = currentUser.email || 'usuario@email.com';
         document.getElementById('avatarContainer').innerHTML = `<img src="eu.jpg" alt="Admin" class="admin-avatar-small">`;
         document.getElementById('dividerAfterUser').style.display = 'block';
         document.getElementById('dropdownLogin').style.display = 'none';
@@ -2238,6 +2301,9 @@
       });
       updatePlaylistCount();
       updateCart();
+      
+      // Carrega a visibilidade do email
+      loadEmailVisibility();
     }
 
     function updatePlaylistButtons(beatId) {
@@ -2258,7 +2324,7 @@
     }
 
     // ============================================================
-    // 15. PLAYLIST MODAL
+    // 16. PLAYLIST MODAL
     // ============================================================
     function openPlaylistModal() {
       const container = document.getElementById('playlistContainer');
@@ -2339,7 +2405,7 @@
     }
 
     // ============================================================
-    // 16. CART MODAL
+    // 17. CART MODAL
     // ============================================================
     function openCartModal() {
       const container = document.getElementById('cartContainer');
@@ -2377,7 +2443,7 @@
     }
 
     // ============================================================
-    // 17. DASHBOARD
+    // 18. DASHBOARD
     // ============================================================
     function openDashboard() {
       const totalBeats = beatsData.length;
@@ -2405,7 +2471,7 @@
     }
 
     // ============================================================
-    // 18. URL DETECT
+    // 19. URL DETECT
     // ============================================================
     function detectBeatFromUrl() {
       const params = new URLSearchParams(window.location.search);
@@ -2429,7 +2495,7 @@
     }
 
     // ============================================================
-    // 19. AUTH
+    // 20. AUTH
     // ============================================================
     async function doLogin(e) {
       e.preventDefault();
@@ -2469,10 +2535,13 @@
     }
 
     // ============================================================
-    // 20. EVENTOS
+    // 21. EVENTOS
     // ============================================================
     document.getElementById('menuBtn').addEventListener('click', (e) => { e.stopPropagation(); document.getElementById('mainDropdown').classList.toggle('active'); });
     document.addEventListener('click', () => document.getElementById('mainDropdown').classList.remove('active'));
+    
+    // Toggle email
+    document.getElementById('toggleEmailBtn').addEventListener('click', toggleEmailVisibility);
     
     document.getElementById('dropdownLogin').addEventListener('click', () => { document.getElementById('loginModal').classList.add('active'); document.getElementById('loginError').style.display = 'none'; document.getElementById('mainDropdown').classList.remove('active'); });
     document.getElementById('loginCancel').addEventListener('click', () => document.getElementById('loginModal').classList.remove('active'));
@@ -2480,10 +2549,6 @@
     
     document.getElementById('dropdownNewBeat').addEventListener('click', () => openFormModal(null));
     document.getElementById('formCancel').addEventListener('click', closeFormModal);
-    
-    // ============================================================
-    // beatForm.submit CORRIGIDO
-    // ============================================================
     document.getElementById('beatForm').addEventListener('submit', async (e) => {
       e.preventDefault();
       
@@ -2499,17 +2564,14 @@
         return;
       }
       
-      // Verifica se é novo beat (editingId = null) e não tem áudio
       if (!editingId && !selectedAudioFile) {
         showToast('Áudio obrigatório', 'Para lançar um novo beat, você precisa enviar um arquivo de áudio.', 'error');
         return;
       }
       
-      // Se for edição, permite salvar sem novo áudio (mantém o existente)
       const beatData = { title, artist, genre, price, bpm, key, plays: 0 };
       await saveBeatToSupabase(beatData, selectedCoverFile, selectedAudioFile);
     });
-    
     document.getElementById('fCoverFile').addEventListener('change', (e) => {
       const file = e.target.files[0];
       if (file) { selectedCoverFile = file; document.getElementById('coverStatus').textContent = `📷 ${file.name} (${(file.size/1024).toFixed(1)} KB)`; }
@@ -2635,14 +2697,15 @@
     });
 
     // ============================================================
-    // 21. INIT
+    // 22. INIT
     // ============================================================
     async function init() {
       loadTheme();
       await checkSession();
       await loadBeats();
       updateUI();
-      console.log('Best Beats v10.0 - Player apenas nos cards!');
+      loadEmailVisibility();
+      console.log('Best Beats v10.0 - Com botão para ocultar email!');
       console.log('📱 WhatsApp: +244 926 261 011');
       console.log('📧 Email: agtbeatsxpalha@email.com');
     }
