@@ -1039,7 +1039,7 @@
         
         <!-- Rodapé informativo -->
         <div style="padding: 0.6rem 1.2rem; font-size: 0.65rem; color: #4a4a5a; border-top: 1px solid rgba(255,255,255,0.03); margin-top: 0.2rem;">
-          Best Beats v9.0
+          Best Beat s v9.0
         </div>
       </div>
     </div>
@@ -1095,10 +1095,10 @@
       <input type="text" id="fTitle" placeholder="Ex: Aurora" required>
       
       <label for="fArtist">Artista *</label>
-      <input type="text" id="fArtist" placeholder="Ex: NXVX" required>
+      <input type="text" id="fArtist" placeholder="Ex: Pedro" required>
       
       <label for="fGenre">Gênero *</label>
-      <input type="text" id="fGenre" placeholder="Ex: Electronic" required>
+      <input type="text" id="fGenre" placeholder="Ex: Trap" required>
       
       <label for="fPrice">Preço *</label>
       <input type="text" id="fPrice" placeholder="Kz 3.500" required>
@@ -1473,8 +1473,30 @@
       }
 
       // PLAYER
-      const playerWrapper = document.createElement('div');
-      playerWrapper.className = 'player-wrapper';
+// Dentro do createBeatCard, substitua o playlistBtn:
+
+const playlistBtn = document.createElement('button');
+playlistBtn.className = 'btn-playlist';
+playlistBtn.innerHTML = '<i class="fas fa-plus"></i> Add';
+playlistBtn.addEventListener('click', (e) => {
+  e.stopPropagation();
+  
+  // Salva no localStorage
+  let saved = JSON.parse(localStorage.getItem('favoriteBeats') || '[]');
+  
+  if (!saved.includes(beat.id)) {
+    saved.push(beat.id);
+    localStorage.setItem('favoriteBeats', JSON.stringify(saved));
+    showToast('Adicionado', `${beat.title} foi adicionado à sua playlist.`, 'success');
+    playlistBtn.innerHTML = '<i class="fas fa-check"></i> Added';
+  } else {
+    // Remove da playlist
+    saved = saved.filter(id => id !== beat.id);
+    localStorage.setItem('favoriteBeats', JSON.stringify(saved));
+    showToast('Removido', `${beat.title} foi removido da sua playlist.`, 'info');
+    playlistBtn.innerHTML = '<i class="fas fa-plus"></i> Add';
+  }
+});
       
       const bgImg = document.createElement('img');
       bgImg.className = 'player-bg';
