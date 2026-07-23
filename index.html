@@ -1759,13 +1759,12 @@
     }
 
     // ============================================================
-    // 9. PLAYS - CORRIGIDO (SEM RECARREGAR A PÁGINA)
+    // 9. PLAYS - CORRIGIDO
     // ============================================================
     async function incrementPlays(beatId) {
       try {
         console.log('🎵 Incrementando plays para beat:', beatId);
         
-        // Busca o beat atual
         const { data, error } = await supabase
           .from('beats')
           .select('plays')
@@ -1779,7 +1778,6 @@
         
         console.log(`📊 Plays: ${currentPlays} → ${newPlays}`);
         
-        // Atualiza no banco
         const { error: updateError } = await supabase
           .from('beats')
           .update({ plays: newPlays })
@@ -1787,16 +1785,12 @@
         
         if (updateError) throw updateError;
         
-        // Atualiza localmente
         const beat = beatsData.find(b => b.id === beatId);
         if (beat) {
           beat.plays = newPlays;
         }
         
-        // Atualiza a interface imediatamente (SEM RECARREGAR)
         updateBeatPlaysDisplay(beatId, newPlays);
-        
-        // NÃO chama loadBeats() aqui para evitar recarregar a página
         
       } catch (error) {
         console.error('❌ Erro ao incrementar plays:', error);
@@ -1813,7 +1807,6 @@
             const playSpan = stats.querySelector('.beat-plays');
             if (playSpan) {
               playSpan.innerHTML = `<i class="fas fa-headphones"></i> ${newPlays} plays`;
-              // Animação de destaque
               playSpan.classList.add('highlight');
               setTimeout(() => {
                 playSpan.classList.remove('highlight');
@@ -2035,7 +2028,28 @@
     }
 
     // ============================================================
-    // 13. RENDER - CORRIGIDO
+    // FUNÇÃO PARA SINCRONIZAR O GLOBAL PLAYER
+    // ============================================================
+    function syncGlobalPlayer(beatId, isPlaying) {
+      if (gpAudio && gpPlaylist.includes(beatId)) {
+        if (isPlaying) {
+          if (gpAudio.paused) {
+            gpAudio.play().catch(() => {});
+            document.getElementById('gpPlay').innerHTML = '<i class="fas fa-pause"></i>';
+            gpIsPlaying = true;
+          }
+        } else {
+          if (!gpAudio.paused) {
+            gpAudio.pause();
+            document.getElementById('gpPlay').innerHTML = '<i class="fas fa-play"></i>';
+            gpIsPlaying = false;
+          }
+        }
+      }
+    }
+
+    // ============================================================
+    // 13. RENDER
     // ============================================================
     function renderBeats() {
       const container = document.getElementById('beatsContainer');
@@ -2066,7 +2080,6 @@
       card.className = 'beat-card';
       card.dataset.id = beat.id;
 
-      // BADGE POPULAR
       if ((beat.plays || 0) > 3) {
         const badge = document.createElement('div');
         badge.className = 'popularity-badge';
@@ -2259,7 +2272,7 @@
       card.appendChild(playerWrapper);
       card.appendChild(infoDiv);
 
-      // ÁUDIO - CORRIGIDO: SEM RELOAD
+      // ÁUDIO - CORRIGIDO COM SINCRONIA DO GLOBAL PLAYER
       let audio = null;
       let isPlaying = false;
 
@@ -2272,7 +2285,6 @@
           return; 
         }
         
-        // Cria o áudio apenas se não existir
         if (!audio) {
           audio = new Audio(beat.audio);
           audio.volume = 0.7;
@@ -2298,17 +2310,16 @@
         if (isPlaying) { 
           audio.pause(); 
           playBtn.innerHTML = '<i class="fas fa-play"></i>'; 
-          isPlaying = false; 
+          isPlaying = false;
+          // Sincroniza com o Global Player
+          syncGlobalPlayer(beat.id, false);
         } else { 
           audio.play().catch(() => {});
           playBtn.innerHTML = '<i class="fas fa-pause"></i>';
           isPlaying = true;
           
-          // INCREMENTA PLAYS (sem recarregar)
-          console.log('▶️ Play iniciado para beat:', beat.id);
           incrementPlays(beat.id);
           
-          // Adiciona à fila do global player
           if (!gpPlaylist.includes(beat.id)) {
             gpPlaylist.push(beat.id);
             gpCurrentIndex = gpPlaylist.indexOf(beat.id);
@@ -2808,7 +2819,7 @@
       await loadBeats();
       updateUI();
       initGlobalPlayer();
-      console.log('Best Beats v10.0 - Correções: Plays sem recarregar a página!');
+      console.log('Best Beats v10.0 - Sincronia entre card e Global Player!');
       console.log('📱 WhatsApp: +244 926 261 011');
       console.log('📧 Email: agtbeatsxpalha@email.com');
     }
