@@ -37,8 +37,6 @@
       --radius: 40px;
       --radius-sm: 16px;
       --transition: 0.25s ease;
-      --header-height: 180px;
-      --toolbar-height: 70px;
     }
     
     [data-theme="light"] {
@@ -66,29 +64,158 @@
       padding: 2rem 1rem 6rem 1rem;
       position: relative;
       transition: background 0.3s ease;
-      padding-top: calc(var(--header-height) + var(--toolbar-height) + 2rem);
+      padding-top: 6rem;
     }
     .app { max-width: 1100px; width: 100%; }
 
-    /* ----- HEADER FIXO ----- */
-    .header-fixed {
+    /* ============================================================
+       MENU FIXO (apenas o botão hambúrguer)
+       ============================================================ */
+    .menu-fixed {
       position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      z-index: 100;
-      background: var(--bg-primary);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border-bottom: 1px solid var(--border-color);
-      padding: 1rem 1.5rem 0.5rem 1.5rem;
-      transition: background 0.3s ease;
+      top: 1rem;
+      right: 1rem;
+      z-index: 999;
     }
+
+    .hamburger-menu {
+      position: relative;
+      display: inline-block;
+    }
+    .hamburger-btn {
+      background: var(--bg-card);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid var(--border-color);
+      color: var(--text-primary);
+      padding: 0.6rem 1rem;
+      border-radius: 60px;
+      font-size: 1.1rem;
+      cursor: pointer;
+      transition: 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-family: 'Inter', sans-serif;
+      box-shadow: var(--shadow);
+    }
+    .hamburger-btn:hover {
+      border-color: var(--gold);
+      background: var(--gold-glow);
+    }
+    .hamburger-btn i { color: var(--gold); }
+    .hamburger-btn .btn-label {
+      font-size: 0.8rem;
+      font-weight: 400;
+    }
+    .admin-avatar-small {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid var(--gold);
+      margin-right: 0.1rem;
+    }
+
+    .hamburger-dropdown {
+      position: absolute;
+      top: 115%;
+      right: 0;
+      background: var(--bg-secondary);
+      backdrop-filter: blur(20px);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      padding: 0.5rem;
+      min-width: 210px;
+      display: none;
+      box-shadow: var(--shadow);
+      z-index: 100;
+    }
+    .hamburger-dropdown.active {
+      display: block;
+      animation: dropdownIn 0.2s ease forwards;
+    }
+    @keyframes dropdownIn {
+      from { opacity: 0; transform: translateY(-10px) scale(0.95); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    .hamburger-dropdown .dropdown-item {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      padding: 0.5rem 1.2rem;
+      border-radius: 12px;
+      color: var(--text-secondary);
+      font-weight: 400;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: 0.2s;
+      border: none;
+      background: none;
+      width: 100%;
+      text-align: left;
+      font-family: 'Inter', sans-serif;
+    }
+    .hamburger-dropdown .dropdown-item:hover {
+      background: var(--gold-glow);
+      color: var(--gold);
+    }
+    .hamburger-dropdown .dropdown-item i {
+      width: 20px;
+      color: var(--gold);
+    }
+    .hamburger-dropdown .dropdown-item.danger {
+      color: #ff6b6b;
+    }
+    .hamburger-dropdown .dropdown-item.danger i {
+      color: #ff6b6b;
+    }
+    .hamburger-dropdown .dropdown-item.danger:hover {
+      background: rgba(255, 70, 70, 0.06);
+    }
+    .hamburger-dropdown .dropdown-divider {
+      height: 1px;
+      background: var(--border-color);
+      margin: 0.3rem 0.8rem;
+    }
+    .user-info-display {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      padding: 0.5rem 1.2rem;
+      border-bottom: 1px solid var(--border-color);
+      margin-bottom: 0.3rem;
+    }
+    .user-info-display .admin-avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid var(--gold);
+    }
+    .user-info-display .user-details {
+      display: flex;
+      flex-direction: column;
+    }
+    .user-info-display .user-name {
+      font-weight: 600;
+      font-size: 0.85rem;
+      color: var(--text-primary);
+    }
+    .user-info-display .user-email {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+    }
+
+    /* ============================================================
+       HEADER (rola com a página)
+       ============================================================ */
     .header {
       display: flex;
       flex-direction: column;
       align-items: center;
       text-align: center;
+      margin-bottom: 1.5rem;
     }
     .logo-wrapper {
       display: flex;
@@ -100,8 +227,8 @@
     }
     .logo-wrapper:hover { opacity: 0.8; }
     .logo {
-      width: 60px;
-      height: 60px;
+      width: 70px;
+      height: 70px;
       border-radius: 50%;
       border: none;
       box-shadow: 0 0 30px var(--gold-glow);
@@ -109,7 +236,7 @@
       background: var(--bg-secondary);
     }
     .brand {
-      font-size: 2rem;
+      font-size: 2.2rem;
       font-weight: 800;
       letter-spacing: 2px;
       background: linear-gradient(135deg, var(--gold), var(--gold-dark));
@@ -119,35 +246,23 @@
     }
     .subtitle {
       font-weight: 300;
-      font-size: 0.8rem;
+      font-size: 0.85rem;
       letter-spacing: 4px;
       color: var(--text-secondary);
       margin-top: 0.1rem;
       display: inline-block;
     }
 
-    /* ----- ADMIN TOOLBAR FIXA ----- */
-    .admin-toolbar-fixed {
-      position: fixed;
-      top: calc(80px);
-      left: 0;
-      right: 0;
-      z-index: 99;
-      background: var(--bg-primary);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      padding: 0.5rem 1.5rem;
-      border-bottom: 1px solid var(--border-color);
-      transition: background 0.3s ease;
-    }
+    /* ============================================================
+       ADMIN TOOLBAR (rola com a página)
+       ============================================================ */
     .admin-toolbar {
       display: flex;
       justify-content: space-between;
       align-items: center;
       flex-wrap: wrap;
-      gap: 0.5rem;
-      max-width: 1100px;
-      margin: 0 auto;
+      gap: 0.8rem;
+      margin-bottom: 1.5rem;
       width: 100%;
     }
     .admin-toolbar-left {
@@ -220,86 +335,6 @@
     .filter-select:focus, .sort-select:focus { border-color: var(--gold); }
     .filter-select option, .sort-select option { background: var(--bg-secondary); }
 
-    /* ----- HAMBURGER MENU ----- */
-    .hamburger-menu { position: relative; display: inline-block; }
-    .hamburger-btn {
-      background: var(--bg-card);
-      backdrop-filter: blur(8px);
-      border: 1px solid var(--border-color);
-      color: var(--text-primary);
-      padding: 0.4rem 1rem;
-      border-radius: 60px;
-      font-size: 1rem;
-      cursor: pointer;
-      transition: 0.2s;
-      display: flex;
-      align-items: center;
-      gap: 0.4rem;
-      font-family: 'Inter', sans-serif;
-    }
-    .hamburger-btn:hover { border-color: var(--gold); background: var(--gold-glow); }
-    .hamburger-btn i { color: var(--gold); }
-    .hamburger-btn .btn-label { font-size: 0.8rem; font-weight: 400; }
-    .admin-avatar-small {
-      width: 24px;
-      height: 24px;
-      border-radius: 50%;
-      object-fit: cover;
-      border: 2px solid var(--gold);
-      margin-right: 0.1rem;
-    }
-    .hamburger-dropdown {
-      position: absolute;
-      top: 115%;
-      right: 0;
-      background: var(--bg-secondary);
-      backdrop-filter: blur(20px);
-      border: 1px solid var(--border-color);
-      border-radius: var(--radius-sm);
-      padding: 0.5rem;
-      min-width: 210px;
-      display: none;
-      box-shadow: var(--shadow);
-      z-index: 100;
-    }
-    .hamburger-dropdown.active { display: block; animation: dropdownIn 0.2s ease forwards; }
-    @keyframes dropdownIn { from { opacity: 0; transform: translateY(-10px) scale(0.95); } to { opacity: 1; transform: translateY(0) scale(1); } }
-    .hamburger-dropdown .dropdown-item {
-      display: flex;
-      align-items: center;
-      gap: 0.8rem;
-      padding: 0.5rem 1.2rem;
-      border-radius: 12px;
-      color: var(--text-secondary);
-      font-weight: 400;
-      font-size: 0.85rem;
-      cursor: pointer;
-      transition: 0.2s;
-      border: none;
-      background: none;
-      width: 100%;
-      text-align: left;
-      font-family: 'Inter', sans-serif;
-    }
-    .hamburger-dropdown .dropdown-item:hover { background: var(--gold-glow); color: var(--gold); }
-    .hamburger-dropdown .dropdown-item i { width: 20px; color: var(--gold); }
-    .hamburger-dropdown .dropdown-item.danger { color: #ff6b6b; }
-    .hamburger-dropdown .dropdown-item.danger i { color: #ff6b6b; }
-    .hamburger-dropdown .dropdown-item.danger:hover { background: rgba(255, 70, 70, 0.06); }
-    .hamburger-dropdown .dropdown-divider { height: 1px; background: var(--border-color); margin: 0.3rem 0.8rem; }
-    .user-info-display {
-      display: flex;
-      align-items: center;
-      gap: 0.8rem;
-      padding: 0.5rem 1.2rem;
-      border-bottom: 1px solid var(--border-color);
-      margin-bottom: 0.3rem;
-    }
-    .user-info-display .admin-avatar { width: 36px; height: 36px; border-radius: 50%; object-fit: cover; border: 2px solid var(--gold); }
-    .user-info-display .user-details { display: flex; flex-direction: column; }
-    .user-info-display .user-name { font-weight: 600; font-size: 0.85rem; color: var(--text-primary); }
-    .user-info-display .user-email { font-size: 0.7rem; color: var(--text-muted); }
-
     /* ----- CART BUTTON ----- */
     .cart-btn {
       background: var(--bg-card);
@@ -329,10 +364,12 @@
       text-align: center;
     }
 
-    /* ----- TOAST ----- */
+    /* ============================================================
+       TOAST
+       ============================================================ */
     .toast-container {
       position: fixed;
-      top: calc(var(--header-height) + var(--toolbar-height) + 1rem);
+      top: 5rem;
       right: 2rem;
       z-index: 9999;
       display: flex;
@@ -379,7 +416,9 @@
     @keyframes slideIn { to { transform: translateX(0); } }
     @keyframes slideOut { to { transform: translateX(120%); opacity: 0; } }
 
-    /* ----- LOADING ----- */
+    /* ============================================================
+       LOADING
+       ============================================================ */
     .loading-wrapper {
       display: flex;
       flex-direction: column;
@@ -428,7 +467,9 @@
     }
     @keyframes progress { 0% { width: 0%; } 50% { width: 70%; } 100% { width: 100%; } }
 
-    /* ----- BEATS LIST ----- */
+    /* ============================================================
+       BEATS LIST
+       ============================================================ */
     .beats-list { display: flex; flex-direction: column; gap: 1.5rem; margin-top: 0.5rem; }
     .beat-card {
       background: var(--bg-card);
@@ -781,7 +822,9 @@
     .btn-cart:hover { background: var(--gold-glow); border-color: var(--gold); color: var(--gold); }
     .btn-cart.in-cart { background: rgba(37, 211, 102, 0.1); color: #25D366; border-color: rgba(37, 211, 102, 0.15); }
 
-    /* ----- FOOTER ----- */
+    /* ============================================================
+       FOOTER
+       ============================================================ */
     .footer {
       margin-top: 3rem;
       padding: 1.5rem 0 0.5rem;
@@ -795,15 +838,21 @@
       font-size: 0.85rem;
     }
     .social-icons { display: flex; gap: 1.5rem; }
-    .social-icons a {
+    .social-icons .social-link {
       color: var(--text-muted);
       font-size: 1.2rem;
       transition: 0.2s;
+      cursor: pointer;
       text-decoration: none;
+      background: none;
+      border: none;
+      padding: 0;
     }
-    .social-icons a:hover { color: var(--gold); transform: translateY(-2px); }
+    .social-icons .social-link:hover { color: var(--gold); transform: translateY(-2px); }
 
-    /* ----- MODALS ----- */
+    /* ============================================================
+       MODALS
+       ============================================================ */
     .modal-overlay {
       display: none;
       position: fixed;
@@ -1042,8 +1091,6 @@
     .preview-item img { width: 50px; height: 50px; object-fit: cover; border-radius: 8px; }
     .preview-item i { font-size: 1.5rem; color: var(--gold); }
 
-    .loading-spinner { display: none; }
-
     /* ----- GLOBAL PLAYER ----- */
     .global-player {
       position: fixed;
@@ -1165,10 +1212,8 @@
 
     /* ----- RESPONSIVE ----- */
     @media (max-width: 850px) {
-      body { padding-top: calc(var(--header-height) + 80px + 1rem); }
-      .header-fixed { padding: 0.5rem 1rem 0.3rem 1rem; }
-      .admin-toolbar-fixed { top: 65px; padding: 0.3rem 1rem; }
-      .admin-toolbar { flex-direction: column; align-items: stretch; gap: 0.3rem; }
+      body { padding-top: 5rem; }
+      .admin-toolbar { flex-direction: column; align-items: stretch; gap: 0.5rem; }
       .admin-toolbar-left { flex-wrap: wrap; }
       .admin-toolbar-right { justify-content: center; }
       .search-container { min-width: 100px; }
@@ -1178,7 +1223,7 @@
       .beat-meta { justify-content: center; }
       .beat-actions { justify-content: center; }
       .modal { padding: 1.2rem 1.5rem; }
-      .toast-container { right: 1rem; left: 1rem; max-width: none; top: calc(var(--header-height) + 80px + 0.5rem); }
+      .toast-container { right: 1rem; left: 1rem; max-width: none; top: 5rem; }
       .hamburger-dropdown { right: -10px; min-width: 180px; }
       .playlist-item { flex-direction: column; text-align: center; }
       .playlist-item .info { width: 100%; }
@@ -1188,113 +1233,81 @@
       .global-player .gp-progress { min-width: 50px; }
       .theme-toggle { bottom: 80px; right: 12px; width: 34px; height: 34px; font-size: 0.9rem; }
       .filter-select, .sort-select { min-width: 70px; font-size: 0.7rem; padding: 0.2rem 0.6rem; }
+      .menu-fixed { top: 0.8rem; right: 0.8rem; }
+      .hamburger-btn { padding: 0.4rem 0.8rem; font-size: 0.9rem; }
+      .hamburger-btn .btn-label { display: none; }
     }
     @media (max-width: 480px) {
-      body { padding-top: calc(var(--header-height) + 90px + 1rem); }
-      .brand { font-size: 1.4rem; }
-      .logo { width: 44px; height: 44px; }
+      body { padding-top: 4.5rem; }
+      .brand { font-size: 1.6rem; }
+      .logo { width: 50px; height: 50px; }
       .player-wrapper { flex: 0 0 120px; width: 120px; height: 120px; }
-      .hamburger-btn .btn-label { display: none; }
       .global-player .gp-info img { width: 24px; height: 24px; }
       .global-player .gp-info .gp-title { font-size: 0.7rem; }
       .global-player .gp-controls button { font-size: 0.8rem; }
       .global-player .gp-controls .gp-play { width: 28px; height: 28px; font-size: 0.7rem; }
       .search-container input { font-size: 0.75rem; min-width: 60px; }
       .filter-select, .sort-select { font-size: 0.65rem; padding: 0.15rem 0.5rem; min-width: 60px; }
-      .toast-container { top: calc(var(--header-height) + 90px + 0.5rem); }
+      .toast-container { top: 4.5rem; }
+      .menu-fixed { top: 0.5rem; right: 0.5rem; }
+      .hamburger-btn { padding: 0.3rem 0.6rem; font-size: 0.8rem; }
     }
   </style>
 </head>
 <body>
 
-<!-- HEADER FIXO -->
-<div class="header-fixed">
-  <header class="header">
-    <a href="?" class="logo-wrapper" id="logoLink">
-      <img src="logo.png" alt="Best Beats" class="logo">
-      <span class="brand">Best Beats</span>
-    </a>
-    <div class="subtitle">ouça e compre</div>
-  </header>
-</div>
-
-<!-- ADMIN TOOLBAR FIXA -->
-<div class="admin-toolbar-fixed">
-  <div class="admin-toolbar">
-    <div class="admin-toolbar-left">
-      <div class="search-container">
-        <i class="fas fa-search"></i>
-        <input type="text" id="searchInput" placeholder="Buscar beat ou artista...">
-        <button class="clear-search" id="clearSearch"><i class="fas fa-times"></i></button>
-      </div>
-      <select class="filter-select" id="filterGenre">
-        <option value="all">Todos os gêneros</option>
-      </select>
-      <select class="sort-select" id="sortBy">
-        <option value="recent">Mais recentes</option>
-        <option value="popular">Mais populares</option>
-        <option value="price-low">Menor preço</option>
-        <option value="price-high">Maior preço</option>
-        <option value="rating">Melhor avaliação</option>
-      </select>
-    </div>
-    <div class="admin-toolbar-right">
-      <button class="cart-btn" id="cartBtn">
-        <i class="fas fa-shopping-cart"></i>
-        <span class="cart-count" id="cartCount">0</span>
-      </button>
-      <div class="hamburger-menu">
-        <button class="hamburger-btn" id="menuBtn">
-          <span id="avatarContainer"></span>
-          <i class="fas fa-bars"></i>
-          <span class="btn-label" id="menuLabel">Menu</span>
-        </button>
-        <div class="hamburger-dropdown" id="mainDropdown">
-          <div class="user-info-display" id="userInfoDisplay" style="display:none;">
-            <img src="eu.jpg" alt="Admin" class="admin-avatar" id="adminAvatar">
-            <div class="user-details">
-              <span class="user-name" id="userNameDisplay">Administrador</span>
-              <span class="user-email" id="userEmailDisplay">usuario@email.com</span>
-            </div>
-          </div>
-          <div class="dropdown-divider" id="dividerAfterUser" style="display:none;"></div>
-          
-          <button class="dropdown-item" id="dropdownLogin" style="display:flex;">
-            <i class="fas fa-sign-in-alt"></i> Admin
-          </button>
-          
-          <button class="dropdown-item" id="dropdownNewBeat" style="display:none;">
-            <i class="fas fa-plus"></i> Lançar Beat
-          </button>
-          <button class="dropdown-item" id="dropdownToggleEdit" style="display:none;">
-            <i class="fas fa-edit"></i> Editar
-          </button>
-          <button class="dropdown-item" id="dropdownDashboard" style="display:none;">
-            <i class="fas fa-chart-bar"></i> Dashboard
-          </button>
-          
-          <button class="dropdown-item" id="dropdownPlaylist">
-            <i class="fas fa-music"></i> Minha Playlist
-            <span id="playlistCount" style="background:rgba(247,201,72,0.1);color:#f7c948;font-size:0.65rem;padding:0.05rem 0.5rem;border-radius:30px;margin-left:auto;">0</span>
-          </button>
-          
-          <button class="dropdown-item" id="dropdownProfile">
-            <i class="fas fa-user"></i> Perfil do Produtor
-          </button>
-          
-          <button class="dropdown-item" id="dropdownAbout">
-            <i class="fas fa-info-circle"></i> Sobre & Contato
-          </button>
-          
-          <div class="dropdown-divider" id="dividerBeforeLogout" style="display:none;"></div>
-          <button class="dropdown-item danger" id="dropdownLogout" style="display:none;">
-            <i class="fas fa-sign-out-alt"></i> Sair
-          </button>
-          
-          <div style="padding: 0.4rem 1.2rem; font-size: 0.6rem; color: var(--text-muted); border-top: 1px solid var(--border-color); margin-top: 0.2rem;">
-            Best Beats v10.0
-          </div>
+<!-- MENU FIXO (APENAS O HAMBÚRGUER) -->
+<div class="menu-fixed">
+  <div class="hamburger-menu">
+    <button class="hamburger-btn" id="menuBtn">
+      <span id="avatarContainer"></span>
+      <i class="fas fa-bars"></i>
+      <span class="btn-label" id="menuLabel">Menu</span>
+    </button>
+    <div class="hamburger-dropdown" id="mainDropdown">
+      <div class="user-info-display" id="userInfoDisplay" style="display:none;">
+        <img src="eu.jpg" alt="Admin" class="admin-avatar" id="adminAvatar">
+        <div class="user-details">
+          <span class="user-name" id="userNameDisplay">Administrador</span>
+          <span class="user-email" id="userEmailDisplay">usuario@email.com</span>
         </div>
+      </div>
+      <div class="dropdown-divider" id="dividerAfterUser" style="display:none;"></div>
+      
+      <button class="dropdown-item" id="dropdownLogin" style="display:flex;">
+        <i class="fas fa-sign-in-alt"></i> Admin
+      </button>
+      
+      <button class="dropdown-item" id="dropdownNewBeat" style="display:none;">
+        <i class="fas fa-plus"></i> Lançar Beat
+      </button>
+      <button class="dropdown-item" id="dropdownToggleEdit" style="display:none;">
+        <i class="fas fa-edit"></i> Editar
+      </button>
+      <button class="dropdown-item" id="dropdownDashboard" style="display:none;">
+        <i class="fas fa-chart-bar"></i> Dashboard
+      </button>
+      
+      <button class="dropdown-item" id="dropdownPlaylist">
+        <i class="fas fa-music"></i> Minha Playlist
+        <span id="playlistCount" style="background:rgba(247,201,72,0.1);color:#f7c948;font-size:0.65rem;padding:0.05rem 0.5rem;border-radius:30px;margin-left:auto;">0</span>
+      </button>
+      
+      <button class="dropdown-item" id="dropdownProfile">
+        <i class="fas fa-user"></i> Perfil do Produtor
+      </button>
+      
+      <button class="dropdown-item" id="dropdownAbout">
+        <i class="fas fa-info-circle"></i> Sobre & Contato
+      </button>
+      
+      <div class="dropdown-divider" id="dividerBeforeLogout" style="display:none;"></div>
+      <button class="dropdown-item danger" id="dropdownLogout" style="display:none;">
+        <i class="fas fa-sign-out-alt"></i> Sair
+      </button>
+      
+      <div style="padding: 0.4rem 1.2rem; font-size: 0.6rem; color: var(--text-muted); border-top: 1px solid var(--border-color); margin-top: 0.2rem;">
+        Best Beats v10.0
       </div>
     </div>
   </div>
@@ -1338,6 +1351,42 @@
 
 <div class="app">
 
+  <!-- HEADER -->
+  <header class="header">
+    <a href="?" class="logo-wrapper" id="logoLink">
+      <img src="logo.png" alt="Best Beats" class="logo">
+      <span class="brand">Best Beats</span>
+    </a>
+    <div class="subtitle">ouça e compre</div>
+  </header>
+
+  <!-- ADMIN TOOLBAR -->
+  <div class="admin-toolbar">
+    <div class="admin-toolbar-left">
+      <div class="search-container">
+        <i class="fas fa-search"></i>
+        <input type="text" id="searchInput" placeholder="Buscar beat ou artista...">
+        <button class="clear-search" id="clearSearch"><i class="fas fa-times"></i></button>
+      </div>
+      <select class="filter-select" id="filterGenre">
+        <option value="all">Todos os gêneros</option>
+      </select>
+      <select class="sort-select" id="sortBy">
+        <option value="recent">Mais recentes</option>
+        <option value="popular">Mais populares</option>
+        <option value="price-low">Menor preço</option>
+        <option value="price-high">Maior preço</option>
+        <option value="rating">Melhor avaliação</option>
+      </select>
+    </div>
+    <div class="admin-toolbar-right">
+      <button class="cart-btn" id="cartBtn">
+        <i class="fas fa-shopping-cart"></i>
+        <span class="cart-count" id="cartCount">0</span>
+      </button>
+    </div>
+  </div>
+
   <!-- LOADING -->
   <div id="loading" class="loading-wrapper">
     <div class="loading-wave">
@@ -1356,10 +1405,10 @@
   <!-- FOOTER -->
   <footer class="footer">
     <div class="social-icons">
-      <a href="https://www.youtube.com/channel/UCZHpXbGkLKXgQxMROaWzR5w" target="_blank" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
-      <a href="https://www.instagram.com/agostinhoagt/" target="_blank" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
-      <a href="https://www.facebook.com/profile.php?id=100080875782151" target="_blank" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
-      <a href="https://wa.me/244926261011" target="_blank" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+      <button class="social-link" onclick="window.open('https://www.youtube.com/channel/UCZHpXbGkLKXgQxMROaWzR5w','_blank')" aria-label="YouTube"><i class="fab fa-youtube"></i></button>
+      <button class="social-link" onclick="window.open('https://www.instagram.com/agostinhoagt/','_blank')" aria-label="Instagram"><i class="fab fa-instagram"></i></button>
+      <button class="social-link" onclick="window.open('https://www.facebook.com/profile.php?id=100080875782151','_blank')" aria-label="Facebook"><i class="fab fa-facebook-f"></i></button>
+      <button class="social-link" onclick="window.open('https://wa.me/244926261011','_blank')" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></button>
     </div>
     <div>© 2026 Best Beats · todos os direitos reservados</div>
   </footer>
@@ -1516,10 +1565,10 @@
       <p><i class="fas fa-phone" style="color:var(--gold);width:20px;"></i> +244 926 261 011</p>
       <p><i class="fas fa-map-marker-alt" style="color:var(--gold);width:20px;"></i> Luanda, Angola</p>
       <div style="margin-top:0.8rem;display:flex;gap:1rem;justify-content:center;">
-        <a href="https://www.youtube.com/channel/UCZHpXbGkLKXgQxMROaWzR5w" target="_blank" style="color:var(--text-muted);font-size:1.2rem;transition:0.2s;"><i class="fab fa-youtube"></i></a>
-        <a href="https://www.instagram.com/agostinhoagt/" target="_blank" style="color:var(--text-muted);font-size:1.2rem;transition:0.2s;"><i class="fab fa-instagram"></i></a>
-        <a href="https://www.facebook.com/profile.php?id=100080875782151" target="_blank" style="color:var(--text-muted);font-size:1.2rem;transition:0.2s;"><i class="fab fa-facebook-f"></i></a>
-        <a href="https://wa.me/244926261011" target="_blank" style="color:var(--text-muted);font-size:1.2rem;transition:0.2s;"><i class="fab fa-whatsapp"></i></a>
+        <button class="social-link" onclick="window.open('https://www.youtube.com/channel/UCZHpXbGkLKXgQxMROaWzR5w','_blank')" style="color:var(--text-muted);font-size:1.2rem;transition:0.2s;background:none;border:none;cursor:pointer;"><i class="fab fa-youtube"></i></button>
+        <button class="social-link" onclick="window.open('https://www.instagram.com/agostinhoagt/','_blank')" style="color:var(--text-muted);font-size:1.2rem;transition:0.2s;background:none;border:none;cursor:pointer;"><i class="fab fa-instagram"></i></button>
+        <button class="social-link" onclick="window.open('https://www.facebook.com/profile.php?id=100080875782151','_blank')" style="color:var(--text-muted);font-size:1.2rem;transition:0.2s;background:none;border:none;cursor:pointer;"><i class="fab fa-facebook-f"></i></button>
+        <button class="social-link" onclick="window.open('https://wa.me/244926261011','_blank')" style="color:var(--text-muted);font-size:1.2rem;transition:0.2s;background:none;border:none;cursor:pointer;"><i class="fab fa-whatsapp"></i></button>
       </div>
     </div>
     <div class="modal-actions">
@@ -1582,7 +1631,7 @@
     // Cart
     let cart = JSON.parse(localStorage.getItem('bestBeatsCart') || '[]');
     
-    // Ratings - AGORA PERSISTENTES NO SUPABASE
+    // Ratings
     let userRatings = {};
 
     // ============================================================
@@ -1611,7 +1660,7 @@
     }
 
     // ============================================================
-    // 4. PLAYLIST (localStorage)
+    // 4. PLAYLIST
     // ============================================================
     function getPlaylist() {
       try { return JSON.parse(localStorage.getItem('favoriteBeats') || '[]'); } catch { return []; }
@@ -1634,7 +1683,7 @@
     }
 
     // ============================================================
-    // 5. CART (localStorage)
+    // 5. CART
     // ============================================================
     function updateCart() {
       localStorage.setItem('bestBeatsCart', JSON.stringify(cart));
@@ -1656,7 +1705,7 @@
     }
 
     // ============================================================
-    // 6. RATING - PERSISTENTE NO SUPABASE
+    // 6. RATING
     // ============================================================
     async function loadRatings() {
       try {
@@ -1720,7 +1769,7 @@
       const slug = beat.title.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
       const shareUrl = `${baseUrl}?beat=${slug}`;
       if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(shareUrl).then(() => showShareToast('Link do beat copiado para a área de transferência'))
+        navigator.clipboard.writeText(shareUrl).then(() => showShareToast('Link do beat copiado'))
           .catch(() => fallbackCopy(shareUrl));
       } else { fallbackCopy(shareUrl); }
     }
@@ -1732,7 +1781,7 @@
       document.body.appendChild(textArea);
       textArea.select();
       try { document.execCommand('copy'); showShareToast('Link do beat copiado'); }
-      catch (err) { showShareToast('Copie o link manualmente: ' + text); }
+      catch (err) { showShareToast('Copie o link manualmente'); }
       document.body.removeChild(textArea);
     }
 
@@ -1764,10 +1813,8 @@
         if (error) throw error;
         beatsData = data || [];
         
-        // Carrega avaliações
         await loadRatings();
         
-        // Atualiza gêneros no filtro
         const genres = [...new Set(beatsData.map(b => b.genre).filter(Boolean))];
         const filterSelect = document.getElementById('filterGenre');
         const currentVal = filterSelect.value;
@@ -1812,17 +1859,17 @@
         if (editingId) {
           const { error } = await supabase.from('beats').update(newBeat).eq('id', editingId);
           if (error) throw error;
-          showToast('Sucesso', 'O beat foi atualizado com sucesso.', 'success');
+          showToast('Sucesso', 'O beat foi atualizado.', 'success');
         } else {
           const { error } = await supabase.from('beats').insert([newBeat]);
           if (error) throw error;
-          showToast('Sucesso', 'Novo beat lançado com sucesso.', 'success');
+          showToast('Sucesso', 'Novo beat lançado!', 'success');
         }
         await loadBeats();
         closeFormModal();
       } catch (error) {
         console.error('Erro ao salvar beat:', error);
-        showToast('Erro ao salvar', error.message || 'Ocorreu um erro ao salvar o beat.', 'error');
+        showToast('Erro ao salvar', error.message || 'Ocorreu um erro.', 'error');
       }
     }
 
@@ -1842,10 +1889,10 @@
         const { error } = await supabase.from('beats').delete().eq('id', id);
         if (error) throw error;
         await loadBeats();
-        showToast('Sucesso', 'O beat foi excluído permanentemente.', 'success');
+        showToast('Sucesso', 'O beat foi excluído.', 'success');
       } catch (error) {
         console.error('Erro ao excluir:', error);
-        showToast('Erro ao excluir', error.message || 'Não foi possível excluir o beat.', 'error');
+        showToast('Erro ao excluir', error.message || 'Não foi possível excluir.', 'error');
       }
     }
 
@@ -1863,7 +1910,7 @@
     }
 
     // ============================================================
-    // 10. FILTERS & SEARCH
+    // 10. FILTERS
     // ============================================================
     function applyFilters() {
       const search = document.getElementById('searchInput').value.toLowerCase();
@@ -2010,7 +2057,6 @@
       card.className = 'beat-card';
       card.dataset.id = beat.id;
 
-      // Popularity badge
       if ((beat.plays || 0) > 10) {
         const badge = document.createElement('div');
         badge.className = 'popularity-badge';
@@ -2018,7 +2064,6 @@
         card.appendChild(badge);
       }
 
-      // Edit buttons
       const editBtn = document.createElement('button');
       editBtn.className = 'card-edit-btn';
       if (isLoggedIn) editBtn.classList.add('visible');
@@ -2130,7 +2175,6 @@
       exclusivo.className = 'beat-exclusivo';
       exclusivo.innerHTML = `<i class="fas fa-certificate"></i> exclusivo · apenas aqui`;
       
-      // Stats
       const avgRating = getBeatAverageRating(beat.id);
       const ratingCount = getBeatRatingCount(beat.id);
       const starsFull = Math.round(avgRating);
@@ -2149,7 +2193,6 @@
         ${beat.key ? `<span><i class="fas fa-music"></i> ${beat.key}</span>` : ''}
       `;
       
-      // Actions
       const actionsDiv = document.createElement('div');
       actionsDiv.className = 'beat-actions';
       
@@ -2559,16 +2602,13 @@
     // ============================================================
     // 20. EVENTOS
     // ============================================================
-    // Menu
     document.getElementById('menuBtn').addEventListener('click', (e) => { e.stopPropagation(); document.getElementById('mainDropdown').classList.toggle('active'); });
     document.addEventListener('click', () => document.getElementById('mainDropdown').classList.remove('active'));
     
-    // Login
     document.getElementById('dropdownLogin').addEventListener('click', () => { document.getElementById('loginModal').classList.add('active'); document.getElementById('loginError').style.display = 'none'; document.getElementById('mainDropdown').classList.remove('active'); });
     document.getElementById('loginCancel').addEventListener('click', () => document.getElementById('loginModal').classList.remove('active'));
     document.getElementById('loginForm').addEventListener('submit', doLogin);
     
-    // Beat Form
     document.getElementById('dropdownNewBeat').addEventListener('click', () => openFormModal(null));
     document.getElementById('formCancel').addEventListener('click', closeFormModal);
     document.getElementById('beatForm').addEventListener('submit', async (e) => {
@@ -2594,7 +2634,6 @@
       else { selectedAudioFile = null; document.getElementById('audioStatus').textContent = 'Selecionar'; }
     });
     
-    // Toggle Edit
     document.getElementById('dropdownToggleEdit').addEventListener('click', function() {
       if (!isLoggedIn) return;
       editMode = !editMode;
@@ -2606,29 +2645,23 @@
       document.getElementById('mainDropdown').classList.remove('active');
     });
     
-    // Logout
     document.getElementById('dropdownLogout').addEventListener('click', doLogout);
-    
-    // Playlist
     document.getElementById('dropdownPlaylist').addEventListener('click', openPlaylistModal);
     document.getElementById('playlistCancel').addEventListener('click', () => { if (playlistAudio) { playlistAudio.pause(); playlistAudio = null; playlistAudioId = null; } document.getElementById('playlistModal').classList.remove('active'); });
     
-    // Cart
     document.getElementById('cartBtn').addEventListener('click', openCartModal);
     document.getElementById('cartCancel').addEventListener('click', () => document.getElementById('cartModal').classList.remove('active'));
     document.getElementById('cartCheckout').addEventListener('click', () => {
       const cartBeats = getCartBeats();
-      if (cartBeats.length === 0) { showToast('Carrinho vazio', 'Adicione beats ao carrinho antes de finalizar.', 'error'); return; }
+      if (cartBeats.length === 0) { showToast('Carrinho vazio', 'Adicione beats ao carrinho.', 'error'); return; }
       const msg = encodeURIComponent(`Olá! Gostaria de comprar os seguintes beats:\n${cartBeats.map(b => `- ${b.title} (${b.artist}) - ${b.price}`).join('\n')}\nTotal: Kz ${getCartTotal().toFixed(2)}`);
       window.open(`https://wa.me/244926261011?text=${msg}`, '_blank');
       document.getElementById('cartModal').classList.remove('active');
     });
     
-    // Dashboard
     document.getElementById('dropdownDashboard').addEventListener('click', openDashboard);
     document.getElementById('dashboardCancel').addEventListener('click', () => document.getElementById('dashboardModal').classList.remove('active'));
     
-    // Profile
     document.getElementById('dropdownProfile').addEventListener('click', () => {
       const saved = JSON.parse(localStorage.getItem('bestBeatsProfile') || '{"name":"","bio":"","social":""}');
       document.getElementById('profName').value = saved.name || '';
@@ -2650,14 +2683,12 @@
       document.getElementById('profileModal').classList.remove('active');
     });
     
-    // About
     document.getElementById('dropdownAbout').addEventListener('click', () => {
       document.getElementById('aboutModal').classList.add('active');
       document.getElementById('mainDropdown').classList.remove('active');
     });
     document.getElementById('aboutCancel').addEventListener('click', () => document.getElementById('aboutModal').classList.remove('active'));
     
-    // Rating
     document.getElementById('ratingCancel').addEventListener('click', () => document.getElementById('ratingModal').classList.remove('active'));
     document.getElementById('ratingSubmit').addEventListener('click', async () => {
       const beatId = parseInt(document.getElementById('ratingBeatId').value);
@@ -2691,7 +2722,6 @@
       });
     });
     
-    // Search
     document.getElementById('searchInput').addEventListener('input', applyFilters);
     document.getElementById('filterGenre').addEventListener('change', applyFilters);
     document.getElementById('sortBy').addEventListener('change', applyFilters);
@@ -2704,16 +2734,13 @@
       document.getElementById('clearSearch').classList.toggle('visible', this.value.length > 0);
     });
     
-    // Logo
     document.getElementById('logoLink').addEventListener('click', (e) => {
       e.preventDefault();
       window.location.href = window.location.pathname;
     });
     
-    // Theme
     document.getElementById('themeToggle').addEventListener('click', toggleTheme);
     
-    // Modal close on overlay click
     document.querySelectorAll('.modal-overlay').forEach(modal => {
       modal.addEventListener('click', (e) => {
         if (e.target === modal) modal.classList.remove('active');
@@ -2721,36 +2748,7 @@
     });
 
     // ============================================================
-    // 21. CREATE RATINGS TABLE (se não existir)
-    // ============================================================
-    async function ensureRatingsTable() {
-      try {
-        // Tenta fazer uma consulta para verificar se a tabela existe
-        const { error } = await supabase.from('ratings').select('count', { count: 'exact', head: true });
-        if (error && error.message.includes('relation "ratings" does not exist')) {
-          // Tabela não existe - o usuário precisa criar manualmente
-          console.warn('A tabela "ratings" não existe. Execute o SQL no Supabase:');
-          console.log(`
-            CREATE TABLE ratings (
-              id BIGSERIAL PRIMARY KEY,
-              beat_id INTEGER NOT NULL REFERENCES beats(id) ON DELETE CASCADE,
-              rating INTEGER NOT NULL CHECK (rating >= 1 AND rating <= 5),
-              user_id TEXT,
-              created_at TIMESTAMPTZ DEFAULT NOW()
-            );
-            ALTER TABLE ratings ENABLE ROW LEVEL SECURITY;
-            CREATE POLICY "Enable read access for all users" ON ratings FOR SELECT USING (true);
-            CREATE POLICY "Enable insert for all users" ON ratings FOR INSERT WITH CHECK (true);
-          `);
-          showToast('Aviso', 'A tabela de avaliações não existe. Execute o SQL no Supabase.', 'info');
-        }
-      } catch (e) {
-        console.warn('Erro ao verificar tabela ratings:', e);
-      }
-    }
-
-    // ============================================================
-    // 22. INIT
+    // 21. INIT
     // ============================================================
     async function init() {
       loadTheme();
@@ -2758,10 +2756,7 @@
       await loadBeats();
       updateUI();
       initGlobalPlayer();
-      await ensureRatingsTable();
-      console.log('Best Beats v10.0 - Todas as funcionalidades implementadas!');
-      console.log('🔍 Pesquisa | 🏷️ Filtros | 📊 Dashboard | 🛒 Carrinho | ⭐ Avaliações');
-      console.log('🎧 Player Global | 📖 Página do Beat | 👤 Perfil do Produtor');
+      console.log('Best Beats v10.0 - Menu fixo, avaliações permanentes!');
       console.log('📱 WhatsApp: +244 926 261 011');
       console.log('📧 Email: agtbeatsxpalha@email.com');
     }
