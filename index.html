@@ -1686,7 +1686,7 @@
     }
 
     // ============================================================
-    // 10. CRUD
+    // 10. CRUD - CORRIGIDO
     // ============================================================
     async function loadBeats() {
       try {
@@ -1725,8 +1725,18 @@
       try {
         let coverUrl = beatData.cover || null;
         let audioUrl = beatData.audio || null;
-        if (coverFile) { const ts = Date.now(); coverUrl = await uploadFile(coverFile, 'covers', `beat-cover-${ts}`); }
-        if (audioFile) { const ts = Date.now(); audioUrl = await uploadFile(audioFile, 'audios', `beat-audio-${ts}`); }
+        
+        // Só faz upload se houver um arquivo novo
+        if (coverFile) {
+          const timestamp = Date.now();
+          coverUrl = await uploadFile(coverFile, 'covers', `beat-cover-${timestamp}`);
+        }
+        
+        if (audioFile) {
+          const timestamp = Date.now();
+          audioUrl = await uploadFile(audioFile, 'audios', `beat-audio-${timestamp}`);
+        }
+        
         const newBeat = {
           title: beatData.title,
           artist: beatData.artist,
@@ -1739,15 +1749,27 @@
           plays: beatData.plays || 0,
           user_id: currentUser?.id
         };
+        
         if (editingId) {
-          const { error } = await supabase.from('beats').update(newBeat).eq('id', editingId);
+          // Na edição, mantém os valores antigos se não houver novos arquivos
+          const { error } = await supabase
+            .from('beats')
+            .update(newBeat)
+            .eq('id', editingId);
+          
           if (error) throw error;
           showToast('Sucesso', 'O beat foi atualizado.', 'success');
         } else {
+          // Novo beat - áudio é obrigatório
+          if (!selectedAudioFile) {
+            showToast('Áudio obrigatório', 'Para lançar um novo beat, você precisa enviar um arquivo de áudio.', 'error');
+            return;
+          }
           const { error } = await supabase.from('beats').insert([newBeat]);
           if (error) throw error;
           showToast('Sucesso', 'Novo beat lançado!', 'success');
         }
+        
         await loadBeats();
         closeFormModal();
       } catch (error) {
@@ -1766,13 +1788,50 @@
       return urlData.publicUrl;
     }
 
+    // ============================================================
+    // deleteBeat CORRIGIDO - APAGA ARQUIVOS DO STORAGE
+    // ============================================================
     async function deleteBeat(id) {
       if (!confirm('Tem certeza que deseja excluir este beat?')) return;
+      
       try {
-        const { error } = await supabase.from('beats').delete().eq('id', id);
+        // Busca o beat para pegar as URLs dos arquivos
+        const { data: beat, error: fetchError } = await supabase
+          .from('beats')
+          .select('cover, audio')
+          .eq('id', id)
+          .single();
+        
+        if (fetchError) throw fetchError;
+        
+        // Apaga o registro da tabela
+        const { error } = await supabase
+          .from('beats')
+          .delete()
+          .eq('id', id);
+        
         if (error) throw error;
+        
+        // Apaga a imagem (cover) do Storage se existir
+        if (beat?.cover) {
+          const coverPath = beat.cover.split('/').pop();
+          if (coverPath) {
+            await supabase.storage.from('covers').remove([coverPath]);
+            console.log('🗑️ Imagem removida do Storage:', coverPath);
+          }
+        }
+        
+        // Apaga o áudio do Storage se existir
+        if (beat?.audio) {
+          const audioPath = beat.audio.split('/').pop();
+          if (audioPath) {
+            await supabase.storage.from('audios').remove([audioPath]);
+            console.log('🗑️ Áudio removido do Storage:', audioPath);
+          }
+        }
+        
         await loadBeats();
-        showToast('Sucesso', 'O beat foi excluído.', 'success');
+        showToast('Sucesso', 'O beat foi excluído permanentemente.', 'success');
       } catch (error) {
         console.error('Erro ao excluir:', error);
         showToast('Erro ao excluir', error.message || 'Não foi possível excluir.', 'error');
@@ -2421,18 +2480,36 @@
     
     document.getElementById('dropdownNewBeat').addEventListener('click', () => openFormModal(null));
     document.getElementById('formCancel').addEventListener('click', closeFormModal);
+    
+    // ============================================================
+    // beatForm.submit CORRIGIDO
+    // ============================================================
     document.getElementById('beatForm').addEventListener('submit', async (e) => {
       e.preventDefault();
+      
       const title = document.getElementById('fTitle').value.trim();
       const artist = document.getElementById('fArtist').value.trim();
       const genre = document.getElementById('fGenre').value.trim();
       const price = document.getElementById('fPrice').value.trim();
       const bpm = document.getElementById('fBpm').value.trim();
       const key = document.getElementById('fKey').value.trim();
-      if (!title || !artist || !genre || !price) { showToast('Campos obrigatórios', 'Preencha todos os campos marcados.', 'error'); return; }
-      if (!editingId && !selectedAudioFile) { showToast('Áudio obrigatório', 'Para lançar um novo beat, você precisa enviar um arquivo de áudio.', 'error'); return; }
-      await saveBeatToSupabase({ title, artist, genre, price, bpm, key, plays: 0 }, selectedCoverFile, selectedAudioFile);
+      
+      if (!title || !artist || !genre || !price) {
+        showToast('Campos obrigatórios', 'Preencha todos os campos marcados.', 'error');
+        return;
+      }
+      
+      // Verifica se é novo beat (editingId = null) e não tem áudio
+      if (!editingId && !selectedAudioFile) {
+        showToast('Áudio obrigatório', 'Para lançar um novo beat, você precisa enviar um arquivo de áudio.', 'error');
+        return;
+      }
+      
+      // Se for edição, permite salvar sem novo áudio (mantém o existente)
+      const beatData = { title, artist, genre, price, bpm, key, plays: 0 };
+      await saveBeatToSupabase(beatData, selectedCoverFile, selectedAudioFile);
     });
+    
     document.getElementById('fCoverFile').addEventListener('change', (e) => {
       const file = e.target.files[0];
       if (file) { selectedCoverFile = file; document.getElementById('coverStatus').textContent = `📷 ${file.name} (${(file.size/1024).toFixed(1)} KB)`; }
