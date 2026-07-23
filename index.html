@@ -37,6 +37,8 @@
       --radius: 40px;
       --radius-sm: 16px;
       --transition: 0.25s ease;
+      --header-height: 180px;
+      --toolbar-height: 70px;
     }
     
     [data-theme="light"] {
@@ -64,129 +66,42 @@
       padding: 2rem 1rem 6rem 1rem;
       position: relative;
       transition: background 0.3s ease;
+      padding-top: calc(var(--header-height) + var(--toolbar-height) + 2rem);
     }
     .app { max-width: 1100px; width: 100%; }
 
-    /* ----- TOAST ----- */
-    .toast-container {
+    /* ----- HEADER FIXO ----- */
+    .header-fixed {
       position: fixed;
-      top: 2rem;
-      right: 2rem;
-      z-index: 9999;
-      display: flex;
-      flex-direction: column;
-      gap: 0.8rem;
-      max-width: 420px;
-      width: 100%;
-      pointer-events: none;
-    }
-    .toast {
-      background: rgba(18, 18, 26, 0.92);
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      background: var(--bg-primary);
       backdrop-filter: blur(20px);
-      border: 1px solid var(--border-color);
-      border-radius: var(--radius-sm);
-      padding: 1.2rem 1.6rem;
-      box-shadow: var(--shadow);
-      display: flex;
-      align-items: flex-start;
-      gap: 1rem;
-      transform: translateX(120%);
-      animation: slideIn 0.4s ease forwards;
-      pointer-events: auto;
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border-color);
+      padding: 1rem 1.5rem 0.5rem 1.5rem;
+      transition: background 0.3s ease;
     }
-    .toast.removing { animation: slideOut 0.3s ease forwards; }
-    .toast-icon {
-      flex-shrink: 0;
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 0.9rem;
-      margin-top: 0.1rem;
-    }
-    .toast-icon.success { background: rgba(37, 211, 102, 0.15); color: #25D366; border: 1px solid rgba(37, 211, 102, 0.2); }
-    .toast-icon.error { background: rgba(255, 70, 70, 0.15); color: #ff6b6b; border: 1px solid rgba(255, 70, 70, 0.2); }
-    .toast-icon.info { background: var(--gold-glow); color: var(--gold); border: 1px solid var(--border-color); }
-    .toast-content { flex: 1; }
-    .toast-title { font-weight: 600; font-size: 0.9rem; color: var(--text-primary); margin-bottom: 0.2rem; }
-    .toast-message { font-weight: 300; font-size: 0.85rem; color: var(--text-secondary); line-height: 1.4; }
-    .toast-close { background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 1rem; padding: 0.2rem; transition: 0.2s; flex-shrink: 0; }
-    .toast-close:hover { color: var(--text-primary); }
-    @keyframes slideIn { to { transform: translateX(0); } }
-    @keyframes slideOut { to { transform: translateX(120%); opacity: 0; } }
-
-    /* ----- LOADING ----- */
-    .loading-wrapper {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 4rem 2rem;
-      gap: 2rem;
-    }
-    .loading-wave { display: flex; gap: 0.4rem; align-items: center; justify-content: center; }
-    .loading-wave span {
-      display: inline-block;
-      width: 12px;
-      height: 12px;
-      border-radius: 50%;
-      background: var(--gold);
-      animation: wave 1.2s ease-in-out infinite;
-    }
-    .loading-wave span:nth-child(1) { animation-delay: 0s; }
-    .loading-wave span:nth-child(2) { animation-delay: 0.15s; }
-    .loading-wave span:nth-child(3) { animation-delay: 0.3s; }
-    .loading-wave span:nth-child(4) { animation-delay: 0.45s; }
-    .loading-wave span:nth-child(5) { animation-delay: 0.6s; }
-    .loading-wave span:nth-child(6) { animation-delay: 0.75s; }
-    .loading-wave span:nth-child(7) { animation-delay: 0.9s; }
-    .loading-wave span:nth-child(8) { animation-delay: 1.05s; }
-    @keyframes wave {
-      0%, 40%, 100% { transform: scale(0.6); opacity: 0.3; background: var(--gold); }
-      20% { transform: scale(1.2); opacity: 1; background: var(--gold-dark); box-shadow: 0 0 20px var(--gold-glow); }
-    }
-    .loading-text {
-      font-size: 1rem;
-      font-weight: 300;
-      color: var(--text-secondary);
-      letter-spacing: 4px;
-      text-transform: uppercase;
-      animation: pulse 1.5s ease-in-out infinite;
-    }
-    @keyframes pulse { 0%, 100% { opacity: 0.6; } 50% { opacity: 1; } }
-    .loading-progress { width: 200px; height: 2px; background: rgba(255,255,255,0.05); border-radius: 10px; overflow: hidden; margin-top: 0.5rem; }
-    .loading-progress-bar {
-      height: 100%;
-      width: 0%;
-      background: linear-gradient(90deg, var(--gold), var(--gold-dark));
-      border-radius: 10px;
-      animation: progress 2s ease-in-out infinite;
-    }
-    @keyframes progress { 0% { width: 0%; } 50% { width: 70%; } 100% { width: 100%; } }
-
-    /* ----- HEADER ----- */
     .header {
       display: flex;
       flex-direction: column;
       align-items: center;
       text-align: center;
-      margin-bottom: 2rem;
     }
     .logo-wrapper {
       display: flex;
       align-items: center;
       gap: 0.75rem;
-      margin-bottom: 0.25rem;
       cursor: pointer;
       transition: opacity 0.2s;
       text-decoration: none;
     }
     .logo-wrapper:hover { opacity: 0.8; }
     .logo {
-      width: 80px;
-      height: 80px;
+      width: 60px;
+      height: 60px;
       border-radius: 50%;
       border: none;
       box-shadow: 0 0 30px var(--gold-glow);
@@ -194,7 +109,7 @@
       background: var(--bg-secondary);
     }
     .brand {
-      font-size: 2.4rem;
+      font-size: 2rem;
       font-weight: 800;
       letter-spacing: 2px;
       background: linear-gradient(135deg, var(--gold), var(--gold-dark));
@@ -204,50 +119,43 @@
     }
     .subtitle {
       font-weight: 300;
-      font-size: 1rem;
+      font-size: 0.8rem;
       letter-spacing: 4px;
       color: var(--text-secondary);
-      margin-top: 0.3rem;
+      margin-top: 0.1rem;
       display: inline-block;
     }
 
-    /* ----- THEME TOGGLE ----- */
-    .theme-toggle {
+    /* ----- ADMIN TOOLBAR FIXA ----- */
+    .admin-toolbar-fixed {
       position: fixed;
-      bottom: 80px;
-      right: 20px;
-      z-index: 100;
-      background: var(--bg-card);
-      backdrop-filter: blur(12px);
-      border: 1px solid var(--border-color);
-      color: var(--text-primary);
-      width: 44px;
-      height: 44px;
-      border-radius: 50%;
-      cursor: pointer;
-      transition: 0.2s;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.2rem;
-      box-shadow: var(--shadow);
+      top: calc(80px);
+      left: 0;
+      right: 0;
+      z-index: 99;
+      background: var(--bg-primary);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      padding: 0.5rem 1.5rem;
+      border-bottom: 1px solid var(--border-color);
+      transition: background 0.3s ease;
     }
-    .theme-toggle:hover { transform: scale(1.05); border-color: var(--gold); }
-
-    /* ----- ADMIN TOOLBAR ----- */
     .admin-toolbar {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 2rem;
       flex-wrap: wrap;
       gap: 0.5rem;
+      max-width: 1100px;
+      margin: 0 auto;
+      width: 100%;
     }
     .admin-toolbar-left {
       display: flex;
       align-items: center;
-      gap: 1rem;
+      gap: 0.8rem;
       flex-wrap: wrap;
+      flex: 1;
     }
     .admin-toolbar-right {
       display: flex;
@@ -265,19 +173,22 @@
       backdrop-filter: blur(8px);
       border: 1px solid var(--border-color);
       border-radius: 60px;
-      padding: 0.3rem 0.3rem 0.3rem 1.2rem;
+      padding: 0.2rem 0.2rem 0.2rem 1rem;
       transition: 0.2s;
+      flex: 1;
+      min-width: 140px;
     }
     .search-container:focus-within { border-color: var(--gold); }
-    .search-container i { color: var(--text-muted); font-size: 0.9rem; }
+    .search-container i { color: var(--text-muted); font-size: 0.8rem; }
     .search-container input {
       background: transparent;
       border: none;
       color: var(--text-primary);
       font-family: 'Inter', sans-serif;
-      font-size: 0.9rem;
-      padding: 0.4rem 0;
-      width: 180px;
+      font-size: 0.85rem;
+      padding: 0.3rem 0;
+      width: 100%;
+      min-width: 80px;
       outline: none;
     }
     .search-container input::placeholder { color: var(--text-muted); }
@@ -286,43 +197,28 @@
       border: none;
       color: var(--text-muted);
       cursor: pointer;
-      padding: 0.3rem 0.8rem;
-      font-size: 0.8rem;
+      padding: 0.2rem 0.6rem;
+      font-size: 0.7rem;
       display: none;
     }
     .search-container .clear-search.visible { display: block; }
 
-    .filter-select {
+    .filter-select, .sort-select {
       background: var(--bg-card);
       backdrop-filter: blur(8px);
       border: 1px solid var(--border-color);
       border-radius: 60px;
       color: var(--text-primary);
       font-family: 'Inter', sans-serif;
-      font-size: 0.85rem;
-      padding: 0.5rem 1.2rem;
+      font-size: 0.8rem;
+      padding: 0.3rem 1rem;
       cursor: pointer;
       outline: none;
       transition: 0.2s;
+      min-width: 100px;
     }
-    .filter-select:focus { border-color: var(--gold); }
-    .filter-select option { background: var(--bg-secondary); }
-
-    .sort-select {
-      background: var(--bg-card);
-      backdrop-filter: blur(8px);
-      border: 1px solid var(--border-color);
-      border-radius: 60px;
-      color: var(--text-primary);
-      font-family: 'Inter', sans-serif;
-      font-size: 0.85rem;
-      padding: 0.5rem 1.2rem;
-      cursor: pointer;
-      outline: none;
-      transition: 0.2s;
-    }
-    .sort-select:focus { border-color: var(--gold); }
-    .sort-select option { background: var(--bg-secondary); }
+    .filter-select:focus, .sort-select:focus { border-color: var(--gold); }
+    .filter-select option, .sort-select option { background: var(--bg-secondary); }
 
     /* ----- HAMBURGER MENU ----- */
     .hamburger-menu { position: relative; display: inline-block; }
@@ -331,26 +227,26 @@
       backdrop-filter: blur(8px);
       border: 1px solid var(--border-color);
       color: var(--text-primary);
-      padding: 0.7rem 1.2rem;
+      padding: 0.4rem 1rem;
       border-radius: 60px;
-      font-size: 1.1rem;
+      font-size: 1rem;
       cursor: pointer;
       transition: 0.2s;
       display: flex;
       align-items: center;
-      gap: 0.5rem;
+      gap: 0.4rem;
       font-family: 'Inter', sans-serif;
     }
     .hamburger-btn:hover { border-color: var(--gold); background: var(--gold-glow); }
     .hamburger-btn i { color: var(--gold); }
-    .hamburger-btn .btn-label { font-size: 0.85rem; font-weight: 400; }
+    .hamburger-btn .btn-label { font-size: 0.8rem; font-weight: 400; }
     .admin-avatar-small {
-      width: 28px;
-      height: 28px;
+      width: 24px;
+      height: 24px;
       border-radius: 50%;
       object-fit: cover;
       border: 2px solid var(--gold);
-      margin-right: 0.2rem;
+      margin-right: 0.1rem;
     }
     .hamburger-dropdown {
       position: absolute;
@@ -361,7 +257,7 @@
       border: 1px solid var(--border-color);
       border-radius: var(--radius-sm);
       padding: 0.5rem;
-      min-width: 220px;
+      min-width: 210px;
       display: none;
       box-shadow: var(--shadow);
       z-index: 100;
@@ -372,11 +268,11 @@
       display: flex;
       align-items: center;
       gap: 0.8rem;
-      padding: 0.6rem 1.2rem;
+      padding: 0.5rem 1.2rem;
       border-radius: 12px;
       color: var(--text-secondary);
       font-weight: 400;
-      font-size: 0.9rem;
+      font-size: 0.85rem;
       cursor: pointer;
       transition: 0.2s;
       border: none;
@@ -395,26 +291,154 @@
       display: flex;
       align-items: center;
       gap: 0.8rem;
-      padding: 0.6rem 1.2rem;
+      padding: 0.5rem 1.2rem;
       border-bottom: 1px solid var(--border-color);
       margin-bottom: 0.3rem;
     }
-    .user-info-display .admin-avatar { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid var(--gold); }
+    .user-info-display .admin-avatar { width: 36px; height: 36px; border-radius: 50%; object-fit: cover; border: 2px solid var(--gold); }
     .user-info-display .user-details { display: flex; flex-direction: column; }
-    .user-info-display .user-name { font-weight: 600; font-size: 0.9rem; color: var(--text-primary); }
-    .user-info-display .user-email { font-size: 0.75rem; color: var(--text-muted); }
+    .user-info-display .user-name { font-weight: 600; font-size: 0.85rem; color: var(--text-primary); }
+    .user-info-display .user-email { font-size: 0.7rem; color: var(--text-muted); }
+
+    /* ----- CART BUTTON ----- */
+    .cart-btn {
+      background: var(--bg-card);
+      backdrop-filter: blur(8px);
+      border: 1px solid var(--border-color);
+      color: var(--text-primary);
+      padding: 0.3rem 1rem;
+      border-radius: 60px;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-family: 'Inter', sans-serif;
+    }
+    .cart-btn:hover { border-color: var(--gold); background: var(--gold-glow); }
+    .cart-btn i { color: var(--gold); }
+    .cart-btn .cart-count {
+      background: var(--gold);
+      color: #0a0a0f;
+      font-size: 0.65rem;
+      font-weight: 700;
+      padding: 0.05rem 0.4rem;
+      border-radius: 30px;
+      min-width: 18px;
+      text-align: center;
+    }
+
+    /* ----- TOAST ----- */
+    .toast-container {
+      position: fixed;
+      top: calc(var(--header-height) + var(--toolbar-height) + 1rem);
+      right: 2rem;
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+      max-width: 420px;
+      width: 100%;
+      pointer-events: none;
+    }
+    .toast {
+      background: rgba(18, 18, 26, 0.92);
+      backdrop-filter: blur(20px);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      padding: 1rem 1.4rem;
+      box-shadow: var(--shadow);
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+      transform: translateX(120%);
+      animation: slideIn 0.4s ease forwards;
+      pointer-events: auto;
+    }
+    .toast.removing { animation: slideOut 0.3s ease forwards; }
+    .toast-icon {
+      flex-shrink: 0;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+      margin-top: 0.1rem;
+    }
+    .toast-icon.success { background: rgba(37, 211, 102, 0.15); color: #25D366; border: 1px solid rgba(37, 211, 102, 0.2); }
+    .toast-icon.error { background: rgba(255, 70, 70, 0.15); color: #ff6b6b; border: 1px solid rgba(255, 70, 70, 0.2); }
+    .toast-icon.info { background: var(--gold-glow); color: var(--gold); border: 1px solid var(--border-color); }
+    .toast-content { flex: 1; }
+    .toast-title { font-weight: 600; font-size: 0.85rem; color: var(--text-primary); margin-bottom: 0.1rem; }
+    .toast-message { font-weight: 300; font-size: 0.8rem; color: var(--text-secondary); line-height: 1.4; }
+    .toast-close { background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 0.9rem; padding: 0.2rem; transition: 0.2s; flex-shrink: 0; }
+    .toast-close:hover { color: var(--text-primary); }
+    @keyframes slideIn { to { transform: translateX(0); } }
+    @keyframes slideOut { to { transform: translateX(120%); opacity: 0; } }
+
+    /* ----- LOADING ----- */
+    .loading-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 3rem 2rem;
+      gap: 1.5rem;
+    }
+    .loading-wave { display: flex; gap: 0.3rem; align-items: center; justify-content: center; }
+    .loading-wave span {
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--gold);
+      animation: wave 1.2s ease-in-out infinite;
+    }
+    .loading-wave span:nth-child(1) { animation-delay: 0s; }
+    .loading-wave span:nth-child(2) { animation-delay: 0.15s; }
+    .loading-wave span:nth-child(3) { animation-delay: 0.3s; }
+    .loading-wave span:nth-child(4) { animation-delay: 0.45s; }
+    .loading-wave span:nth-child(5) { animation-delay: 0.6s; }
+    .loading-wave span:nth-child(6) { animation-delay: 0.75s; }
+    .loading-wave span:nth-child(7) { animation-delay: 0.9s; }
+    .loading-wave span:nth-child(8) { animation-delay: 1.05s; }
+    @keyframes wave {
+      0%, 40%, 100% { transform: scale(0.6); opacity: 0.3; background: var(--gold); }
+      20% { transform: scale(1.2); opacity: 1; background: var(--gold-dark); box-shadow: 0 0 20px var(--gold-glow); }
+    }
+    .loading-text {
+      font-size: 0.9rem;
+      font-weight: 300;
+      color: var(--text-secondary);
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      animation: pulse 1.5s ease-in-out infinite;
+    }
+    @keyframes pulse { 0%, 100% { opacity: 0.6; } 50% { opacity: 1; } }
+    .loading-progress { width: 150px; height: 2px; background: rgba(255,255,255,0.05); border-radius: 10px; overflow: hidden; }
+    .loading-progress-bar {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--gold), var(--gold-dark));
+      border-radius: 10px;
+      animation: progress 2s ease-in-out infinite;
+    }
+    @keyframes progress { 0% { width: 0%; } 50% { width: 70%; } 100% { width: 100%; } }
 
     /* ----- BEATS LIST ----- */
-    .beats-list { display: flex; flex-direction: column; gap: 2rem; margin-top: 0.5rem; }
+    .beats-list { display: flex; flex-direction: column; gap: 1.5rem; margin-top: 0.5rem; }
     .beat-card {
       background: var(--bg-card);
       backdrop-filter: blur(14px);
       border-radius: var(--radius);
       border: 1px solid var(--border-color);
-      padding: 1.5rem 2rem;
+      padding: 1.2rem 1.8rem;
       display: flex;
       align-items: center;
-      gap: 2rem;
+      gap: 1.5rem;
       box-shadow: var(--shadow);
       transition: var(--transition);
       flex-wrap: wrap;
@@ -423,26 +447,26 @@
     .beat-card:hover { border-color: var(--border-hover); box-shadow: 0 25px 50px rgba(0,0,0,0.8), 0 0 0 1px var(--border-hover); }
     .beat-card .popularity-badge {
       position: absolute;
-      top: 12px;
-      left: 12px;
+      top: 10px;
+      left: 10px;
       background: var(--gold-glow);
       color: var(--gold);
       border: 1px solid var(--border-color);
-      padding: 0.15rem 0.8rem;
+      padding: 0.1rem 0.6rem;
       border-radius: 30px;
-      font-size: 0.6rem;
+      font-size: 0.55rem;
       font-weight: 600;
       letter-spacing: 0.5px;
     }
     .card-edit-btn {
       position: absolute;
-      top: 12px;
-      right: 12px;
+      top: 10px;
+      right: 10px;
       background: rgba(255,255,255,0.04);
       border: 1px solid var(--border-color);
       color: var(--text-muted);
-      width: 32px;
-      height: 32px;
+      width: 28px;
+      height: 28px;
       border-radius: 50%;
       backdrop-filter: blur(4px);
       cursor: pointer;
@@ -450,17 +474,17 @@
       display: none;
       align-items: center;
       justify-content: center;
-      font-size: 0.8rem;
+      font-size: 0.7rem;
     }
     .card-edit-btn.visible { display: flex; }
     .card-edit-btn:hover { background: var(--gold-glow); color: var(--gold); border-color: var(--gold); }
 
     /* ----- PLAYER ----- */
     .player-wrapper {
-      flex: 0 0 200px;
-      width: 200px;
-      height: 200px;
-      border-radius: 24px;
+      flex: 0 0 160px;
+      width: 160px;
+      height: 160px;
+      border-radius: 20px;
       position: relative;
       overflow: hidden;
       background: var(--bg-secondary);
@@ -484,34 +508,34 @@
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      padding: 0.8rem;
+      padding: 0.6rem;
       color: white;
     }
     .player-artist {
-      font-size: 0.6rem;
+      font-size: 0.5rem;
       font-weight: 400;
       text-transform: uppercase;
       letter-spacing: 2px;
       color: #d4d4e0;
       background: rgba(0,0,0,0.3);
-      padding: 0.15rem 0.6rem;
+      padding: 0.1rem 0.5rem;
       border-radius: 30px;
       backdrop-filter: blur(4px);
-      margin-bottom: 0.2rem;
+      margin-bottom: 0.1rem;
     }
     .player-title {
       font-weight: 700;
-      font-size: 1.1rem;
+      font-size: 0.9rem;
       text-align: center;
       line-height: 1.2;
-      margin: 0.1rem 0 0.2rem;
+      margin: 0.1rem 0 0.1rem;
       text-shadow: 0 2px 8px rgba(0,0,0,0.6);
     }
     .player-controls {
       display: flex;
       align-items: center;
-      gap: 0.4rem;
-      margin-top: 0.2rem;
+      gap: 0.3rem;
+      margin-top: 0.1rem;
       flex-wrap: wrap;
       justify-content: center;
     }
@@ -519,10 +543,10 @@
       background: var(--gold);
       border: none;
       color: #0a0a0f;
-      width: 40px;
-      height: 40px;
+      width: 34px;
+      height: 34px;
       border-radius: 50%;
-      font-size: 1.2rem;
+      font-size: 1rem;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -535,10 +559,10 @@
       background: rgba(255,255,255,0.08);
       border: 1px solid rgba(255,255,255,0.15);
       color: #eee;
-      width: 30px;
-      height: 30px;
+      width: 26px;
+      height: 26px;
       border-radius: 50%;
-      font-size: 0.9rem;
+      font-size: 0.7rem;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -551,9 +575,9 @@
       background: rgba(255,255,255,0.04);
       border: 1px solid rgba(255,255,255,0.08);
       color: #d0d0dd;
-      padding: 0.15rem 0.6rem;
+      padding: 0.1rem 0.5rem;
       border-radius: 40px;
-      font-size: 0.65rem;
+      font-size: 0.55rem;
       font-weight: 400;
       backdrop-filter: blur(4px);
       cursor: pointer;
@@ -568,13 +592,13 @@
       width: 100%;
       display: flex;
       align-items: center;
-      gap: 0.4rem;
-      margin: 0.1rem 0 0.1rem;
-      padding: 0 0.2rem;
+      gap: 0.3rem;
+      margin: 0.05rem 0 0.05rem;
+      padding: 0 0.1rem;
     }
     .progress-bar {
       flex: 1;
-      height: 3px;
+      height: 2px;
       background: rgba(255,255,255,0.15);
       border-radius: 10px;
       appearance: none;
@@ -583,37 +607,37 @@
     }
     .progress-bar::-webkit-slider-thumb {
       -webkit-appearance: none;
-      width: 10px;
-      height: 10px;
+      width: 8px;
+      height: 8px;
       border-radius: 50%;
       background: var(--gold);
       cursor: pointer;
       box-shadow: 0 0 12px var(--gold-glow);
     }
-    .progress-bar::-moz-range-thumb { width: 10px; height: 10px; border-radius: 50%; background: var(--gold); cursor: pointer; border: none; }
-    .time-display { font-size: 0.55rem; font-weight: 300; color: #bfbfd0; min-width: 32px; }
-    .volume-wrap { display: flex; align-items: center; gap: 0.2rem; margin-top: 0.1rem; }
-    .volume-wrap i { font-size: 0.65rem; color: #b0b0c0; }
+    .progress-bar::-moz-range-thumb { width: 8px; height: 8px; border-radius: 50%; background: var(--gold); cursor: pointer; border: none; }
+    .time-display { font-size: 0.5rem; font-weight: 300; color: #bfbfd0; min-width: 28px; }
+    .volume-wrap { display: flex; align-items: center; gap: 0.15rem; margin-top: 0.05rem; }
+    .volume-wrap i { font-size: 0.55rem; color: #b0b0c0; }
     .volume-slider {
-      width: 36px;
-      height: 3px;
+      width: 30px;
+      height: 2px;
       background: rgba(255,255,255,0.15);
       border-radius: 10px;
       appearance: none;
       -webkit-appearance: none;
       outline: none;
     }
-    .volume-slider::-webkit-slider-thumb { width: 8px; height: 8px; border-radius: 50%; background: var(--gold); cursor: pointer; }
-    .volume-slider::-moz-range-thumb { width: 8px; height: 8px; border-radius: 50%; background: var(--gold); border: none; }
+    .volume-slider::-webkit-slider-thumb { width: 6px; height: 6px; border-radius: 50%; background: var(--gold); cursor: pointer; }
+    .volume-slider::-moz-range-thumb { width: 6px; height: 6px; border-radius: 50%; background: var(--gold); border: none; }
     .badge-genre {
       position: absolute;
-      top: 8px;
-      right: 10px;
+      top: 6px;
+      right: 8px;
       background: rgba(0,0,0,0.55);
       backdrop-filter: blur(6px);
-      padding: 0.1rem 0.6rem;
+      padding: 0.05rem 0.5rem;
       border-radius: 30px;
-      font-size: 0.5rem;
+      font-size: 0.45rem;
       font-weight: 600;
       letter-spacing: 0.5px;
       color: var(--gold);
@@ -626,108 +650,109 @@
       flex: 1;
       display: flex;
       flex-direction: column;
-      gap: 0.4rem;
-      min-width: 160px;
+      gap: 0.3rem;
+      min-width: 140px;
     }
     .beat-title {
       font-weight: 700;
-      font-size: 1.5rem;
+      font-size: 1.2rem;
       display: flex;
       align-items: center;
-      gap: 0.5rem;
+      gap: 0.4rem;
       flex-wrap: wrap;
     }
-    .beat-title i { color: var(--gold); font-size: 1rem; opacity: 0.7; }
+    .beat-title i { color: var(--gold); font-size: 0.9rem; opacity: 0.7; }
     .beat-meta {
       display: flex;
       align-items: center;
-      gap: 0.8rem;
+      gap: 0.6rem;
       flex-wrap: wrap;
-      margin: 0.1rem 0;
+      margin: 0.05rem 0;
     }
     .beat-genre {
-      font-size: 0.9rem;
+      font-size: 0.75rem;
       color: var(--text-secondary);
       font-weight: 300;
       letter-spacing: 0.2px;
       background: rgba(255,255,255,0.04);
-      padding: 0.1rem 0.8rem;
+      padding: 0.05rem 0.6rem;
       border-radius: 30px;
       border: 1px solid var(--border-color);
     }
-    .beat-genre i { color: var(--gold); margin-right: 4px; }
+    .beat-genre i { color: var(--gold); margin-right: 3px; }
     .beat-price {
       display: inline-block;
       background: var(--gold-glow);
       border: 1px solid var(--border-color);
       backdrop-filter: blur(4px);
-      padding: 0.15rem 1rem;
+      padding: 0.1rem 0.8rem;
       border-radius: 60px;
       font-weight: 600;
-      font-size: 1rem;
+      font-size: 0.85rem;
       color: var(--gold);
     }
-    .beat-price i { margin-right: 6px; color: var(--gold-dark); }
+    .beat-price i { margin-right: 4px; color: var(--gold-dark); }
     .beat-exclusivo {
-      font-size: 0.75rem;
+      font-size: 0.65rem;
       color: var(--text-muted);
       font-weight: 300;
       letter-spacing: 0.5px;
-      margin-top: -0.1rem;
+      margin-top: -0.05rem;
     }
-    .beat-exclusivo i { color: var(--gold); margin-right: 4px; font-size: 0.7rem; }
+    .beat-exclusivo i { color: var(--gold); margin-right: 3px; font-size: 0.6rem; }
     .beat-stats {
       display: flex;
-      gap: 1rem;
-      font-size: 0.75rem;
+      gap: 0.8rem;
+      font-size: 0.65rem;
       color: var(--text-muted);
+      flex-wrap: wrap;
     }
-    .beat-stats i { color: var(--gold); margin-right: 3px; }
+    .beat-stats i { color: var(--gold); margin-right: 2px; }
     .beat-rating {
       display: flex;
       align-items: center;
-      gap: 0.3rem;
+      gap: 0.2rem;
     }
     .beat-rating .stars {
       color: var(--gold);
-      font-size: 0.8rem;
+      font-size: 0.7rem;
       letter-spacing: 1px;
     }
     .beat-actions {
       display: flex;
-      gap: 0.8rem;
+      gap: 0.5rem;
       flex-wrap: wrap;
-      margin-top: 0.3rem;
+      margin-top: 0.2rem;
     }
     .btn-share {
       background: rgba(255,255,255,0.04);
       border: 1px solid var(--border-color);
       color: var(--text-secondary);
-      padding: 0.4rem 1.2rem;
+      padding: 0.25rem 1rem;
       border-radius: 60px;
-      font-size: 0.8rem;
+      font-size: 0.7rem;
       font-weight: 400;
       cursor: pointer;
       transition: 0.2s;
       display: inline-flex;
       align-items: center;
-      gap: 0.5rem;
+      gap: 0.4rem;
       font-family: 'Inter', sans-serif;
       backdrop-filter: blur(4px);
     }
     .btn-share:hover { background: var(--gold-glow); border-color: var(--gold); color: var(--gold); }
-    .btn-share i { font-size: 0.9rem; }
+    .btn-share i { font-size: 0.8rem; }
     .btn-whatsapp {
       background: linear-gradient(135deg, #25D366, #1ebe5c);
       border: 1px solid rgba(255,255,255,0.1);
       color: white;
-      padding: 0.4rem 1.6rem;
+      padding: 0.25rem 1.2rem;
       border-radius: 60px;
       font-weight: 600;
-      font-size: 0.9rem;
+      font-size: 0.75rem;
       display: inline-flex;
       align-items: center;
-      gap: 0.6rem;
+      gap: 0.4rem;
       box-shadow: 0 8px 20px rgba(37, 211, 102, 0.2);
       transition: 0.2s;
       cursor: pointer;
@@ -736,58 +761,29 @@
       backdrop-filter: blur(4px);
       font-family: 'Inter', sans-serif;
     }
-    .btn-whatsapp i { font-size: 1.1rem; }
+    .btn-whatsapp i { font-size: 0.9rem; }
     .btn-whatsapp:hover { transform: scale(1.02); box-shadow: 0 10px 28px rgba(37, 211, 102, 0.35); background: linear-gradient(135deg, #2fd16e, #1ebe5c); }
     .btn-cart {
       background: rgba(255,255,255,0.04);
       border: 1px solid var(--border-color);
       color: var(--text-secondary);
-      padding: 0.4rem 1.2rem;
+      padding: 0.25rem 1rem;
       border-radius: 60px;
-      font-size: 0.8rem;
+      font-size: 0.7rem;
       font-weight: 400;
       cursor: pointer;
       transition: 0.2s;
       display: inline-flex;
       align-items: center;
-      gap: 0.5rem;
+      gap: 0.4rem;
       font-family: 'Inter', sans-serif;
     }
     .btn-cart:hover { background: var(--gold-glow); border-color: var(--gold); color: var(--gold); }
     .btn-cart.in-cart { background: rgba(37, 211, 102, 0.1); color: #25D366; border-color: rgba(37, 211, 102, 0.15); }
 
-    /* ----- CART BUTTON ----- */
-    .cart-btn {
-      background: var(--bg-card);
-      backdrop-filter: blur(8px);
-      border: 1px solid var(--border-color);
-      color: var(--text-primary);
-      padding: 0.5rem 1.2rem;
-      border-radius: 60px;
-      font-size: 0.9rem;
-      cursor: pointer;
-      transition: 0.2s;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      font-family: 'Inter', sans-serif;
-    }
-    .cart-btn:hover { border-color: var(--gold); background: var(--gold-glow); }
-    .cart-btn i { color: var(--gold); }
-    .cart-btn .cart-count {
-      background: var(--gold);
-      color: #0a0a0f;
-      font-size: 0.7rem;
-      font-weight: 700;
-      padding: 0.1rem 0.5rem;
-      border-radius: 30px;
-      min-width: 20px;
-      text-align: center;
-    }
-
     /* ----- FOOTER ----- */
     .footer {
-      margin-top: 4rem;
+      margin-top: 3rem;
       padding: 1.5rem 0 0.5rem;
       border-top: 1px solid var(--border-color);
       display: flex;
@@ -796,10 +792,15 @@
       gap: 0.8rem;
       color: var(--text-muted);
       font-weight: 300;
-      font-size: 0.9rem;
+      font-size: 0.85rem;
     }
-    .social-icons { display: flex; gap: 1.6rem; }
-    .social-icons a { color: var(--text-muted); font-size: 1.2rem; transition: 0.2s; }
+    .social-icons { display: flex; gap: 1.5rem; }
+    .social-icons a {
+      color: var(--text-muted);
+      font-size: 1.2rem;
+      transition: 0.2s;
+      text-decoration: none;
+    }
     .social-icons a:hover { color: var(--gold); transform: translateY(-2px); }
 
     /* ----- MODALS ----- */
@@ -812,15 +813,16 @@
       z-index: 999;
       justify-content: center;
       align-items: center;
+      padding: 1rem;
     }
     .modal-overlay.active { display: flex; }
     .modal {
       background: var(--bg-secondary);
       border: 1px solid var(--border-color);
       border-radius: var(--radius);
-      padding: 2rem 2.5rem;
+      padding: 1.8rem 2rem;
       max-width: 520px;
-      width: 90%;
+      width: 100%;
       backdrop-filter: blur(20px);
       box-shadow: var(--shadow);
       color: var(--text-primary);
@@ -829,29 +831,30 @@
     }
     .modal h2 {
       font-weight: 700;
-      margin-bottom: 1.5rem;
+      margin-bottom: 1.2rem;
       color: var(--gold);
       display: flex;
       align-items: center;
       gap: 0.6rem;
+      font-size: 1.3rem;
     }
     .modal label {
       display: block;
       font-weight: 400;
-      font-size: 0.8rem;
+      font-size: 0.75rem;
       color: var(--text-secondary);
-      margin: 0.8rem 0 0.2rem;
+      margin: 0.6rem 0 0.15rem;
       letter-spacing: 0.5px;
     }
     .modal input, .modal select, .modal textarea {
       width: 100%;
-      padding: 0.6rem 1rem;
+      padding: 0.5rem 1rem;
       border-radius: 30px;
       border: 1px solid var(--border-color);
       background: rgba(255,255,255,0.04);
       color: var(--text-primary);
       font-family: 'Inter', sans-serif;
-      font-size: 0.95rem;
+      font-size: 0.9rem;
       outline: none;
       transition: 0.2s;
     }
@@ -859,9 +862,9 @@
       border-color: var(--gold);
       background: rgba(255,255,255,0.06);
     }
-    .modal textarea { border-radius: 16px; min-height: 80px; resize: vertical; }
+    .modal textarea { border-radius: 16px; min-height: 70px; resize: vertical; }
     .modal input[type="file"] {
-      padding: 0.4rem;
+      padding: 0.3rem;
       background: rgba(255,255,255,0.02);
       border: 1px dashed var(--border-color);
     }
@@ -869,23 +872,24 @@
       background: var(--gold-glow);
       border: 1px solid var(--border-color);
       color: var(--gold);
-      padding: 0.4rem 1rem;
+      padding: 0.3rem 0.8rem;
       border-radius: 30px;
       cursor: pointer;
       font-family: 'Inter', sans-serif;
+      font-size: 0.8rem;
     }
-    .modal .file-status { font-size: 0.75rem; color: var(--text-muted); margin-top: 0.2rem; }
+    .modal .file-status { font-size: 0.7rem; color: var(--text-muted); margin-top: 0.1rem; }
     .modal .modal-actions {
       display: flex;
-      gap: 0.8rem;
-      margin-top: 1.8rem;
+      gap: 0.6rem;
+      margin-top: 1.5rem;
       justify-content: flex-end;
     }
     .modal .modal-actions button {
-      padding: 0.6rem 1.8rem;
+      padding: 0.5rem 1.5rem;
       border-radius: 60px;
       font-weight: 600;
-      font-size: 0.9rem;
+      font-size: 0.85rem;
       cursor: pointer;
       transition: 0.2s;
       border: none;
@@ -907,20 +911,20 @@
       background: linear-gradient(135deg, var(--gold), var(--gold-dark));
       color: #0a0a0f;
       font-weight: 700;
-      padding: 0.6rem 1.8rem;
+      padding: 0.5rem 1.5rem;
       border-radius: 60px;
       border: none;
       cursor: pointer;
       transition: 0.2s;
       font-family: 'Inter', sans-serif;
-      font-size: 0.9rem;
+      font-size: 0.85rem;
     }
     .modal .btn-primary:hover { transform: scale(1.04); box-shadow: 0 0 30px var(--gold-glow); }
-    .modal .login-error { color: #ff6b6b; font-size: 0.8rem; margin-top: 0.5rem; display: none; }
+    .modal .login-error { color: #ff6b6b; font-size: 0.75rem; margin-top: 0.5rem; display: none; }
 
     /* ----- PLAYLIST MODAL ----- */
     #playlistContainer {
-      max-height: 450px;
+      max-height: 400px;
       overflow-y: auto;
       padding-right: 0.5rem;
     }
@@ -930,33 +934,34 @@
     .playlist-item {
       background: rgba(255,255,255,0.04);
       border-radius: var(--radius-sm);
-      padding: 1rem 1.5rem;
+      padding: 0.8rem 1.2rem;
       display: flex;
       align-items: center;
-      gap: 1.5rem;
+      gap: 1rem;
       border: 1px solid var(--border-color);
       transition: 0.2s;
-      margin-bottom: 0.8rem;
+      margin-bottom: 0.6rem;
+      flex-wrap: wrap;
     }
     .playlist-item:hover { border-color: var(--border-hover); background: rgba(255,255,255,0.06); }
-    .playlist-item .cover { width: 60px; height: 60px; border-radius: 12px; object-fit: cover; flex-shrink: 0; }
-    .playlist-item .info { flex: 1; }
-    .playlist-item .info .title { font-weight: 600; font-size: 1rem; }
-    .playlist-item .info .sub { font-size: 0.8rem; color: var(--text-secondary); }
-    .playlist-item .actions { display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap; }
+    .playlist-item .cover { width: 50px; height: 50px; border-radius: 10px; object-fit: cover; flex-shrink: 0; }
+    .playlist-item .info { flex: 1; min-width: 100px; }
+    .playlist-item .info .title { font-weight: 600; font-size: 0.9rem; }
+    .playlist-item .info .sub { font-size: 0.7rem; color: var(--text-secondary); }
+    .playlist-item .actions { display: flex; gap: 0.4rem; align-items: center; flex-wrap: wrap; }
     .playlist-item .btn-play-mini {
       background: var(--gold-glow);
       color: var(--gold);
       border: 1px solid var(--border-color);
-      width: 40px;
-      height: 40px;
+      width: 34px;
+      height: 34px;
       border-radius: 50%;
       cursor: pointer;
       transition: 0.2s;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 0.9rem;
+      font-size: 0.8rem;
     }
     .playlist-item .btn-play-mini:hover { background: rgba(247, 201, 72, 0.2); transform: scale(1.05); }
     .playlist-item .btn-play-mini.playing { background: var(--gold); color: #0a0a0f; }
@@ -964,47 +969,47 @@
       background: rgba(255, 70, 70, 0.08);
       color: #ff6b6b;
       border: 1px solid rgba(255, 70, 70, 0.08);
-      padding: 0.3rem 1rem;
+      padding: 0.2rem 0.8rem;
       border-radius: 30px;
       cursor: pointer;
       font-family: 'Inter', sans-serif;
-      font-size: 0.8rem;
+      font-size: 0.7rem;
       transition: 0.2s;
     }
     .playlist-item .btn-remove:hover { background: rgba(255, 70, 70, 0.15); border-color: rgba(255, 70, 70, 0.2); }
-    .playlist-item .progress-mini { width: 80px; height: 3px; background: rgba(255,255,255,0.1); border-radius: 10px; overflow: hidden; }
+    .playlist-item .progress-mini { width: 60px; height: 2px; background: rgba(255,255,255,0.1); border-radius: 10px; overflow: hidden; }
     .playlist-item .progress-mini-bar { height: 100%; width: 0%; background: var(--gold); border-radius: 10px; transition: width 0.1s; }
-    .playlist-item .time-mini { font-size: 0.7rem; color: var(--text-muted); min-width: 35px; }
-    .empty-playlist { text-align: center; padding: 3rem 0; color: var(--text-muted); }
-    .empty-playlist i { font-size: 3rem; display: block; opacity: 0.3; margin-bottom: 1rem; }
-    .empty-playlist p { font-weight: 300; }
-    .empty-playlist .sub { font-size: 0.8rem; margin-top: 0.3rem; }
+    .playlist-item .time-mini { font-size: 0.65rem; color: var(--text-muted); min-width: 30px; }
+    .empty-playlist { text-align: center; padding: 2rem 0; color: var(--text-muted); }
+    .empty-playlist i { font-size: 2.5rem; display: block; opacity: 0.3; margin-bottom: 0.8rem; }
+    .empty-playlist p { font-weight: 300; font-size: 0.9rem; }
+    .empty-playlist .sub { font-size: 0.75rem; margin-top: 0.2rem; }
 
     /* ----- CART MODAL ----- */
     .cart-item {
       display: flex;
       align-items: center;
-      gap: 1rem;
-      padding: 0.8rem 0;
+      gap: 0.8rem;
+      padding: 0.6rem 0;
       border-bottom: 1px solid var(--border-color);
     }
     .cart-item:last-child { border-bottom: none; }
     .cart-item .info { flex: 1; }
-    .cart-item .info .title { font-weight: 600; }
-    .cart-item .info .sub { font-size: 0.8rem; color: var(--text-secondary); }
+    .cart-item .info .title { font-weight: 600; font-size: 0.9rem; }
+    .cart-item .info .sub { font-size: 0.75rem; color: var(--text-secondary); }
     .cart-item .remove-item {
       background: none;
       border: none;
       color: #ff6b6b;
       cursor: pointer;
-      font-size: 1rem;
-      padding: 0.2rem 0.5rem;
+      font-size: 0.9rem;
+      padding: 0.2rem 0.4rem;
     }
     .cart-total {
       text-align: right;
-      padding-top: 1rem;
+      padding-top: 0.8rem;
       border-top: 2px solid var(--border-color);
-      font-size: 1.2rem;
+      font-size: 1.1rem;
       font-weight: 700;
     }
     .cart-total span { color: var(--gold); }
@@ -1019,9 +1024,9 @@
       backdrop-filter: blur(20px);
       border: 1px solid var(--border-color);
       border-radius: var(--radius-sm);
-      padding: 0.8rem 2rem;
+      padding: 0.6rem 1.5rem;
       color: var(--text-primary);
-      font-size: 0.9rem;
+      font-size: 0.85rem;
       z-index: 1000;
       opacity: 0;
       transition: opacity 0.3s ease, transform 0.3s ease;
@@ -1032,10 +1037,10 @@
     .share-toast i { color: var(--gold); margin-right: 0.5rem; }
 
     /* ----- PREVIEW ----- */
-    .preview-container { display: flex; gap: 1rem; margin: 0.5rem 0; flex-wrap: wrap; }
-    .preview-item { background: rgba(255,255,255,0.04); border-radius: 12px; padding: 0.5rem; border: 1px solid var(--border-color); display: flex; align-items: center; gap: 0.5rem; }
-    .preview-item img { width: 60px; height: 60px; object-fit: cover; border-radius: 8px; }
-    .preview-item i { font-size: 2rem; color: var(--gold); }
+    .preview-container { display: flex; gap: 0.8rem; margin: 0.3rem 0; flex-wrap: wrap; }
+    .preview-item { background: rgba(255,255,255,0.04); border-radius: 12px; padding: 0.4rem; border: 1px solid var(--border-color); display: flex; align-items: center; gap: 0.4rem; }
+    .preview-item img { width: 50px; height: 50px; object-fit: cover; border-radius: 8px; }
+    .preview-item i { font-size: 1.5rem; color: var(--gold); }
 
     .loading-spinner { display: none; }
 
@@ -1048,65 +1053,65 @@
       background: var(--bg-secondary);
       backdrop-filter: blur(20px);
       border-top: 1px solid var(--border-color);
-      padding: 0.8rem 2rem;
+      padding: 0.5rem 1.5rem;
       z-index: 998;
       display: none;
       align-items: center;
-      gap: 1.5rem;
+      gap: 1rem;
       box-shadow: 0 -10px 40px rgba(0,0,0,0.3);
     }
     .global-player.active { display: flex; }
     .global-player .gp-info {
       display: flex;
       align-items: center;
-      gap: 0.8rem;
-      min-width: 150px;
+      gap: 0.6rem;
+      min-width: 120px;
     }
     .global-player .gp-info img {
-      width: 40px;
-      height: 40px;
-      border-radius: 8px;
+      width: 32px;
+      height: 32px;
+      border-radius: 6px;
       object-fit: cover;
     }
-    .global-player .gp-info .gp-title { font-weight: 600; font-size: 0.9rem; }
-    .global-player .gp-info .gp-artist { font-size: 0.75rem; color: var(--text-muted); }
+    .global-player .gp-info .gp-title { font-weight: 600; font-size: 0.8rem; }
+    .global-player .gp-info .gp-artist { font-size: 0.65rem; color: var(--text-muted); }
     .global-player .gp-controls {
       display: flex;
       align-items: center;
-      gap: 0.8rem;
+      gap: 0.5rem;
     }
     .global-player .gp-controls button {
       background: none;
       border: none;
       color: var(--text-primary);
-      font-size: 1.2rem;
+      font-size: 1rem;
       cursor: pointer;
       transition: 0.2s;
-      padding: 0.2rem 0.4rem;
+      padding: 0.15rem 0.3rem;
     }
     .global-player .gp-controls button:hover { color: var(--gold); }
     .global-player .gp-controls .gp-play {
       background: var(--gold);
       color: #0a0a0f;
-      width: 36px;
-      height: 36px;
+      width: 32px;
+      height: 32px;
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 0.9rem;
+      font-size: 0.8rem;
     }
     .global-player .gp-controls .gp-play:hover { background: var(--gold-dark); transform: scale(1.05); }
     .global-player .gp-progress {
       flex: 1;
       display: flex;
       align-items: center;
-      gap: 0.8rem;
-      min-width: 100px;
+      gap: 0.5rem;
+      min-width: 80px;
     }
     .global-player .gp-progress .gp-bar {
       flex: 1;
-      height: 3px;
+      height: 2px;
       background: rgba(255,255,255,0.1);
       border-radius: 10px;
       cursor: pointer;
@@ -1120,57 +1125,180 @@
       transition: width 0.1s;
     }
     .global-player .gp-progress .gp-time {
-      font-size: 0.7rem;
+      font-size: 0.65rem;
       color: var(--text-muted);
-      min-width: 70px;
+      min-width: 60px;
     }
     .global-player .gp-close {
       background: none;
       border: none;
       color: var(--text-muted);
       cursor: pointer;
-      font-size: 1rem;
-      padding: 0.2rem 0.5rem;
+      font-size: 0.9rem;
+      padding: 0.15rem 0.4rem;
       transition: 0.2s;
     }
     .global-player .gp-close:hover { color: #ff6b6b; }
 
+    /* ----- THEME TOGGLE ----- */
+    .theme-toggle {
+      position: fixed;
+      bottom: 80px;
+      right: 16px;
+      z-index: 100;
+      background: var(--bg-card);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--border-color);
+      color: var(--text-primary);
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      cursor: pointer;
+      transition: 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      box-shadow: var(--shadow);
+    }
+    .theme-toggle:hover { transform: scale(1.05); border-color: var(--gold); }
+
     /* ----- RESPONSIVE ----- */
-    @media (max-width: 750px) {
-      .beat-card { flex-direction: column; align-items: center; text-align: center; padding: 1.5rem; }
-      .player-wrapper { flex: 0 0 180px; width: 180px; height: 180px; }
+    @media (max-width: 850px) {
+      body { padding-top: calc(var(--header-height) + 80px + 1rem); }
+      .header-fixed { padding: 0.5rem 1rem 0.3rem 1rem; }
+      .admin-toolbar-fixed { top: 65px; padding: 0.3rem 1rem; }
+      .admin-toolbar { flex-direction: column; align-items: stretch; gap: 0.3rem; }
+      .admin-toolbar-left { flex-wrap: wrap; }
+      .admin-toolbar-right { justify-content: center; }
+      .search-container { min-width: 100px; }
+      .beat-card { flex-direction: column; align-items: center; text-align: center; padding: 1.2rem; }
+      .player-wrapper { flex: 0 0 150px; width: 150px; height: 150px; }
       .beat-info { align-items: center; width: 100%; }
       .beat-meta { justify-content: center; }
       .beat-actions { justify-content: center; }
-      .admin-toolbar { flex-direction: column; align-items: stretch; }
-      .admin-toolbar-left { justify-content: center; flex-wrap: wrap; }
-      .admin-toolbar-right { justify-content: center; }
-      .search-container { width: 100%; }
-      .search-container input { width: 100%; }
-      .modal { padding: 1.5rem; }
-      .toast-container { right: 1rem; left: 1rem; max-width: none; }
-      .hamburger-dropdown { right: -10px; min-width: 200px; }
-      .playlist-item { flex-wrap: wrap; justify-content: center; text-align: center; }
+      .modal { padding: 1.2rem 1.5rem; }
+      .toast-container { right: 1rem; left: 1rem; max-width: none; top: calc(var(--header-height) + 80px + 0.5rem); }
+      .hamburger-dropdown { right: -10px; min-width: 180px; }
+      .playlist-item { flex-direction: column; text-align: center; }
       .playlist-item .info { width: 100%; }
-      .playlist-item .actions { flex-wrap: wrap; justify-content: center; }
-      .global-player { flex-wrap: wrap; padding: 0.8rem 1rem; gap: 0.8rem; }
-      .global-player .gp-info { min-width: 100px; }
+      .playlist-item .actions { justify-content: center; }
+      .global-player { flex-wrap: wrap; padding: 0.5rem 1rem; gap: 0.5rem; }
+      .global-player .gp-info { min-width: 80px; }
       .global-player .gp-progress { min-width: 50px; }
-      .theme-toggle { bottom: 100px; right: 12px; width: 38px; height: 38px; font-size: 1rem; }
+      .theme-toggle { bottom: 80px; right: 12px; width: 34px; height: 34px; font-size: 0.9rem; }
+      .filter-select, .sort-select { min-width: 70px; font-size: 0.7rem; padding: 0.2rem 0.6rem; }
     }
     @media (max-width: 480px) {
-      .brand { font-size: 1.8rem; }
-      .player-wrapper { flex: 0 0 150px; width: 150px; height: 150px; }
+      body { padding-top: calc(var(--header-height) + 90px + 1rem); }
+      .brand { font-size: 1.4rem; }
+      .logo { width: 44px; height: 44px; }
+      .player-wrapper { flex: 0 0 120px; width: 120px; height: 120px; }
       .hamburger-btn .btn-label { display: none; }
-      .logo { width: 60px; height: 60px; }
-      .global-player .gp-info img { width: 30px; height: 30px; }
-      .global-player .gp-info .gp-title { font-size: 0.8rem; }
-      .global-player .gp-controls button { font-size: 1rem; }
-      .global-player .gp-controls .gp-play { width: 30px; height: 30px; font-size: 0.8rem; }
+      .global-player .gp-info img { width: 24px; height: 24px; }
+      .global-player .gp-info .gp-title { font-size: 0.7rem; }
+      .global-player .gp-controls button { font-size: 0.8rem; }
+      .global-player .gp-controls .gp-play { width: 28px; height: 28px; font-size: 0.7rem; }
+      .search-container input { font-size: 0.75rem; min-width: 60px; }
+      .filter-select, .sort-select { font-size: 0.65rem; padding: 0.15rem 0.5rem; min-width: 60px; }
+      .toast-container { top: calc(var(--header-height) + 90px + 0.5rem); }
     }
   </style>
 </head>
 <body>
+
+<!-- HEADER FIXO -->
+<div class="header-fixed">
+  <header class="header">
+    <a href="?" class="logo-wrapper" id="logoLink">
+      <img src="logo.png" alt="Best Beats" class="logo">
+      <span class="brand">Best Beats</span>
+    </a>
+    <div class="subtitle">ouça e compre</div>
+  </header>
+</div>
+
+<!-- ADMIN TOOLBAR FIXA -->
+<div class="admin-toolbar-fixed">
+  <div class="admin-toolbar">
+    <div class="admin-toolbar-left">
+      <div class="search-container">
+        <i class="fas fa-search"></i>
+        <input type="text" id="searchInput" placeholder="Buscar beat ou artista...">
+        <button class="clear-search" id="clearSearch"><i class="fas fa-times"></i></button>
+      </div>
+      <select class="filter-select" id="filterGenre">
+        <option value="all">Todos os gêneros</option>
+      </select>
+      <select class="sort-select" id="sortBy">
+        <option value="recent">Mais recentes</option>
+        <option value="popular">Mais populares</option>
+        <option value="price-low">Menor preço</option>
+        <option value="price-high">Maior preço</option>
+        <option value="rating">Melhor avaliação</option>
+      </select>
+    </div>
+    <div class="admin-toolbar-right">
+      <button class="cart-btn" id="cartBtn">
+        <i class="fas fa-shopping-cart"></i>
+        <span class="cart-count" id="cartCount">0</span>
+      </button>
+      <div class="hamburger-menu">
+        <button class="hamburger-btn" id="menuBtn">
+          <span id="avatarContainer"></span>
+          <i class="fas fa-bars"></i>
+          <span class="btn-label" id="menuLabel">Menu</span>
+        </button>
+        <div class="hamburger-dropdown" id="mainDropdown">
+          <div class="user-info-display" id="userInfoDisplay" style="display:none;">
+            <img src="eu.jpg" alt="Admin" class="admin-avatar" id="adminAvatar">
+            <div class="user-details">
+              <span class="user-name" id="userNameDisplay">Administrador</span>
+              <span class="user-email" id="userEmailDisplay">usuario@email.com</span>
+            </div>
+          </div>
+          <div class="dropdown-divider" id="dividerAfterUser" style="display:none;"></div>
+          
+          <button class="dropdown-item" id="dropdownLogin" style="display:flex;">
+            <i class="fas fa-sign-in-alt"></i> Admin
+          </button>
+          
+          <button class="dropdown-item" id="dropdownNewBeat" style="display:none;">
+            <i class="fas fa-plus"></i> Lançar Beat
+          </button>
+          <button class="dropdown-item" id="dropdownToggleEdit" style="display:none;">
+            <i class="fas fa-edit"></i> Editar
+          </button>
+          <button class="dropdown-item" id="dropdownDashboard" style="display:none;">
+            <i class="fas fa-chart-bar"></i> Dashboard
+          </button>
+          
+          <button class="dropdown-item" id="dropdownPlaylist">
+            <i class="fas fa-music"></i> Minha Playlist
+            <span id="playlistCount" style="background:rgba(247,201,72,0.1);color:#f7c948;font-size:0.65rem;padding:0.05rem 0.5rem;border-radius:30px;margin-left:auto;">0</span>
+          </button>
+          
+          <button class="dropdown-item" id="dropdownProfile">
+            <i class="fas fa-user"></i> Perfil do Produtor
+          </button>
+          
+          <button class="dropdown-item" id="dropdownAbout">
+            <i class="fas fa-info-circle"></i> Sobre & Contato
+          </button>
+          
+          <div class="dropdown-divider" id="dividerBeforeLogout" style="display:none;"></div>
+          <button class="dropdown-item danger" id="dropdownLogout" style="display:none;">
+            <i class="fas fa-sign-out-alt"></i> Sair
+          </button>
+          
+          <div style="padding: 0.4rem 1.2rem; font-size: 0.6rem; color: var(--text-muted); border-top: 1px solid var(--border-color); margin-top: 0.2rem;">
+            Best Beats v10.0
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
 <!-- TOAST -->
 <div class="toast-container" id="toastContainer"></div>
@@ -1210,100 +1338,6 @@
 
 <div class="app">
 
-  <!-- HEADER -->
-  <header class="header">
-    <a href="?" class="logo-wrapper" id="logoLink">
-      <img src="logo.png" alt="Best Beats" class="logo">
-      <span class="brand">Best Beats</span>
-    </a>
-    <div class="subtitle">ouça e compre</div>
-  </header>
-
-  <!-- ADMIN TOOLBAR -->
-  <div class="admin-toolbar">
-    <div class="admin-toolbar-left">
-      <!-- Search -->
-      <div class="search-container">
-        <i class="fas fa-search"></i>
-        <input type="text" id="searchInput" placeholder="Buscar beat ou artista...">
-        <button class="clear-search" id="clearSearch"><i class="fas fa-times"></i></button>
-      </div>
-      <!-- Filter -->
-      <select class="filter-select" id="filterGenre">
-        <option value="all">Todos os gêneros</option>
-      </select>
-      <!-- Sort -->
-      <select class="sort-select" id="sortBy">
-        <option value="recent">Mais recentes</option>
-        <option value="popular">Mais populares</option>
-        <option value="price-low">Menor preço</option>
-        <option value="price-high">Maior preço</option>
-        <option value="rating">Melhor avaliação</option>
-      </select>
-    </div>
-    <div class="admin-toolbar-right">
-      <!-- Cart -->
-      <button class="cart-btn" id="cartBtn">
-        <i class="fas fa-shopping-cart"></i>
-        <span class="cart-count" id="cartCount">0</span>
-      </button>
-      <!-- Menu -->
-      <div class="hamburger-menu">
-        <button class="hamburger-btn" id="menuBtn">
-          <span id="avatarContainer"></span>
-          <i class="fas fa-bars"></i>
-          <span class="btn-label" id="menuLabel">Menu</span>
-        </button>
-        <div class="hamburger-dropdown" id="mainDropdown">
-          <div class="user-info-display" id="userInfoDisplay" style="display:none;">
-            <img src="eu.jpg" alt="Admin" class="admin-avatar" id="adminAvatar">
-            <div class="user-details">
-              <span class="user-name" id="userNameDisplay">Administrador</span>
-              <span class="user-email" id="userEmailDisplay">usuario@email.com</span>
-            </div>
-          </div>
-          <div class="dropdown-divider" id="dividerAfterUser" style="display:none;"></div>
-          
-          <button class="dropdown-item" id="dropdownLogin" style="display:flex;">
-            <i class="fas fa-sign-in-alt"></i> Admin
-          </button>
-          
-          <button class="dropdown-item" id="dropdownNewBeat" style="display:none;">
-            <i class="fas fa-plus"></i> Lançar Beat
-          </button>
-          <button class="dropdown-item" id="dropdownToggleEdit" style="display:none;">
-            <i class="fas fa-edit"></i> Editar
-          </button>
-          <button class="dropdown-item" id="dropdownDashboard" style="display:none;">
-            <i class="fas fa-chart-bar"></i> Dashboard
-          </button>
-          
-          <button class="dropdown-item" id="dropdownPlaylist">
-            <i class="fas fa-music"></i> Minha Playlist
-            <span id="playlistCount" style="background:rgba(247,201,72,0.1);color:#f7c948;font-size:0.7rem;padding:0.1rem 0.6rem;border-radius:30px;margin-left:auto;">0</span>
-          </button>
-          
-          <button class="dropdown-item" id="dropdownProfile">
-            <i class="fas fa-user"></i> Perfil do Produtor
-          </button>
-          
-          <button class="dropdown-item" id="dropdownAbout">
-            <i class="fas fa-info-circle"></i> Sobre & Contato
-          </button>
-          
-          <div class="dropdown-divider" id="dividerBeforeLogout" style="display:none;"></div>
-          <button class="dropdown-item danger" id="dropdownLogout" style="display:none;">
-            <i class="fas fa-sign-out-alt"></i> Sair
-          </button>
-          
-          <div style="padding: 0.6rem 1.2rem; font-size: 0.65rem; color: var(--text-muted); border-top: 1px solid var(--border-color); margin-top: 0.2rem;">
-            Best Beats v10.0
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
   <!-- LOADING -->
   <div id="loading" class="loading-wrapper">
     <div class="loading-wave">
@@ -1322,10 +1356,10 @@
   <!-- FOOTER -->
   <footer class="footer">
     <div class="social-icons">
-      <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
-      <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
-      <a href="#" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
-      <a href="#" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+      <a href="https://www.youtube.com/channel/UCZHpXbGkLKXgQxMROaWzR5w" target="_blank" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+      <a href="https://www.instagram.com/agostinhoagt/" target="_blank" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+      <a href="https://www.facebook.com/profile.php?id=100080875782151" target="_blank" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+      <a href="https://wa.me/244926261011" target="_blank" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
     </div>
     <div>© 2026 Best Beats · todos os direitos reservados</div>
   </footer>
@@ -1337,11 +1371,11 @@
     <h2><i class="fas fa-lock"></i> Administrador</h2>
     <form id="loginForm">
       <label for="loginEmail">Email</label>
-      <input type="email" id="loginEmail" placeholder="seu@email.com" required>
+      <input type="email" id="loginEmail" placeholder="agtbeatsxpalha@email.com" required>
       <label for="loginPass">Senha</label>
       <input type="password" id="loginPass" placeholder="••••••••" required>
       <div class="login-error" id="loginError">Email ou senha inválidos.</div>
-      <div class="modal-actions" style="justify-content: center; flex-direction: column; gap: 0.8rem;">
+      <div class="modal-actions" style="justify-content: center; flex-direction: column; gap: 0.6rem;">
         <button type="submit" class="btn-primary" style="width:100%;"><i class="fas fa-sign-in-alt"></i> Entrar</button>
         <button type="button" class="btn-cancel" id="loginCancel" style="width:100%;">Cancelar</button>
       </div>
@@ -1402,8 +1436,8 @@
   <div class="modal" style="max-width: 600px;">
     <h2><i class="fas fa-shopping-cart"></i> Meu Carrinho</h2>
     <div id="cartContainer"></div>
-    <div class="empty-cart" id="emptyCart" style="text-align:center;padding:2rem 0;color:var(--text-muted);">
-      <i class="fas fa-shopping-bag" style="font-size:2rem;display:block;opacity:0.3;margin-bottom:1rem;"></i>
+    <div class="empty-cart" id="emptyCart" style="text-align:center;padding:1.5rem 0;color:var(--text-muted);">
+      <i class="fas fa-shopping-bag" style="font-size:2rem;display:block;opacity:0.3;margin-bottom:0.8rem;"></i>
       <p>Seu carrinho está vazio</p>
     </div>
     <div class="cart-total" id="cartTotal" style="display:none;">
@@ -1422,26 +1456,26 @@
 <div class="modal-overlay" id="dashboardModal">
   <div class="modal" style="max-width: 600px;">
     <h2><i class="fas fa-chart-bar"></i> Dashboard</h2>
-    <div id="dashboardContent" style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
-      <div style="background:var(--bg-card);border-radius:var(--radius-sm);padding:1.5rem;text-align:center;border:1px solid var(--border-color);">
-        <div style="font-size:2rem;font-weight:800;color:var(--gold);" id="totalBeats">0</div>
-        <div style="font-size:0.8rem;color:var(--text-muted);">Total de Beats</div>
+    <div id="dashboardContent" style="display:grid;grid-template-columns:1fr 1fr;gap:0.8rem;">
+      <div style="background:var(--bg-card);border-radius:var(--radius-sm);padding:1.2rem;text-align:center;border:1px solid var(--border-color);">
+        <div style="font-size:1.8rem;font-weight:800;color:var(--gold);" id="totalBeats">0</div>
+        <div style="font-size:0.75rem;color:var(--text-muted);">Total de Beats</div>
       </div>
-      <div style="background:var(--bg-card);border-radius:var(--radius-sm);padding:1.5rem;text-align:center;border:1px solid var(--border-color);">
-        <div style="font-size:2rem;font-weight:800;color:var(--gold);" id="totalPlays">0</div>
-        <div style="font-size:0.8rem;color:var(--text-muted);">Total de Plays</div>
+      <div style="background:var(--bg-card);border-radius:var(--radius-sm);padding:1.2rem;text-align:center;border:1px solid var(--border-color);">
+        <div style="font-size:1.8rem;font-weight:800;color:var(--gold);" id="totalPlays">0</div>
+        <div style="font-size:0.75rem;color:var(--text-muted);">Total de Plays</div>
       </div>
-      <div style="background:var(--bg-card);border-radius:var(--radius-sm);padding:1.5rem;text-align:center;border:1px solid var(--border-color);">
-        <div style="font-size:2rem;font-weight:800;color:var(--gold);" id="avgRating">0.0</div>
-        <div style="font-size:0.8rem;color:var(--text-muted);">Avaliação Média</div>
+      <div style="background:var(--bg-card);border-radius:var(--radius-sm);padding:1.2rem;text-align:center;border:1px solid var(--border-color);">
+        <div style="font-size:1.8rem;font-weight:800;color:var(--gold);" id="avgRating">0.0</div>
+        <div style="font-size:0.75rem;color:var(--text-muted);">Avaliação Média</div>
       </div>
-      <div style="background:var(--bg-card);border-radius:var(--radius-sm);padding:1.5rem;text-align:center;border:1px solid var(--border-color);">
-        <div style="font-size:2rem;font-weight:800;color:var(--gold);" id="topGenre">-</div>
-        <div style="font-size:0.8rem;color:var(--text-muted);">Gênero Mais Popular</div>
+      <div style="background:var(--bg-card);border-radius:var(--radius-sm);padding:1.2rem;text-align:center;border:1px solid var(--border-color);">
+        <div style="font-size:1.8rem;font-weight:800;color:var(--gold);" id="topGenre">-</div>
+        <div style="font-size:0.75rem;color:var(--text-muted);">Gênero Mais Popular</div>
       </div>
     </div>
-    <div style="margin-top:1.5rem;background:var(--bg-card);border-radius:var(--radius-sm);padding:1.2rem;border:1px solid var(--border-color);">
-      <div style="font-weight:600;margin-bottom:0.5rem;">Beats Mais Ouvidos</div>
+    <div style="margin-top:1rem;background:var(--bg-card);border-radius:var(--radius-sm);padding:1rem;border:1px solid var(--border-color);">
+      <div style="font-weight:600;margin-bottom:0.3rem;font-size:0.9rem;">Beats Mais Ouvidos</div>
       <div id="topBeats"></div>
     </div>
     <div class="modal-actions">
@@ -1473,13 +1507,20 @@
 <div class="modal-overlay" id="aboutModal">
   <div class="modal" style="max-width: 500px;">
     <h2><i class="fas fa-info-circle"></i> Sobre</h2>
-    <div style="color:var(--text-secondary);line-height:1.8;">
-      <p><strong style="color:var(--gold);">Best Beats</strong> é uma plataforma dedicada a produtores musicais que desejam vender seus beats de forma simples e direta.</p>
-      <p style="margin-top:1rem;">Compre beats exclusivos diretamente via WhatsApp e impulsione sua carreira musical.</p>
-      <hr style="border-color:var(--border-color);margin:1rem 0;">
-      <p><i class="fas fa-envelope" style="color:var(--gold);width:20px;"></i> contato@bestbeats.com</p>
-      <p><i class="fas fa-phone" style="color:var(--gold);width:20px;"></i> +244 900 000 000</p>
+    <div style="color:var(--text-secondary);line-height:1.8;font-size:0.9rem;">
+      <p><strong style="color:var(--gold);">Best Beats</strong> é uma plataforma dedicada a cantores, produtores musicais e artistas que buscam beats exclusivos e de alta qualidade para impulsionar suas carreiras e projetos musicais.</p>
+      <p style="margin-top:0.8rem;">Nossa missão é conectar criadores a instrumentais únicos, oferecendo uma experiência simples, rápida e segura para adquirir beats prontos para uso profissional.</p>
+      <p style="margin-top:0.8rem;">Compre beats exclusivos diretamente via WhatsApp e impulsione sua carreira musical com sons que vão destacar seu trabalho.</p>
+      <hr style="border-color:var(--border-color);margin:0.8rem 0;">
+      <p><i class="fas fa-envelope" style="color:var(--gold);width:20px;"></i> agtbeatsxpalha@email.com</p>
+      <p><i class="fas fa-phone" style="color:var(--gold);width:20px;"></i> +244 926 261 011</p>
       <p><i class="fas fa-map-marker-alt" style="color:var(--gold);width:20px;"></i> Luanda, Angola</p>
+      <div style="margin-top:0.8rem;display:flex;gap:1rem;justify-content:center;">
+        <a href="https://www.youtube.com/channel/UCZHpXbGkLKXgQxMROaWzR5w" target="_blank" style="color:var(--text-muted);font-size:1.2rem;transition:0.2s;"><i class="fab fa-youtube"></i></a>
+        <a href="https://www.instagram.com/agostinhoagt/" target="_blank" style="color:var(--text-muted);font-size:1.2rem;transition:0.2s;"><i class="fab fa-instagram"></i></a>
+        <a href="https://www.facebook.com/profile.php?id=100080875782151" target="_blank" style="color:var(--text-muted);font-size:1.2rem;transition:0.2s;"><i class="fab fa-facebook-f"></i></a>
+        <a href="https://wa.me/244926261011" target="_blank" style="color:var(--text-muted);font-size:1.2rem;transition:0.2s;"><i class="fab fa-whatsapp"></i></a>
+      </div>
     </div>
     <div class="modal-actions">
       <button type="button" class="btn-cancel" id="aboutCancel">Fechar</button>
@@ -1489,10 +1530,10 @@
 
 <!-- MODAL RATING -->
 <div class="modal-overlay" id="ratingModal">
-  <div class="modal" style="max-width: 400px;">
+  <div class="modal" style="max-width: 380px;">
     <h2><i class="fas fa-star"></i> Avaliar Beat</h2>
-    <p style="color:var(--text-secondary);margin-bottom:1rem;">Como você avalia este beat?</p>
-    <div style="display:flex;gap:0.5rem;font-size:2rem;justify-content:center;margin-bottom:1.5rem;" id="ratingStars">
+    <p style="color:var(--text-secondary);margin-bottom:0.8rem;font-size:0.9rem;">Como você avalia este beat?</p>
+    <div style="display:flex;gap:0.4rem;font-size:1.8rem;justify-content:center;margin-bottom:1.2rem;" id="ratingStars">
       <span data-value="1" style="cursor:pointer;color:var(--text-muted);transition:0.2s;">★</span>
       <span data-value="2" style="cursor:pointer;color:var(--text-muted);transition:0.2s;">★</span>
       <span data-value="3" style="cursor:pointer;color:var(--text-muted);transition:0.2s;">★</span>
@@ -1541,8 +1582,8 @@
     // Cart
     let cart = JSON.parse(localStorage.getItem('bestBeatsCart') || '[]');
     
-    // Ratings
-    let userRatings = JSON.parse(localStorage.getItem('bestBeatsRatings') || '{}');
+    // Ratings - AGORA PERSISTENTES NO SUPABASE
+    let userRatings = {};
 
     // ============================================================
     // 3. TOAST
@@ -1570,7 +1611,7 @@
     }
 
     // ============================================================
-    // 4. PLAYLIST
+    // 4. PLAYLIST (localStorage)
     // ============================================================
     function getPlaylist() {
       try { return JSON.parse(localStorage.getItem('favoriteBeats') || '[]'); } catch { return []; }
@@ -1593,7 +1634,7 @@
     }
 
     // ============================================================
-    // 5. CART
+    // 5. CART (localStorage)
     // ============================================================
     function updateCart() {
       localStorage.setItem('bestBeatsCart', JSON.stringify(cart));
@@ -1615,7 +1656,58 @@
     }
 
     // ============================================================
-    // 6. SHARE
+    // 6. RATING - PERSISTENTE NO SUPABASE
+    // ============================================================
+    async function loadRatings() {
+      try {
+        const { data, error } = await supabase
+          .from('ratings')
+          .select('*');
+        if (error) throw error;
+        userRatings = {};
+        if (data) {
+          data.forEach(r => {
+            if (!userRatings[r.beat_id]) userRatings[r.beat_id] = [];
+            userRatings[r.beat_id].push(r.rating);
+          });
+        }
+      } catch (error) {
+        console.error('Erro ao carregar avaliações:', error);
+      }
+    }
+
+    async function rateBeat(beatId, rating) {
+      try {
+        const { error } = await supabase
+          .from('ratings')
+          .insert([{
+            beat_id: beatId,
+            rating: rating,
+            user_id: currentUser?.id || 'anonymous'
+          }]);
+        if (error) throw error;
+        await loadRatings();
+        renderBeats();
+        showToast('Avaliação enviada', 'Obrigado pela sua avaliação!', 'success');
+      } catch (error) {
+        console.error('Erro ao salvar avaliação:', error);
+        showToast('Erro', 'Não foi possível salvar sua avaliação.', 'error');
+      }
+    }
+
+    function getBeatAverageRating(beatId) {
+      const ratings = userRatings[beatId] || [];
+      if (ratings.length === 0) return 0;
+      const sum = ratings.reduce((a, b) => a + b, 0);
+      return sum / ratings.length;
+    }
+
+    function getBeatRatingCount(beatId) {
+      return (userRatings[beatId] || []).length;
+    }
+
+    // ============================================================
+    // 7. SHARE
     // ============================================================
     function showShareToast(message) {
       const toast = document.getElementById('shareToast');
@@ -1645,7 +1737,7 @@
     }
 
     // ============================================================
-    // 7. THEME
+    // 8. THEME
     // ============================================================
     function toggleTheme() {
       const html = document.documentElement;
@@ -1662,136 +1754,7 @@
     }
 
     // ============================================================
-    // 8. RATING
-    // ============================================================
-    function rateBeat(beatId, rating) {
-      userRatings[beatId] = rating;
-      localStorage.setItem('bestBeatsRatings', JSON.stringify(userRatings));
-      renderBeats();
-    }
-    function getBeatRating(beatId) {
-      return userRatings[beatId] || 0;
-    }
-    function getBeatAverageRating(beatId) {
-      // Se tivéssemos múltiplas avaliações por beat, faríamos média
-      return getBeatRating(beatId);
-    }
-
-    // ============================================================
-    // 9. GLOBAL PLAYER
-    // ============================================================
-    function initGlobalPlayer() {
-      const gp = document.getElementById('globalPlayer');
-      const playBtn = document.getElementById('gpPlay');
-      const prevBtn = document.getElementById('gpPrev');
-      const nextBtn = document.getElementById('gpNext');
-      const closeBtn = document.getElementById('gpClose');
-      const bar = document.getElementById('gpBar');
-      const fill = document.getElementById('gpFill');
-      const time = document.getElementById('gpTime');
-
-      playBtn.addEventListener('click', () => {
-        if (!gpAudio) return;
-        if (gpIsPlaying) {
-          gpAudio.pause();
-          playBtn.innerHTML = '<i class="fas fa-play"></i>';
-          gpIsPlaying = false;
-        } else {
-          gpAudio.play().catch(() => {});
-          playBtn.innerHTML = '<i class="fas fa-pause"></i>';
-          gpIsPlaying = true;
-        }
-      });
-
-      prevBtn.addEventListener('click', () => {
-        if (gpPlaylist.length === 0) return;
-        gpCurrentIndex = (gpCurrentIndex - 1 + gpPlaylist.length) % gpPlaylist.length;
-        playGlobalBeat(gpPlaylist[gpCurrentIndex]);
-      });
-
-      nextBtn.addEventListener('click', () => {
-        if (gpPlaylist.length === 0) return;
-        gpCurrentIndex = (gpCurrentIndex + 1) % gpPlaylist.length;
-        playGlobalBeat(gpPlaylist[gpCurrentIndex]);
-      });
-
-      closeBtn.addEventListener('click', () => {
-        if (gpAudio) { gpAudio.pause(); gpAudio = null; }
-        gp.classList.remove('active');
-        gpIsPlaying = false;
-      });
-
-      bar.addEventListener('click', (e) => {
-        if (!gpAudio || !gpAudio.duration) return;
-        const rect = bar.getBoundingClientRect();
-        const pct = (e.clientX - rect.left) / rect.width;
-        gpAudio.currentTime = pct * gpAudio.duration;
-      });
-
-      if (gpAudio) {
-        gpAudio.addEventListener('timeupdate', () => {
-          if (gpAudio.duration) {
-            const pct = (gpAudio.currentTime / gpAudio.duration) * 100;
-            fill.style.width = pct + '%';
-            const m = Math.floor(gpAudio.currentTime / 60);
-            const s = Math.floor(gpAudio.currentTime % 60);
-            const tm = Math.floor(gpAudio.duration / 60);
-            const ts = Math.floor(gpAudio.duration % 60);
-            time.textContent = `${m}:${s < 10 ? '0' : ''}${s} / ${tm}:${ts < 10 ? '0' : ''}${ts}`;
-          }
-        });
-        gpAudio.addEventListener('ended', () => {
-          playBtn.innerHTML = '<i class="fas fa-play"></i>';
-          gpIsPlaying = false;
-          if (gpPlaylist.length > 1) {
-            gpCurrentIndex = (gpCurrentIndex + 1) % gpPlaylist.length;
-            playGlobalBeat(gpPlaylist[gpCurrentIndex]);
-          }
-        });
-      }
-    }
-
-    function playGlobalBeat(beatId) {
-      const beat = beatsData.find(b => b.id === beatId);
-      if (!beat || !beat.audio) { showToast('Erro', 'Áudio indisponível.', 'error'); return; }
-
-      const gp = document.getElementById('globalPlayer');
-      document.getElementById('gpCover').src = beat.cover || 'https://picsum.photos/seed/default/100/100';
-      document.getElementById('gpTitle').textContent = beat.title;
-      document.getElementById('gpArtist').textContent = beat.artist;
-
-      if (gpAudio) { gpAudio.pause(); gpAudio = null; }
-
-      gpAudio = new Audio(beat.audio);
-      gpAudio.volume = 0.7;
-      gpAudio.play().catch(() => {});
-      gpIsPlaying = true;
-      document.getElementById('gpPlay').innerHTML = '<i class="fas fa-pause"></i>';
-      gp.classList.add('active');
-
-      gpAudio.addEventListener('timeupdate', () => {
-        if (gpAudio.duration) {
-          const pct = (gpAudio.currentTime / gpAudio.duration) * 100;
-          document.getElementById('gpFill').style.width = pct + '%';
-          const m = Math.floor(gpAudio.currentTime / 60);
-          const s = Math.floor(gpAudio.currentTime % 60);
-          const tm = Math.floor(gpAudio.duration / 60);
-          const ts = Math.floor(gpAudio.duration % 60);
-          document.getElementById('gpTime').textContent = `${m}:${s < 10 ? '0' : ''}${s} / ${tm}:${ts < 10 ? '0' : ''}${ts}`;
-        }
-      });
-      gpAudio.addEventListener('ended', () => {
-        document.getElementById('gpPlay').innerHTML = '<i class="fas fa-play"></i>';
-        gpIsPlaying = false;
-        if (gpPlaylist.length > 1) {
-          gpCurrentIndex = (gpCurrentIndex + 1) % gpPlaylist.length;
-          playGlobalBeat(gpPlaylist[gpCurrentIndex]);
-        }
-      });
-    }
-
-    // ============================================================
-    // 10. CRUD
+    // 9. CRUD
     // ============================================================
     async function loadBeats() {
       try {
@@ -1800,6 +1763,10 @@
         const { data, error } = await supabase.from('beats').select('*').order('id', { ascending: false });
         if (error) throw error;
         beatsData = data || [];
+        
+        // Carrega avaliações
+        await loadRatings();
+        
         // Atualiza gêneros no filtro
         const genres = [...new Set(beatsData.map(b => b.genre).filter(Boolean))];
         const filterSelect = document.getElementById('filterGenre');
@@ -1889,7 +1856,6 @@
         const newPlays = (beat.plays || 0) + 1;
         const { error } = await supabase.from('beats').update({ plays: newPlays }).eq('id', beatId);
         if (error) throw error;
-        // Atualiza localmente
         beat.plays = newPlays;
       } catch (error) {
         console.error('Erro ao incrementar plays:', error);
@@ -1897,7 +1863,7 @@
     }
 
     // ============================================================
-    // 11. FILTERS & SEARCH
+    // 10. FILTERS & SEARCH
     // ============================================================
     function applyFilters() {
       const search = document.getElementById('searchInput').value.toLowerCase();
@@ -1915,10 +1881,101 @@
         case 'popular': filteredBeats.sort((a, b) => (b.plays || 0) - (a.plays || 0)); break;
         case 'price-low': filteredBeats.sort((a, b) => parseFloat(a.price.replace(/[^0-9.]/g, '')) - parseFloat(b.price.replace(/[^0-9.]/g, ''))); break;
         case 'price-high': filteredBeats.sort((a, b) => parseFloat(b.price.replace(/[^0-9.]/g, '')) - parseFloat(a.price.replace(/[^0-9.]/g, ''))); break;
-        case 'rating': filteredBeats.sort((a, b) => (getBeatAverageRating(b.id) || 0) - (getBeatAverageRating(a.id) || 0)); break;
+        case 'rating': filteredBeats.sort((a, b) => getBeatAverageRating(b.id) - getBeatAverageRating(a.id)); break;
       }
 
       renderBeats();
+    }
+
+    // ============================================================
+    // 11. GLOBAL PLAYER
+    // ============================================================
+    function initGlobalPlayer() {
+      const gp = document.getElementById('globalPlayer');
+      const playBtn = document.getElementById('gpPlay');
+      const prevBtn = document.getElementById('gpPrev');
+      const nextBtn = document.getElementById('gpNext');
+      const closeBtn = document.getElementById('gpClose');
+      const bar = document.getElementById('gpBar');
+      const fill = document.getElementById('gpFill');
+      const time = document.getElementById('gpTime');
+
+      playBtn.addEventListener('click', () => {
+        if (!gpAudio) return;
+        if (gpIsPlaying) {
+          gpAudio.pause();
+          playBtn.innerHTML = '<i class="fas fa-play"></i>';
+          gpIsPlaying = false;
+        } else {
+          gpAudio.play().catch(() => {});
+          playBtn.innerHTML = '<i class="fas fa-pause"></i>';
+          gpIsPlaying = true;
+        }
+      });
+
+      prevBtn.addEventListener('click', () => {
+        if (gpPlaylist.length === 0) return;
+        gpCurrentIndex = (gpCurrentIndex - 1 + gpPlaylist.length) % gpPlaylist.length;
+        playGlobalBeat(gpPlaylist[gpCurrentIndex]);
+      });
+
+      nextBtn.addEventListener('click', () => {
+        if (gpPlaylist.length === 0) return;
+        gpCurrentIndex = (gpCurrentIndex + 1) % gpPlaylist.length;
+        playGlobalBeat(gpPlaylist[gpCurrentIndex]);
+      });
+
+      closeBtn.addEventListener('click', () => {
+        if (gpAudio) { gpAudio.pause(); gpAudio = null; }
+        gp.classList.remove('active');
+        gpIsPlaying = false;
+      });
+
+      bar.addEventListener('click', (e) => {
+        if (!gpAudio || !gpAudio.duration) return;
+        const rect = bar.getBoundingClientRect();
+        const pct = (e.clientX - rect.left) / rect.width;
+        gpAudio.currentTime = pct * gpAudio.duration;
+      });
+    }
+
+    function playGlobalBeat(beatId) {
+      const beat = beatsData.find(b => b.id === beatId);
+      if (!beat || !beat.audio) { showToast('Erro', 'Áudio indisponível.', 'error'); return; }
+
+      const gp = document.getElementById('globalPlayer');
+      document.getElementById('gpCover').src = beat.cover || 'https://picsum.photos/seed/default/100/100';
+      document.getElementById('gpTitle').textContent = beat.title;
+      document.getElementById('gpArtist').textContent = beat.artist;
+
+      if (gpAudio) { gpAudio.pause(); gpAudio = null; }
+
+      gpAudio = new Audio(beat.audio);
+      gpAudio.volume = 0.7;
+      gpAudio.play().catch(() => {});
+      gpIsPlaying = true;
+      document.getElementById('gpPlay').innerHTML = '<i class="fas fa-pause"></i>';
+      gp.classList.add('active');
+
+      gpAudio.addEventListener('timeupdate', () => {
+        if (gpAudio.duration) {
+          const pct = (gpAudio.currentTime / gpAudio.duration) * 100;
+          document.getElementById('gpFill').style.width = pct + '%';
+          const m = Math.floor(gpAudio.currentTime / 60);
+          const s = Math.floor(gpAudio.currentTime % 60);
+          const tm = Math.floor(gpAudio.duration / 60);
+          const ts = Math.floor(gpAudio.duration % 60);
+          document.getElementById('gpTime').textContent = `${m}:${s < 10 ? '0' : ''}${s} / ${tm}:${ts < 10 ? '0' : ''}${ts}`;
+        }
+      });
+      gpAudio.addEventListener('ended', () => {
+        document.getElementById('gpPlay').innerHTML = '<i class="fas fa-play"></i>';
+        gpIsPlaying = false;
+        if (gpPlaylist.length > 1) {
+          gpCurrentIndex = (gpCurrentIndex + 1) % gpPlaylist.length;
+          playGlobalBeat(gpPlaylist[gpCurrentIndex]);
+        }
+      });
     }
 
     // ============================================================
@@ -1930,10 +1987,10 @@
       
       if (list.length === 0) {
         container.innerHTML = `
-          <div style="text-align:center;padding:4rem 0;color:var(--text-muted);">
-            <i class="fas fa-search" style="font-size:3rem;display:block;opacity:0.3;margin-bottom:1rem;"></i>
-            <p style="font-size:1.2rem;font-weight:300;">Nenhum beat encontrado</p>
-            <p style="font-size:0.9rem;">Tente ajustar sua busca ou filtros</p>
+          <div style="text-align:center;padding:3rem 0;color:var(--text-muted);">
+            <i class="fas fa-search" style="font-size:2.5rem;display:block;opacity:0.3;margin-bottom:0.8rem;"></i>
+            <p style="font-size:1.1rem;font-weight:300;">Nenhum beat encontrado</p>
+            <p style="font-size:0.85rem;">Tente ajustar sua busca ou filtros</p>
           </div>
         `;
         updateUI();
@@ -2074,14 +2131,19 @@
       exclusivo.innerHTML = `<i class="fas fa-certificate"></i> exclusivo · apenas aqui`;
       
       // Stats
+      const avgRating = getBeatAverageRating(beat.id);
+      const ratingCount = getBeatRatingCount(beat.id);
+      const starsFull = Math.round(avgRating);
+      const starsEmpty = 5 - starsFull;
+      
       const statsDiv = document.createElement('div');
       statsDiv.className = 'beat-stats';
       statsDiv.innerHTML = `
         <span><i class="fas fa-headphones"></i> ${beat.plays || 0} plays</span>
         <span class="beat-rating">
           <i class="fas fa-star"></i> 
-          <span class="stars">${'★'.repeat(Math.round(getBeatAverageRating(beat.id) || 0))}${'☆'.repeat(5 - Math.round(getBeatAverageRating(beat.id) || 0))}</span>
-          <span style="font-size:0.7rem;color:var(--text-muted);">${getBeatAverageRating(beat.id) ? getBeatAverageRating(beat.id).toFixed(1) : '0.0'}</span>
+          <span class="stars">${'★'.repeat(starsFull)}${'☆'.repeat(starsEmpty)}</span>
+          <span style="font-size:0.6rem;color:var(--text-muted);">${avgRating ? avgRating.toFixed(1) : '0.0'} (${ratingCount})</span>
         </span>
         ${beat.bpm ? `<span><i class="fas fa-waveform"></i> ${beat.bpm} BPM</span>` : ''}
         ${beat.key ? `<span><i class="fas fa-music"></i> ${beat.key}</span>` : ''}
@@ -2102,15 +2164,9 @@
       rateBtn.addEventListener('click', (e) => {
         e.preventDefault();
         document.getElementById('ratingBeatId').value = beat.id;
-        document.getElementById('ratingValue').value = getBeatRating(beat.id) || 0;
-        const stars = document.querySelectorAll('#ratingStars span');
-        stars.forEach(s => {
-          const val = parseInt(s.dataset.value);
-          if (val <= (getBeatRating(beat.id) || 0)) {
-            s.style.color = 'var(--gold)';
-          } else {
-            s.style.color = 'var(--text-muted)';
-          }
+        document.getElementById('ratingValue').value = 0;
+        document.querySelectorAll('#ratingStars span').forEach(s => {
+          s.style.color = 'var(--text-muted)';
         });
         document.getElementById('ratingModal').classList.add('active');
       });
@@ -2134,7 +2190,7 @@
       buyBtn.addEventListener('click', (e) => {
         e.preventDefault();
         const msg = encodeURIComponent(`Olá! Gostaria de comprar o beat "${beat.title}" de ${beat.artist}.`);
-        window.open(`https://wa.me/5511999999999?text=${msg}`, '_blank');
+        window.open(`https://wa.me/244926261011?text=${msg}`, '_blank');
       });
       
       actionsDiv.appendChild(shareBtn);
@@ -2162,7 +2218,6 @@
           playBtn.innerHTML = '<i class="fas fa-pause"></i>';
           isPlaying = true;
           incrementPlays(beat.id);
-          // Adiciona à fila do global player
           if (!gpPlaylist.includes(beat.id)) {
             gpPlaylist.push(beat.id);
             gpCurrentIndex = gpPlaylist.indexOf(beat.id);
@@ -2234,6 +2289,64 @@
     function closeFormModal() { document.getElementById('formModal').classList.remove('active'); editingId = null; selectedCoverFile = null; selectedAudioFile = null; }
     function openEditModal(id) { const beat = beatsData.find(b => b.id === id); if (beat) openFormModal(beat); }
 
+    // ============================================================
+    // 14. UI UPDATE
+    // ============================================================
+    function updateUI() {
+      if (isLoggedIn && currentUser) {
+        document.getElementById('userInfoDisplay').style.display = 'flex';
+        document.getElementById('userNameDisplay').textContent = currentUser.user_metadata?.name || 'Administrador';
+        document.getElementById('userEmailDisplay').textContent = currentUser.email || 'usuario@email.com';
+        document.getElementById('avatarContainer').innerHTML = `<img src="eu.jpg" alt="Admin" class="admin-avatar-small">`;
+        document.getElementById('dividerAfterUser').style.display = 'block';
+        document.getElementById('dropdownLogin').style.display = 'none';
+        document.getElementById('dropdownNewBeat').style.display = 'flex';
+        document.getElementById('dropdownToggleEdit').style.display = 'flex';
+        document.getElementById('dropdownDashboard').style.display = 'flex';
+        document.getElementById('dividerBeforeLogout').style.display = 'block';
+        document.getElementById('dropdownLogout').style.display = 'flex';
+        document.getElementById('dropdownToggleEdit').innerHTML = editMode ? '<i class="fas fa-edit"></i> Desativar Edição' : '<i class="fas fa-edit"></i> Editar';
+        document.getElementById('menuLabel').textContent = 'Admin';
+      } else {
+        document.getElementById('userInfoDisplay').style.display = 'none';
+        document.getElementById('avatarContainer').innerHTML = '';
+        document.getElementById('dividerAfterUser').style.display = 'none';
+        document.getElementById('dropdownLogin').style.display = 'flex';
+        document.getElementById('dropdownNewBeat').style.display = 'none';
+        document.getElementById('dropdownToggleEdit').style.display = 'none';
+        document.getElementById('dropdownDashboard').style.display = 'none';
+        document.getElementById('dividerBeforeLogout').style.display = 'none';
+        document.getElementById('dropdownLogout').style.display = 'none';
+        document.getElementById('menuLabel').textContent = 'Menu';
+      }
+      document.querySelectorAll('.card-edit-btn').forEach(btn => {
+        if (isLoggedIn) btn.classList.add('visible');
+        else btn.classList.remove('visible');
+      });
+      updatePlaylistCount();
+      updateCart();
+    }
+
+    function updatePlaylistButtons(beatId) {
+      document.querySelectorAll('.beat-card').forEach(card => {
+        if (parseInt(card.dataset.id) === beatId) {
+          const btn = card.querySelector('.btn-playlist');
+          if (btn) {
+            if (isInPlaylist(beatId)) {
+              btn.innerHTML = '<i class="fas fa-check"></i> Added';
+              btn.classList.add('added');
+            } else {
+              btn.innerHTML = '<i class="fas fa-plus"></i> Add';
+              btn.classList.remove('added');
+            }
+          }
+        }
+      });
+    }
+
+    // ============================================================
+    // 15. PLAYLIST MODAL
+    // ============================================================
     function openPlaylistModal() {
       const container = document.getElementById('playlistContainer');
       const emptyMsg = document.getElementById('emptyPlaylist');
@@ -2312,6 +2425,9 @@
       document.getElementById('mainDropdown').classList.remove('active');
     }
 
+    // ============================================================
+    // 16. CART MODAL
+    // ============================================================
     function openCartModal() {
       const container = document.getElementById('cartContainer');
       const emptyMsg = document.getElementById('emptyCart');
@@ -2326,7 +2442,7 @@
           const item = document.createElement('div');
           item.className = 'cart-item';
           item.innerHTML = `
-            <img src="${beat.cover || 'https://picsum.photos/seed/default/50/50'}" style="width:50px;height:50px;border-radius:8px;object-fit:cover;flex-shrink:0;">
+            <img src="${beat.cover || 'https://picsum.photos/seed/default/50/50'}" style="width:40px;height:40px;border-radius:8px;object-fit:cover;flex-shrink:0;">
             <div class="info">
               <div class="title">${beat.title}</div>
               <div class="sub">${beat.artist} · ${beat.price}</div>
@@ -2347,11 +2463,15 @@
       document.getElementById('cartModal').classList.add('active');
     }
 
+    // ============================================================
+    // 17. DASHBOARD
+    // ============================================================
     function openDashboard() {
       const totalBeats = beatsData.length;
       const totalPlays = beatsData.reduce((sum, b) => sum + (b.plays || 0), 0);
-      const ratings = Object.values(userRatings).filter(r => r > 0);
-      const avgRating = ratings.length > 0 ? (ratings.reduce((a, b) => a + b, 0) / ratings.length) : 0;
+      let allRatings = [];
+      Object.values(userRatings).forEach(r => { allRatings = allRatings.concat(r); });
+      const avgRating = allRatings.length > 0 ? (allRatings.reduce((a, b) => a + b, 0) / allRatings.length) : 0;
       const genres = {};
       beatsData.forEach(b => { genres[b.genre] = (genres[b.genre] || 0) + 1; });
       const topGenre = Object.keys(genres).sort((a, b) => genres[b] - genres[a])[0] || '-';
@@ -2364,7 +2484,7 @@
       topContainer.innerHTML = '';
       topBeats.forEach((b, i) => {
         const div = document.createElement('div');
-        div.style.cssText = 'display:flex;justify-content:space-between;padding:0.3rem 0;border-bottom:1px solid var(--border-color);font-size:0.85rem;';
+        div.style.cssText = 'display:flex;justify-content:space-between;padding:0.2rem 0;border-bottom:1px solid var(--border-color);font-size:0.8rem;';
         div.innerHTML = `<span>${i+1}. ${b.title}</span><span style="color:var(--gold);">${b.plays || 0} plays</span>`;
         topContainer.appendChild(div);
       });
@@ -2372,62 +2492,7 @@
     }
 
     // ============================================================
-    // 14. UI UPDATE
-    // ============================================================
-    function updateUI() {
-      if (isLoggedIn && currentUser) {
-        document.getElementById('userInfoDisplay').style.display = 'flex';
-        document.getElementById('userNameDisplay').textContent = currentUser.user_metadata?.name || 'Administrador';
-        document.getElementById('userEmailDisplay').textContent = currentUser.email || 'usuario@email.com';
-        document.getElementById('avatarContainer').innerHTML = `<img src="eu.jpg" alt="Admin" class="admin-avatar-small">`;
-        document.getElementById('dividerAfterUser').style.display = 'block';
-        document.getElementById('dropdownLogin').style.display = 'none';
-        document.getElementById('dropdownNewBeat').style.display = 'flex';
-        document.getElementById('dropdownToggleEdit').style.display = 'flex';
-        document.getElementById('dropdownDashboard').style.display = 'flex';
-        document.getElementById('dividerBeforeLogout').style.display = 'block';
-        document.getElementById('dropdownLogout').style.display = 'flex';
-        document.getElementById('dropdownToggleEdit').innerHTML = editMode ? '<i class="fas fa-edit"></i> Desativar Edição' : '<i class="fas fa-edit"></i> Editar';
-        document.getElementById('menuLabel').textContent = 'Admin';
-      } else {
-        document.getElementById('userInfoDisplay').style.display = 'none';
-        document.getElementById('avatarContainer').innerHTML = '';
-        document.getElementById('dividerAfterUser').style.display = 'none';
-        document.getElementById('dropdownLogin').style.display = 'flex';
-        document.getElementById('dropdownNewBeat').style.display = 'none';
-        document.getElementById('dropdownToggleEdit').style.display = 'none';
-        document.getElementById('dropdownDashboard').style.display = 'none';
-        document.getElementById('dividerBeforeLogout').style.display = 'none';
-        document.getElementById('dropdownLogout').style.display = 'none';
-        document.getElementById('menuLabel').textContent = 'Menu';
-      }
-      document.querySelectorAll('.card-edit-btn').forEach(btn => {
-        if (isLoggedIn) btn.classList.add('visible');
-        else btn.classList.remove('visible');
-      });
-      updatePlaylistCount();
-      updateCart();
-    }
-
-    function updatePlaylistButtons(beatId) {
-      document.querySelectorAll('.beat-card').forEach(card => {
-        if (parseInt(card.dataset.id) === beatId) {
-          const btn = card.querySelector('.btn-playlist');
-          if (btn) {
-            if (isInPlaylist(beatId)) {
-              btn.innerHTML = '<i class="fas fa-check"></i> Added';
-              btn.classList.add('added');
-            } else {
-              btn.innerHTML = '<i class="fas fa-plus"></i> Add';
-              btn.classList.remove('added');
-            }
-          }
-        }
-      });
-    }
-
-    // ============================================================
-    // 15. URL DETECT
+    // 18. URL DETECT
     // ============================================================
     function detectBeatFromUrl() {
       const params = new URLSearchParams(window.location.search);
@@ -2451,7 +2516,7 @@
     }
 
     // ============================================================
-    // 16. AUTH
+    // 19. AUTH
     // ============================================================
     async function doLogin(e) {
       e.preventDefault();
@@ -2492,7 +2557,7 @@
     }
 
     // ============================================================
-    // 17. EVENTOS
+    // 20. EVENTOS
     // ============================================================
     // Menu
     document.getElementById('menuBtn').addEventListener('click', (e) => { e.stopPropagation(); document.getElementById('mainDropdown').classList.toggle('active'); });
@@ -2555,7 +2620,7 @@
       const cartBeats = getCartBeats();
       if (cartBeats.length === 0) { showToast('Carrinho vazio', 'Adicione beats ao carrinho antes de finalizar.', 'error'); return; }
       const msg = encodeURIComponent(`Olá! Gostaria de comprar os seguintes beats:\n${cartBeats.map(b => `- ${b.title} (${b.artist}) - ${b.price}`).join('\n')}\nTotal: Kz ${getCartTotal().toFixed(2)}`);
-      window.open(`https://wa.me/5511999999999?text=${msg}`, '_blank');
+      window.open(`https://wa.me/244926261011?text=${msg}`, '_blank');
       document.getElementById('cartModal').classList.remove('active');
     });
     
@@ -2594,13 +2659,12 @@
     
     // Rating
     document.getElementById('ratingCancel').addEventListener('click', () => document.getElementById('ratingModal').classList.remove('active'));
-    document.getElementById('ratingSubmit').addEventListener('click', () => {
+    document.getElementById('ratingSubmit').addEventListener('click', async () => {
       const beatId = parseInt(document.getElementById('ratingBeatId').value);
       const rating = parseInt(document.getElementById('ratingValue').value);
       if (rating === 0) { showToast('Avaliação', 'Selecione uma nota de 1 a 5.', 'info'); return; }
-      rateBeat(beatId, rating);
+      await rateBeat(beatId, rating);
       document.getElementById('ratingModal').classList.remove('active');
-      showToast('Avaliação enviada', 'Obrigado pela sua avaliação!', 'success');
     });
     document.querySelectorAll('#ratingStars span').forEach(star => {
       star.addEventListener('click', function() {
@@ -2657,7 +2721,36 @@
     });
 
     // ============================================================
-    // 18. INIT
+    // 21. CREATE RATINGS TABLE (se não existir)
+    // ============================================================
+    async function ensureRatingsTable() {
+      try {
+        // Tenta fazer uma consulta para verificar se a tabela existe
+        const { error } = await supabase.from('ratings').select('count', { count: 'exact', head: true });
+        if (error && error.message.includes('relation "ratings" does not exist')) {
+          // Tabela não existe - o usuário precisa criar manualmente
+          console.warn('A tabela "ratings" não existe. Execute o SQL no Supabase:');
+          console.log(`
+            CREATE TABLE ratings (
+              id BIGSERIAL PRIMARY KEY,
+              beat_id INTEGER NOT NULL REFERENCES beats(id) ON DELETE CASCADE,
+              rating INTEGER NOT NULL CHECK (rating >= 1 AND rating <= 5),
+              user_id TEXT,
+              created_at TIMESTAMPTZ DEFAULT NOW()
+            );
+            ALTER TABLE ratings ENABLE ROW LEVEL SECURITY;
+            CREATE POLICY "Enable read access for all users" ON ratings FOR SELECT USING (true);
+            CREATE POLICY "Enable insert for all users" ON ratings FOR INSERT WITH CHECK (true);
+          `);
+          showToast('Aviso', 'A tabela de avaliações não existe. Execute o SQL no Supabase.', 'info');
+        }
+      } catch (e) {
+        console.warn('Erro ao verificar tabela ratings:', e);
+      }
+    }
+
+    // ============================================================
+    // 22. INIT
     // ============================================================
     async function init() {
       loadTheme();
@@ -2665,9 +2758,12 @@
       await loadBeats();
       updateUI();
       initGlobalPlayer();
+      await ensureRatingsTable();
       console.log('Best Beats v10.0 - Todas as funcionalidades implementadas!');
       console.log('🔍 Pesquisa | 🏷️ Filtros | 📊 Dashboard | 🛒 Carrinho | ⭐ Avaliações');
       console.log('🎧 Player Global | 📖 Página do Beat | 👤 Perfil do Produtor');
+      console.log('📱 WhatsApp: +244 926 261 011');
+      console.log('📧 Email: agtbeatsxpalha@email.com');
     }
     init();
 
