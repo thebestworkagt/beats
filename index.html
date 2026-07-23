@@ -141,8 +141,6 @@
       width: 80px;
       height: 80px;
       border-radius: 50%;
-      border: 2px solid #f7c948;
-      box-shadow: 0 0 20px rgba(247, 201, 72, 0.2);
       object-fit: cover;
       background: #0a0a0f;
     }
@@ -161,12 +159,8 @@
       font-size: 1rem;
       letter-spacing: 4px;
       color: #b9b9c0;
-      margin-top: -0.25rem;
-      border-top: 1px solid rgba(247, 201, 72, 0.2);
-      padding-top: 0.3rem;
       display: inline-block;
     }
-    .subtitle i { color: #f7c948; margin: 0 4px; }
 
     /* === ADMIN TOOLBAR === */
     .admin-toolbar {
@@ -220,6 +214,52 @@
       background: rgba(255, 70, 70, 0.08);
     }
     .admin-btn.hidden { display: none; }
+
+    /* === EMAIL DISPLAY === */
+    .user-email-wrapper {
+      display: none;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(247, 201, 72, 0.08);
+      border-radius: 60px;
+      padding: 0.3rem 0.6rem 0.3rem 1rem;
+      backdrop-filter: blur(8px);
+    }
+    .user-email-wrapper.visible { display: flex; }
+    .user-email-wrapper .email-text {
+      font-size: 0.75rem;
+      color: #b5b5c8;
+      font-weight: 300;
+      letter-spacing: 0.3px;
+      max-width: 120px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .user-email-wrapper .toggle-email-btn {
+      background: rgba(247, 201, 72, 0.1);
+      border: 1px solid rgba(247, 201, 72, 0.15);
+      color: #f7c948;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      cursor: pointer;
+      transition: 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.7rem;
+    }
+    .user-email-wrapper .toggle-email-btn:hover {
+      background: rgba(247, 201, 72, 0.2);
+      transform: scale(1.05);
+    }
+    .user-email-wrapper .toggle-email-btn.revealed {
+      background: rgba(255, 70, 70, 0.1);
+      border-color: rgba(255, 70, 70, 0.2);
+      color: #ff6b6b;
+    }
 
     /* === BEATS LIST === */
     .beats-list { display: flex; flex-direction: column; gap: 2rem; margin-top: 0.5rem; }
@@ -690,22 +730,48 @@
       display: none;
     }
 
-    /* === LOADING === */
-    .loading-spinner {
-      display: flex;
+    /* === LOADING BAR === */
+    .loading-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(8, 8, 14, 0.85);
+      backdrop-filter: blur(8px);
+      z-index: 9999;
       justify-content: center;
       align-items: center;
-      padding: 4rem;
+      flex-direction: column;
+      gap: 2rem;
+    }
+    .loading-overlay.active { display: flex; }
+    .loading-bar-container {
+      width: 320px;
+      max-width: 80%;
+      height: 4px;
+      background: rgba(255,255,255,0.06);
+      border-radius: 10px;
+      overflow: hidden;
+      position: relative;
+    }
+    .loading-bar {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #f7c948, #f0a500);
+      border-radius: 10px;
+      transition: width 0.3s ease;
+      box-shadow: 0 0 20px rgba(247, 201, 72, 0.2);
+    }
+    .loading-bar-text {
+      color: #b5b5c8;
+      font-weight: 300;
+      font-size: 0.9rem;
+      letter-spacing: 1px;
+      margin-top: -1rem;
+    }
+    .loading-bar-percent {
       color: #f7c948;
+      font-weight: 600;
       font-size: 1.2rem;
-      gap: 1rem;
-    }
-    .loading-spinner i {
-      font-size: 2rem;
-      animation: spin 1s linear infinite;
-    }
-    @keyframes spin {
-      to { transform: rotate(360deg); }
     }
 
     /* === PREVIEW === */
@@ -745,14 +811,27 @@
       .admin-toolbar { justify-content: center; }
       .modal { padding: 1.5rem; }
       .toast-container { right: 1rem; left: 1rem; max-width: none; }
+      .loading-bar-container { width: 250px; }
     }
     @media (max-width: 480px) {
       .brand { font-size: 1.8rem; }
       .player-wrapper { flex: 0 0 150px; width: 150px; height: 150px; }
+      .user-email-wrapper .email-text { max-width: 80px; }
     }
   </style>
 </head>
 <body>
+
+<!-- LOADING BAR OVERLAY -->
+<div class="loading-overlay" id="loadingOverlay">
+  <div class="loading-bar-container">
+    <div class="loading-bar" id="loadingBar"></div>
+  </div>
+  <div class="loading-bar-text">
+    <span id="loadingLabel">Carregando...</span>
+    <span class="loading-bar-percent" id="loadingPercent">0%</span>
+  </div>
+</div>
 
 <!-- TOAST CONTAINER -->
 <div class="toast-container" id="toastContainer"></div>
@@ -764,7 +843,7 @@
       <img src="logo.png" alt="Best Beats" class="logo">
       <span class="brand">Best Beats</span>
     </div>
-    <div class="subtitle"><i class="fas fa-headphones"></i> · ouça & compre <i class="fas fa-crown" style="margin-left: 6px;"></i></div>
+    <div class="subtitle">· ouça & compre ·</div>
   </header>
 
   <div class="admin-toolbar">
@@ -772,10 +851,16 @@
     <button class="admin-btn hidden" id="toggleEditMode"><i class="fas fa-edit"></i> Editar</button>
     <button class="admin-btn" id="loginBtn"><i class="fas fa-user"></i> Login</button>
     <button class="admin-btn danger hidden" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Sair</button>
-    <span id="userEmail" style="font-size:0.8rem; color:#b5b5c8; display:none;"></span>
+    
+    <!-- Email Display com botão toggle -->
+    <div class="user-email-wrapper" id="userEmailWrapper">
+      <span class="email-text" id="userEmailDisplay">usuario@email.com</span>
+      <button class="toggle-email-btn" id="toggleEmailBtn" title="Mostrar/Ocultar email">
+        <i class="fas fa-eye"></i>
+      </button>
+    </div>
   </div>
 
-  <div id="loading" class="loading-spinner"><i class="fas fa-spinner"></i> Carregando beats...</div>
   <div class="beats-list" id="beatsContainer"></div>
 
   <footer class="footer">
@@ -899,7 +984,64 @@
     }
 
     // ============================================================
-    // 3. ESTADO
+    // 3. LOADING BAR SYSTEM
+    // ============================================================
+    let loadingInterval = null;
+    let loadingProgress = 0;
+
+    function showLoading(label = 'Carregando...') {
+      const overlay = document.getElementById('loadingOverlay');
+      const bar = document.getElementById('loadingBar');
+      const percent = document.getElementById('loadingPercent');
+      const labelEl = document.getElementById('loadingLabel');
+      
+      labelEl.textContent = label;
+      loadingProgress = 0;
+      bar.style.width = '0%';
+      percent.textContent = '0%';
+      overlay.classList.add('active');
+      
+      // Anima a barra até 90% (simula progresso)
+      if (loadingInterval) clearInterval(loadingInterval);
+      loadingInterval = setInterval(() => {
+        if (loadingProgress < 90) {
+          loadingProgress += Math.random() * 3 + 1;
+          if (loadingProgress > 90) loadingProgress = 90;
+          bar.style.width = loadingProgress + '%';
+          percent.textContent = Math.round(loadingProgress) + '%';
+        }
+      }, 200);
+    }
+
+    function updateLoading(label) {
+      document.getElementById('loadingLabel').textContent = label;
+    }
+
+    function hideLoading() {
+      const overlay = document.getElementById('loadingOverlay');
+      const bar = document.getElementById('loadingBar');
+      const percent = document.getElementById('loadingPercent');
+      
+      if (loadingInterval) {
+        clearInterval(loadingInterval);
+        loadingInterval = null;
+      }
+      
+      // Completa a barra
+      loadingProgress = 100;
+      bar.style.width = '100%';
+      percent.textContent = '100%';
+      
+      // Aguarda um momento e esconde
+      setTimeout(() => {
+        overlay.classList.remove('active');
+        bar.style.width = '0%';
+        percent.textContent = '0%';
+      }, 500);
+    }
+
+    // ============================================================
+    // 4. ESTADO
     // ============================================================
     let beatsData = [];
     let editMode = false;
@@ -908,12 +1050,12 @@
     let currentUser = null;
     let selectedCoverFile = null;
     let selectedAudioFile = null;
+    let emailRevealed = false;
 
     // ============================================================
-    // 4. DOM REFS
+    // 5. DOM REFS
     // ============================================================
     const container = document.getElementById('beatsContainer');
-    const loading = document.getElementById('loading');
     const loginModal = document.getElementById('loginModal');
     const formModal = document.getElementById('formModal');
     const modalTitle = document.getElementById('modalTitle');
@@ -929,7 +1071,9 @@
     const previewContainer = document.getElementById('previewContainer');
     const loginForm = document.getElementById('loginForm');
     const loginError = document.getElementById('loginError');
-    const userEmail = document.getElementById('userEmail');
+    const userEmailWrapper = document.getElementById('userEmailWrapper');
+    const userEmailDisplay = document.getElementById('userEmailDisplay');
+    const toggleEmailBtn = document.getElementById('toggleEmailBtn');
 
     const newBeatBtn = document.getElementById('newBeatBtn');
     const toggleEditBtn = document.getElementById('toggleEditMode');
@@ -937,7 +1081,7 @@
     const logoutBtn = document.getElementById('logoutBtn');
 
     // ============================================================
-    // 5. FUNÇÕES DE UPLOAD
+    // 6. FUNÇÕES DE UPLOAD
     // ============================================================
     async function uploadFile(file, bucket, path) {
       if (!file) return null;
@@ -965,11 +1109,12 @@
     }
 
     // ============================================================
-    // 6. CRUD COM SUPABASE
+    // 7. CRUD COM SUPABASE
     // ============================================================
     async function loadBeats() {
+      showLoading('Carregando beats...');
+      
       try {
-        loading.style.display = 'flex';
         container.innerHTML = '';
         
         const { data, error } = await supabase
@@ -981,26 +1126,31 @@
         
         beatsData = data || [];
         renderBeats();
+        updateLoading('Beats carregados com sucesso');
+        setTimeout(() => hideLoading(), 300);
       } catch (error) {
         console.error('Erro ao carregar beats:', error);
+        hideLoading();
         showToast('Erro ao carregar', 'Não foi possível carregar os beats. Verifique sua conexão.', 'error');
-      } finally {
-        loading.style.display = 'none';
       }
     }
 
     async function saveBeatToSupabase(beatData, coverFile, audioFile) {
+      showLoading(editingId ? 'Atualizando beat...' : 'Lançando novo beat...');
+      
       try {
         let coverUrl = beatData.cover || null;
         let audioUrl = beatData.audio || null;
         
         if (coverFile) {
+          updateLoading('Enviando imagem...');
           const timestamp = Date.now();
           const path = `beat-cover-${timestamp}`;
           coverUrl = await uploadFile(coverFile, 'covers', path);
         }
         
         if (audioFile) {
+          updateLoading('Enviando áudio...');
           const timestamp = Date.now();
           const path = `beat-audio-${timestamp}`;
           audioUrl = await uploadFile(audioFile, 'audios', path);
@@ -1015,6 +1165,8 @@
           audio: audioUrl,
           user_id: currentUser?.id
         };
+        
+        updateLoading('Salvando no banco de dados...');
         
         if (editingId) {
           const { error } = await supabase
@@ -1035,16 +1187,21 @@
           showToast('Sucesso', 'Novo beat lançado com sucesso.', 'success');
         }
         
+        updateLoading('Finalizando...');
         await loadBeats();
         closeFormModal();
+        setTimeout(() => hideLoading(), 300);
       } catch (error) {
         console.error('Erro ao salvar beat:', error);
+        hideLoading();
         showToast('Erro ao salvar', error.message || 'Ocorreu um erro ao salvar o beat.', 'error');
       }
     }
 
     async function deleteBeat(id) {
       if (!confirm('Tem certeza que deseja excluir este beat?')) return;
+      
+      showLoading('Excluindo beat...');
       
       try {
         const { error } = await supabase
@@ -1056,14 +1213,16 @@
         
         await loadBeats();
         showToast('Sucesso', 'O beat foi excluído permanentemente.', 'success');
+        setTimeout(() => hideLoading(), 300);
       } catch (error) {
         console.error('Erro ao excluir:', error);
+        hideLoading();
         showToast('Erro ao excluir', error.message || 'Não foi possível excluir o beat.', 'error');
       }
     }
 
     // ============================================================
-    // 7. RENDERIZAÇÃO
+    // 8. RENDERIZAÇÃO
     // ============================================================
     function renderBeats() {
       container.innerHTML = '';
@@ -1313,21 +1472,46 @@
         toggleEditBtn.classList.remove('hidden');
         logoutBtn.classList.remove('hidden');
         loginBtn.classList.add('hidden');
-        userEmail.style.display = 'inline';
-        userEmail.textContent = currentUser?.email || '';
+        userEmailWrapper.classList.add('visible');
+        userEmailDisplay.textContent = currentUser?.email || '';
+        // Email fica oculto por padrão
+        emailRevealed = false;
+        userEmailDisplay.textContent = '••••••••@••••';
+        toggleEmailBtn.innerHTML = '<i class="fas fa-eye"></i>';
+        toggleEmailBtn.classList.remove('revealed');
       } else {
         newBeatBtn.classList.add('hidden');
         toggleEditBtn.classList.add('hidden');
         logoutBtn.classList.add('hidden');
         loginBtn.classList.remove('hidden');
-        userEmail.style.display = 'none';
+        userEmailWrapper.classList.remove('visible');
         editMode = false;
         toggleEditBtn.innerHTML = '<i class="fas fa-edit"></i> Editar';
+        // Desativa modo edição nos cards
+        document.querySelectorAll('.card-edit-btn').forEach(btn => {
+          btn.style.display = 'none';
+        });
       }
     }
 
     // ============================================================
-    // 8. MODAL FORM
+    // 9. TOGGLE EMAIL
+    // ============================================================
+    toggleEmailBtn.addEventListener('click', () => {
+      emailRevealed = !emailRevealed;
+      if (emailRevealed) {
+        userEmailDisplay.textContent = currentUser?.email || '';
+        toggleEmailBtn.innerHTML = '<i class="fas fa-eye-slash"></i>';
+        toggleEmailBtn.classList.add('revealed');
+      } else {
+        userEmailDisplay.textContent = '••••••••@••••';
+        toggleEmailBtn.innerHTML = '<i class="fas fa-eye"></i>';
+        toggleEmailBtn.classList.remove('revealed');
+      }
+    });
+
+    // ============================================================
+    // 10. MODAL FORM
     // ============================================================
     function openFormModal(beat = null) {
       if (!isLoggedIn) return;
@@ -1382,7 +1566,7 @@
     }
 
     // ============================================================
-    // 9. EVENTOS DO FORMULÁRIO
+    // 11. EVENTOS DO FORMULÁRIO
     // ============================================================
     fCoverFile.addEventListener('change', (e) => {
       const file = e.target.files[0];
@@ -1429,12 +1613,14 @@
     });
 
     // ============================================================
-    // 10. AUTENTICAÇÃO
+    // 12. AUTENTICAÇÃO
     // ============================================================
     async function doLogin(e) {
       e.preventDefault();
       const email = document.getElementById('loginEmail').value.trim();
       const password = document.getElementById('loginPass').value.trim();
+      
+      showLoading('Autenticando...');
       
       try {
         const { data, error } = await supabase.auth.signInWithPassword({
@@ -1451,14 +1637,18 @@
         updateEditButtons();
         await loadBeats();
         showToast('Login realizado', `Bem-vindo, ${currentUser.email}. Você agora tem acesso ao painel administrativo.`, 'success');
+        setTimeout(() => hideLoading(), 300);
       } catch (error) {
         console.error('Erro no login:', error);
+        hideLoading();
         loginError.style.display = 'block';
         loginError.textContent = error.message || 'Email ou senha inválidos.';
       }
     }
 
     async function doLogout() {
+      showLoading('Encerrando sessão...');
+      
       try {
         await supabase.auth.signOut();
         isLoggedIn = false;
@@ -1468,8 +1658,10 @@
         updateEditButtons();
         await loadBeats();
         showToast('Sessão encerrada', 'Você saiu do modo administrador com sucesso.', 'info');
+        setTimeout(() => hideLoading(), 300);
       } catch (error) {
         console.error('Erro no logout:', error);
+        hideLoading();
       }
     }
 
@@ -1487,7 +1679,7 @@
     }
 
     // ============================================================
-    // 11. EVENTOS
+    // 13. EVENTOS
     // ============================================================
     newBeatBtn.addEventListener('click', () => openFormModal(null));
     
@@ -1520,13 +1712,13 @@
     loginForm.addEventListener('submit', doLogin);
 
     // ============================================================
-    // 12. INICIALIZAÇÃO
+    // 14. INICIALIZAÇÃO
     // ============================================================
     async function init() {
       await checkSession();
       await loadBeats();
       
-      console.log('Best Beats conectado ao Supabase');
+      console.log('Best Beats conectado...');
       console.log('Tabela: beats');
       console.log('Buckets: covers, audios');
     }
