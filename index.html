@@ -221,8 +221,8 @@
       width: 80px;
       height: 80px;
       border-radius: 50%;
-      border: 2px solid #f7c948;
-      box-shadow: 0 0 20px rgba(247, 201, 72, 0.2);
+      border: none;
+      box-shadow: 0 0 30px rgba(247, 201, 72, 0.15);
       object-fit: cover;
       background: #0a0a0f;
     }
@@ -234,28 +234,21 @@
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
-      text-shadow: 0 0 30px rgba(247, 201, 72, 0.15);
     }
     .subtitle {
       font-weight: 300;
       font-size: 1rem;
       letter-spacing: 4px;
       color: #b9b9c0;
-      margin-top: -0.25rem;
-      border-top: 1px solid rgba(247, 201, 72, 0.2);
-      padding-top: 0.3rem;
+      margin-top: 0.3rem;
       display: inline-block;
     }
-    .subtitle i { color: #f7c948; margin: 0 4px; }
 
     /* === ADMIN TOOLBAR === */
     .admin-toolbar {
       display: flex;
       justify-content: flex-end;
-      gap: 1rem;
       margin-bottom: 2rem;
-      flex-wrap: wrap;
-      align-items: center;
       position: relative;
     }
 
@@ -268,9 +261,9 @@
       background: rgba(255,255,255,0.04);
       border: 1px solid rgba(247, 201, 72, 0.15);
       color: #e0e0e8;
-      padding: 0.6rem 1rem;
+      padding: 0.7rem 1.2rem;
       border-radius: 60px;
-      font-size: 1.2rem;
+      font-size: 1.1rem;
       backdrop-filter: blur(8px);
       cursor: pointer;
       transition: 0.2s;
@@ -284,10 +277,14 @@
       border-color: #f7c948;
     }
     .hamburger-btn i { color: #f7c948; }
+    .hamburger-btn .btn-label {
+      font-size: 0.85rem;
+      font-weight: 400;
+    }
 
     .hamburger-dropdown {
       position: absolute;
-      top: 110%;
+      top: 115%;
       right: 0;
       background: rgba(18, 18, 26, 0.95);
       backdrop-filter: blur(20px);
@@ -295,7 +292,7 @@
       border: 1px solid rgba(247, 201, 72, 0.1);
       border-radius: 16px;
       padding: 0.5rem;
-      min-width: 200px;
+      min-width: 220px;
       display: none;
       box-shadow: 0 20px 60px rgba(0,0,0,0.6);
       z-index: 100;
@@ -663,15 +660,44 @@
       margin-top: -0.1rem;
     }
     .beat-exclusivo i { color: #f7c948; margin-right: 4px; font-size: 0.7rem; }
-    .buy-wrap { margin-top: 0.6rem; }
+
+    .beat-actions {
+      display: flex;
+      gap: 0.8rem;
+      flex-wrap: wrap;
+      margin-top: 0.3rem;
+    }
+    .btn-share {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(247, 201, 72, 0.1);
+      color: #b5b5c8;
+      padding: 0.4rem 1.2rem;
+      border-radius: 60px;
+      font-size: 0.8rem;
+      font-weight: 400;
+      cursor: pointer;
+      transition: 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-family: 'Inter', sans-serif;
+      backdrop-filter: blur(4px);
+    }
+    .btn-share:hover {
+      background: rgba(247, 201, 72, 0.08);
+      border-color: #f7c948;
+      color: #f7c948;
+    }
+    .btn-share i { font-size: 0.9rem; }
+
     .btn-whatsapp {
       background: linear-gradient(135deg, #25D366, #1ebe5c);
       border: 1px solid rgba(255,255,255,0.1);
       color: white;
-      padding: 0.6rem 2rem;
+      padding: 0.4rem 1.6rem;
       border-radius: 60px;
       font-weight: 600;
-      font-size: 0.95rem;
+      font-size: 0.9rem;
       display: inline-flex;
       align-items: center;
       gap: 0.6rem;
@@ -681,13 +707,16 @@
       text-decoration: none;
       letter-spacing: 0.3px;
       backdrop-filter: blur(4px);
+      font-family: 'Inter', sans-serif;
     }
-    .btn-whatsapp i { font-size: 1.2rem; }
+    .btn-whatsapp i { font-size: 1.1rem; }
     .btn-whatsapp:hover {
       transform: scale(1.02);
       box-shadow: 0 10px 28px rgba(37, 211, 102, 0.35);
       background: linear-gradient(135deg, #2fd16e, #1ebe5c);
     }
+
+    .buy-wrap { margin-top: 0.3rem; }
 
     /* === FOOTER === */
     .footer {
@@ -867,20 +896,52 @@
       color: #f7c948;
     }
 
+    /* === SHARE TOAST CUSTOM === */
+    .share-toast {
+      position: fixed;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(18, 18, 26, 0.95);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(247, 201, 72, 0.15);
+      border-radius: 16px;
+      padding: 0.8rem 2rem;
+      color: #f0f0f0;
+      font-size: 0.9rem;
+      z-index: 1000;
+      opacity: 0;
+      transition: opacity 0.3s ease, transform 0.3s ease;
+      transform: translateX(-50%) translateY(20px);
+      pointer-events: none;
+    }
+    .share-toast.visible {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+      pointer-events: auto;
+    }
+    .share-toast i {
+      color: #f7c948;
+      margin-right: 0.5rem;
+    }
+
     /* === RESPONSIVE === */
     @media (max-width: 750px) {
       .beat-card { flex-direction: column; align-items: center; text-align: center; padding: 1.5rem; }
       .player-wrapper { flex: 0 0 180px; width: 180px; height: 180px; }
       .beat-info { align-items: center; width: 100%; }
       .beat-meta { justify-content: center; }
+      .beat-actions { justify-content: center; }
       .buy-wrap { width: 100%; display: flex; justify-content: center; }
       .admin-toolbar { justify-content: center; }
       .modal { padding: 1.5rem; }
       .toast-container { right: 1rem; left: 1rem; max-width: none; }
+      .hamburger-dropdown { right: -10px; min-width: 200px; }
     }
     @media (max-width: 480px) {
       .brand { font-size: 1.8rem; }
       .player-wrapper { flex: 0 0 150px; width: 150px; height: 150px; }
+      .hamburger-btn .btn-label { display: none; }
     }
   </style>
 </head>
@@ -889,6 +950,11 @@
 <!-- TOAST CONTAINER -->
 <div class="toast-container" id="toastContainer"></div>
 
+<!-- SHARE TOAST -->
+<div class="share-toast" id="shareToast">
+  <i class="fas fa-check-circle"></i> Link copiado para a área de transferência
+</div>
+
 <div class="app">
 
   <header class="header">
@@ -896,45 +962,43 @@
       <img src="logo.png" alt="Best Beats" class="logo">
       <span class="brand">Best Beats</span>
     </div>
-    <div class="subtitle"><i class="fas fa-headphones"></i> · ouça & compre <i class="fas fa-crown" style="margin-left: 6px;"></i></div>
+    <div class="subtitle">ouça e compre</div>
   </header>
 
   <div class="admin-toolbar">
-    <!-- MENU HAMBURGUER (Admin - visível após login) -->
-    <div class="hamburger-menu" id="adminMenu">
-      <button class="hamburger-btn hidden" id="adminMenuBtn">
+    <!-- MENU HAMBURGUER ÚNICO -->
+    <div class="hamburger-menu">
+      <button class="hamburger-btn" id="menuBtn">
         <i class="fas fa-bars"></i>
+        <span class="btn-label" id="menuLabel">Menu</span>
       </button>
-      <div class="hamburger-dropdown" id="adminDropdown">
-        <div class="user-email-display" id="dropdownUserEmail">
-          <i class="fas fa-user"></i> <span>usuario@email.com</span>
+      <div class="hamburger-dropdown" id="mainDropdown">
+        <!-- Email do usuário (aparece quando logado) -->
+        <div class="user-email-display" id="dropdownUserEmail" style="display:none;">
+          <i class="fas fa-user"></i> <span id="userEmailText">usuario@email.com</span>
         </div>
-        <div class="dropdown-divider"></div>
-        <button class="dropdown-item" id="dropdownNewBeat">
-          <i class="fas fa-plus"></i> Lançar Beat
-        </button>
-        <button class="dropdown-item" id="dropdownToggleEdit">
-          <i class="fas fa-edit"></i> Editar
-        </button>
-        <div class="dropdown-divider"></div>
-        <button class="dropdown-item danger" id="dropdownLogout">
-          <i class="fas fa-sign-out-alt"></i> Sair
-        </button>
-      </div>
-    </div>
-
-    <!-- MENU HAMBURGUER (Login - visível antes do login) -->
-    <div class="hamburger-menu" id="loginMenu">
-      <button class="hamburger-btn" id="loginMenuBtn">
-        <i class="fas fa-user"></i> <span>Login</span>
-      </button>
-      <div class="hamburger-dropdown" id="loginDropdown">
-        <button class="dropdown-item" id="dropdownLogin">
+        <div class="dropdown-divider" id="dividerAfterUser" style="display:none;"></div>
+        
+        <!-- Login (aparece quando deslogado) -->
+        <button class="dropdown-item" id="dropdownLogin" style="display:flex;">
           <i class="fas fa-sign-in-alt"></i> Acessar como Admin
         </button>
-        <div class="dropdown-divider"></div>
-        <div style="padding: 0.6rem 1.2rem; font-size: 0.7rem; color: #5a5a6a;">
-          <i class="fas fa-info-circle"></i> Faça login para gerenciar os beats
+        
+        <!-- Opções de admin (aparecem quando logado) -->
+        <button class="dropdown-item" id="dropdownNewBeat" style="display:none;">
+          <i class="fas fa-plus"></i> Lançar Beat
+        </button>
+        <button class="dropdown-item" id="dropdownToggleEdit" style="display:none;">
+          <i class="fas fa-edit"></i> Editar
+        </button>
+        <div class="dropdown-divider" id="dividerBeforeLogout" style="display:none;"></div>
+        <button class="dropdown-item danger" id="dropdownLogout" style="display:none;">
+          <i class="fas fa-sign-out-alt"></i> Sair
+        </button>
+        
+        <!-- Rodapé informativo -->
+        <div style="padding: 0.6rem 1.2rem; font-size: 0.65rem; color: #4a4a5a; border-top: 1px solid rgba(255,255,255,0.03); margin-top: 0.2rem;">
+          Best Beats v2.0
         </div>
       </div>
     </div>
@@ -976,9 +1040,6 @@
       <div class="modal-actions" style="justify-content: center; flex-direction: column; gap: 0.8rem;">
         <button type="submit" class="btn-login"><i class="fas fa-sign-in-alt"></i> Entrar</button>
         <button type="button" class="btn-cancel" id="loginCancel" style="width:100%;">Cancelar</button>
-      </div>
-      <div style="margin-top: 1rem; text-align: center; font-size: 0.75rem; color: #7a7a8a;">
-        <i class="fas fa-info-circle"></i> Crie sua conta no Supabase primeiro
       </div>
     </form>
   </div>
@@ -1075,7 +1136,91 @@
     }
 
     // ============================================================
-    // 3. ESTADO
+    // 3. SHARE FUNCTION
+    // ============================================================
+    function showShareToast(message = 'Link copiado para a área de transferência') {
+      const toast = document.getElementById('shareToast');
+      toast.querySelector('i').className = 'fas fa-check-circle';
+      toast.innerHTML = `<i class="fas fa-check-circle"></i> ${message}`;
+      toast.classList.add('visible');
+      setTimeout(() => {
+        toast.classList.remove('visible');
+      }, 3000);
+    }
+
+    function shareBeat(beat) {
+      // Gera URL amigável
+      const baseUrl = window.location.origin + window.location.pathname;
+      const slug = beat.title.toLowerCase()
+        .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/^-|-$/g, '');
+      const shareUrl = `${baseUrl}?beat=${slug}`;
+      
+      // Copia para área de transferência
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(shareUrl).then(() => {
+          showShareToast('Link do beat copiado para a área de transferência');
+        }).catch(() => {
+          // Fallback
+          fallbackCopy(shareUrl);
+        });
+      } else {
+        fallbackCopy(shareUrl);
+      }
+    }
+
+    function fallbackCopy(text) {
+      const textArea = document.createElement('textarea');
+      textArea.value = text;
+      textArea.style.position = 'fixed';
+      textArea.style.opacity = '0';
+      document.body.appendChild(textArea);
+      textArea.select();
+      try {
+        document.execCommand('copy');
+        showShareToast('Link do beat copiado para a área de transferência');
+      } catch (err) {
+        showShareToast('Copie o link manualmente: ' + text, 5000);
+      }
+      document.body.removeChild(textArea);
+    }
+
+    // ============================================================
+    // 4. URL AMIGÁVEL - Detectar beat na URL
+    // ============================================================
+    function detectBeatFromUrl() {
+      const params = new URLSearchParams(window.location.search);
+      const slug = params.get('beat');
+      if (slug) {
+        // Aguarda os beats carregarem e rola até o beat
+        setTimeout(() => {
+          const cards = document.querySelectorAll('.beat-card');
+          for (let card of cards) {
+            const title = card.querySelector('.beat-title')?.textContent?.trim();
+            if (title) {
+              const cardSlug = title.toLowerCase()
+                .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+                .replace(/[^a-z0-9]+/g, '-')
+                .replace(/^-|-$/g, '');
+              if (cardSlug === slug) {
+                card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                card.style.borderColor = '#f7c948';
+                card.style.boxShadow = '0 0 40px rgba(247, 201, 72, 0.15)';
+                setTimeout(() => {
+                  card.style.borderColor = '';
+                  card.style.boxShadow = '';
+                }, 3000);
+                break;
+              }
+            }
+          }
+        }, 800);
+      }
+    }
+
+    // ============================================================
+    // 5. ESTADO
     // ============================================================
     let beatsData = [];
     let editMode = false;
@@ -1086,7 +1231,7 @@
     let selectedAudioFile = null;
 
     // ============================================================
-    // 4. DOM REFS
+    // 6. DOM REFS
     // ============================================================
     const container = document.getElementById('beatsContainer');
     const loading = document.getElementById('loading');
@@ -1107,21 +1252,20 @@
     const loginError = document.getElementById('loginError');
 
     // Menu elements
-    const adminMenu = document.getElementById('adminMenu');
-    const adminMenuBtn = document.getElementById('adminMenuBtn');
-    const adminDropdown = document.getElementById('adminDropdown');
+    const menuBtn = document.getElementById('menuBtn');
+    const mainDropdown = document.getElementById('mainDropdown');
+    const menuLabel = document.getElementById('menuLabel');
     const dropdownUserEmail = document.getElementById('dropdownUserEmail');
+    const userEmailText = document.getElementById('userEmailText');
+    const dividerAfterUser = document.getElementById('dividerAfterUser');
+    const dropdownLogin = document.getElementById('dropdownLogin');
     const dropdownNewBeat = document.getElementById('dropdownNewBeat');
     const dropdownToggleEdit = document.getElementById('dropdownToggleEdit');
+    const dividerBeforeLogout = document.getElementById('dividerBeforeLogout');
     const dropdownLogout = document.getElementById('dropdownLogout');
 
-    const loginMenu = document.getElementById('loginMenu');
-    const loginMenuBtn = document.getElementById('loginMenuBtn');
-    const loginDropdown = document.getElementById('loginDropdown');
-    const dropdownLogin = document.getElementById('dropdownLogin');
-
     // ============================================================
-    // 5. FUNÇÕES DE UPLOAD
+    // 7. FUNÇÕES DE UPLOAD
     // ============================================================
     async function uploadFile(file, bucket, path) {
       if (!file) return null;
@@ -1149,7 +1293,7 @@
     }
 
     // ============================================================
-    // 6. CRUD COM SUPABASE
+    // 8. CRUD COM SUPABASE
     // ============================================================
     async function loadBeats() {
       try {
@@ -1165,6 +1309,7 @@
         
         beatsData = data || [];
         renderBeats();
+        detectBeatFromUrl();
       } catch (error) {
         console.error('Erro ao carregar beats:', error);
         showToast('Erro ao carregar', 'Não foi possível carregar os beats. Verifique sua conexão.', 'error');
@@ -1247,7 +1392,7 @@
     }
 
     // ============================================================
-    // 7. RENDERIZAÇÃO
+    // 9. RENDERIZAÇÃO
     // ============================================================
     function renderBeats() {
       container.innerHTML = '';
@@ -1400,8 +1545,17 @@
       exclusivo.className = 'beat-exclusivo';
       exclusivo.innerHTML = `<i class="fas fa-certificate"></i> exclusivo · apenas aqui`;
       
-      const buyWrap = document.createElement('div');
-      buyWrap.className = 'buy-wrap';
+      // Ações: Compartilhar + Comprar
+      const actionsDiv = document.createElement('div');
+      actionsDiv.className = 'beat-actions';
+      
+      const shareBtn = document.createElement('button');
+      shareBtn.className = 'btn-share';
+      shareBtn.innerHTML = '<i class="fas fa-share-alt"></i> Compartilhar';
+      shareBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        shareBeat(beat);
+      });
       
       const buyBtn = document.createElement('a');
       buyBtn.className = 'btn-whatsapp';
@@ -1414,12 +1568,13 @@
         window.open(`https://wa.me/${phone}?text=${msg}`, '_blank');
       });
       
-      buyWrap.appendChild(buyBtn);
+      actionsDiv.appendChild(shareBtn);
+      actionsDiv.appendChild(buyBtn);
       
       infoDiv.appendChild(titleInfo);
       infoDiv.appendChild(metaDiv);
       infoDiv.appendChild(exclusivo);
-      infoDiv.appendChild(buyWrap);
+      infoDiv.appendChild(actionsDiv);
 
       card.appendChild(playerWrapper);
       card.appendChild(infoDiv);
@@ -1487,24 +1642,36 @@
     }
 
     // ============================================================
-    // 8. UI UPDATE
+    // 10. UI UPDATE
     // ============================================================
     function updateUI() {
-      // Admin menu
       if (isLoggedIn && currentUser) {
-        adminMenuBtn.classList.remove('hidden');
-        loginMenu.style.display = 'none';
-        dropdownUserEmail.querySelector('span').textContent = currentUser.email || 'usuario@email.com';
+        // Mostra opções de admin
+        dropdownUserEmail.style.display = 'block';
+        userEmailText.textContent = currentUser.email || 'usuario@email.com';
+        dividerAfterUser.style.display = 'block';
+        dropdownLogin.style.display = 'none';
+        dropdownNewBeat.style.display = 'flex';
+        dropdownToggleEdit.style.display = 'flex';
+        dividerBeforeLogout.style.display = 'block';
+        dropdownLogout.style.display = 'flex';
+        
         // Atualiza texto do botão de editar
         dropdownToggleEdit.innerHTML = editMode 
           ? '<i class="fas fa-edit"></i> Desativar Edição' 
           : '<i class="fas fa-edit"></i> Editar';
+        
+        menuLabel.textContent = 'Admin';
       } else {
-        adminMenuBtn.classList.add('hidden');
-        loginMenu.style.display = 'block';
-        // Fecha dropdowns
-        adminDropdown.classList.remove('active');
-        loginDropdown.classList.remove('active');
+        // Mostra opção de login
+        dropdownUserEmail.style.display = 'none';
+        dividerAfterUser.style.display = 'none';
+        dropdownLogin.style.display = 'flex';
+        dropdownNewBeat.style.display = 'none';
+        dropdownToggleEdit.style.display = 'none';
+        dividerBeforeLogout.style.display = 'none';
+        dropdownLogout.style.display = 'none';
+        menuLabel.textContent = 'Menu';
       }
 
       // Botões de editar nos cards
@@ -1515,7 +1682,7 @@
     }
 
     // ============================================================
-    // 9. MODAL FORM
+    // 11. MODAL FORM
     // ============================================================
     function openFormModal(beat = null) {
       if (!isLoggedIn) return;
@@ -1555,7 +1722,7 @@
       }
       
       formModal.classList.add('active');
-      adminDropdown.classList.remove('active');
+      mainDropdown.classList.remove('active');
     }
 
     function closeFormModal() {
@@ -1571,7 +1738,7 @@
     }
 
     // ============================================================
-    // 10. EVENTOS DO FORMULÁRIO
+    // 12. EVENTOS DO FORMULÁRIO
     // ============================================================
     fCoverFile.addEventListener('change', (e) => {
       const file = e.target.files[0];
@@ -1618,7 +1785,7 @@
     });
 
     // ============================================================
-    // 11. AUTENTICAÇÃO
+    // 13. AUTENTICAÇÃO
     // ============================================================
     async function doLogin(e) {
       e.preventDefault();
@@ -1637,7 +1804,7 @@
         isLoggedIn = true;
         loginError.style.display = 'none';
         loginModal.classList.remove('active');
-        loginDropdown.classList.remove('active');
+        mainDropdown.classList.remove('active');
         await loadBeats();
         updateUI();
         showToast('Login realizado', `Bem-vindo, ${currentUser.email}. Você agora tem acesso ao painel administrativo.`, 'success');
@@ -1654,7 +1821,7 @@
         isLoggedIn = false;
         currentUser = null;
         editMode = false;
-        adminDropdown.classList.remove('active');
+        mainDropdown.classList.remove('active');
         await loadBeats();
         updateUI();
         showToast('Sessão encerrada', 'Você saiu do modo administrador com sucesso.', 'info');
@@ -1677,29 +1844,25 @@
     }
 
     // ============================================================
-    // 12. EVENTOS DOS MENUS
+    // 14. EVENTOS DO MENU
     // ============================================================
-    // Admin menu toggle
-    adminMenuBtn.addEventListener('click', (e) => {
+    menuBtn.addEventListener('click', (e) => {
       e.stopPropagation();
-      adminDropdown.classList.toggle('active');
-      loginDropdown.classList.remove('active');
+      mainDropdown.classList.toggle('active');
     });
 
-    // Login menu toggle
-    loginMenuBtn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      loginDropdown.classList.toggle('active');
-      adminDropdown.classList.remove('active');
-    });
-
-    // Fecha dropdowns ao clicar fora
+    // Fecha dropdown ao clicar fora
     document.addEventListener('click', () => {
-      adminDropdown.classList.remove('active');
-      loginDropdown.classList.remove('active');
+      mainDropdown.classList.remove('active');
     });
 
-    // Admin dropdown items
+    // Itens do dropdown
+    dropdownLogin.addEventListener('click', () => {
+      loginModal.classList.add('active');
+      loginError.style.display = 'none';
+      mainDropdown.classList.remove('active');
+    });
+
     dropdownNewBeat.addEventListener('click', () => {
       openFormModal(null);
     });
@@ -1715,18 +1878,13 @@
         if (editMode && isLoggedIn) btn.style.display = 'flex';
         else btn.style.display = 'none';
       });
-      adminDropdown.classList.remove('active');
+      mainDropdown.classList.remove('active');
     });
 
     dropdownLogout.addEventListener('click', doLogout);
-    dropdownLogin.addEventListener('click', () => {
-      loginModal.classList.add('active');
-      loginError.style.display = 'none';
-      loginDropdown.classList.remove('active');
-    });
 
     // ============================================================
-    // 13. OUTROS EVENTOS
+    // 15. OUTROS EVENTOS
     // ============================================================
     document.getElementById('loginCancel').addEventListener('click', () => loginModal.classList.remove('active'));
     document.getElementById('formCancel').addEventListener('click', closeFormModal);
@@ -1741,7 +1899,7 @@
     loginForm.addEventListener('submit', doLogin);
 
     // ============================================================
-    // 14. INICIALIZAÇÃO
+    // 16. INICIALIZAÇÃO
     // ============================================================
     async function init() {
       await checkSession();
@@ -1749,8 +1907,7 @@
       updateUI();
       
       console.log('Best Beats conectado ao Supabase');
-      console.log('Tabela: beats');
-      console.log('Buckets: covers, audios');
+      console.log('URLs amigáveis: ?beat=nome-do-beat');
     }
 
     init();
