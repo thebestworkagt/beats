@@ -160,15 +160,18 @@
       display: flex;
       align-items: center;
       gap: 0.3rem;
-    }
-    .user-info-display .user-email.hidden {
-      filter: blur(8px);
-      user-select: none;
-      pointer-events: none;
-      opacity: 0.5;
+      font-family: 'Inter', sans-serif;
+      letter-spacing: 1px;
     }
     .user-info-display .user-email .email-text {
       transition: all 0.3s ease;
+      font-family: 'Inter', sans-serif;
+      letter-spacing: 1px;
+    }
+    .user-info-display .user-email .email-text.hidden {
+      color: var(--text-muted);
+      opacity: 0.5;
+      letter-spacing: 2px;
     }
     .user-info-display .user-email .email-toggle-btn {
       background: none;
@@ -190,6 +193,9 @@
       font-size: 0.6rem;
     }
 
+    /* ============================================================
+       O RESTO DO CSS CONTINUA IGUAL
+       ============================================================ */
     /* ----- HEADER ----- */
     .header {
       display: flex;
@@ -440,6 +446,9 @@
     }
     @keyframes progress { 0% { width: 0%; } 50% { width: 70%; } 100% { width: 100%; } }
 
+    /* ============================================================
+       O RESTO DO CSS CONTINUA IGUAL (BEATS, PLAYER, MODALS, ETC)
+       ============================================================ */
     /* ----- BEATS LIST ----- */
     .beats-list { display: flex; flex-direction: column; gap: 1.5rem; margin-top: 0.5rem; }
     .beat-card {
@@ -1500,6 +1509,7 @@
     
     // Email visibility
     let emailVisible = true;
+    let emailText = '';
 
     // ============================================================
     // 3. TOAST
@@ -1527,32 +1537,47 @@
     }
 
     // ============================================================
-    // 4. EMAIL TOGGLE
+    // 4. EMAIL TOGGLE - CORRIGIDO
     // ============================================================
     function toggleEmailVisibility() {
       emailVisible = !emailVisible;
-      const emailText = document.getElementById('emailText');
+      const emailElement = document.getElementById('emailText');
       const eyeIcon = document.getElementById('emailEyeIcon');
+      const userEmail = currentUser?.email || 'usuario@email.com';
       
       if (emailVisible) {
-        emailText.classList.remove('hidden');
+        emailElement.textContent = emailText || userEmail;
         eyeIcon.className = 'fas fa-eye';
         localStorage.setItem('bestBeatsEmailVisible', 'true');
+        showToast('Email visível', 'O email está visível.', 'info', 2000);
       } else {
-        emailText.classList.add('hidden');
+        // Substitui o email por asteriscos
+        const hiddenText = userEmail.replace(/[^@]/g, '•');
+        emailElement.textContent = hiddenText;
         eyeIcon.className = 'fas fa-eye-slash';
         localStorage.setItem('bestBeatsEmailVisible', 'false');
+        showToast('Email oculto', 'O email foi ocultado.', 'info', 2000);
       }
     }
 
     function loadEmailVisibility() {
       const saved = localStorage.getItem('bestBeatsEmailVisible');
+      const userEmail = currentUser?.email || 'usuario@email.com';
+      const emailElement = document.getElementById('emailText');
+      const eyeIcon = document.getElementById('emailEyeIcon');
+      
+      // Armazena o email original
+      emailText = userEmail;
+      
       if (saved === 'false') {
         emailVisible = false;
-        const emailText = document.getElementById('emailText');
-        const eyeIcon = document.getElementById('emailEyeIcon');
-        emailText.classList.add('hidden');
+        const hiddenText = userEmail.replace(/[^@]/g, '•');
+        emailElement.textContent = hiddenText;
         eyeIcon.className = 'fas fa-eye-slash';
+      } else {
+        emailVisible = true;
+        emailElement.textContent = userEmail;
+        eyeIcon.className = 'fas fa-eye';
       }
     }
 
@@ -2283,6 +2308,9 @@
         document.getElementById('dropdownLogout').style.display = 'flex';
         document.getElementById('dropdownToggleEdit').innerHTML = editMode ? '<i class="fas fa-edit"></i> Desativar Edição' : '<i class="fas fa-edit"></i> Editar';
         document.getElementById('menuLabel').textContent = 'Admin';
+        
+        // Carrega a visibilidade do email
+        loadEmailVisibility();
       } else {
         document.getElementById('userInfoDisplay').style.display = 'none';
         document.getElementById('avatarContainer').innerHTML = '';
@@ -2301,9 +2329,6 @@
       });
       updatePlaylistCount();
       updateCart();
-      
-      // Carrega a visibilidade do email
-      loadEmailVisibility();
     }
 
     function updatePlaylistButtons(beatId) {
@@ -2704,8 +2729,7 @@
       await checkSession();
       await loadBeats();
       updateUI();
-      loadEmailVisibility();
-      console.log('Best Beats v10.0 - Com botão para ocultar email!');
+      console.log('Best Beats v10.0 - Email ocultado com asteriscos!');
       console.log('📱 WhatsApp: +244 926 261 011');
       console.log('📧 Email: agtbeatsxpalha@email.com');
     }
