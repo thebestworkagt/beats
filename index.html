@@ -1,0 +1,1539 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Best Beats · ouça & compre</title>
+  
+  <!-- Favicon usando logo.png -->
+  <link rel="icon" type="image/png" href="logo.png">
+  <link rel="apple-touch-icon" href="logo.png">
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    /* === ESTILOS COMPLETOS === */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: #08080e;
+      background-image: radial-gradient(circle at 10% 20%, #12121e 0%, #08080e 90%);
+      min-height: 100vh;
+      font-family: 'Inter', sans-serif;
+      color: #f0f0f0;
+      display: flex;
+      justify-content: center;
+      padding: 2rem 1rem;
+      position: relative;
+    }
+    .app { max-width: 1100px; width: 100%; }
+
+    /* === TOAST NOTIFICATION === */
+    .toast-container {
+      position: fixed;
+      top: 2rem;
+      right: 2rem;
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+      max-width: 420px;
+      width: 100%;
+      pointer-events: none;
+    }
+    .toast {
+      background: rgba(18, 18, 26, 0.92);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(247, 201, 72, 0.12);
+      border-radius: 16px;
+      padding: 1.2rem 1.6rem;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+      transform: translateX(120%);
+      animation: slideIn 0.4s ease forwards;
+      pointer-events: auto;
+    }
+    .toast.removing {
+      animation: slideOut 0.3s ease forwards;
+    }
+    .toast-icon {
+      flex-shrink: 0;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.9rem;
+      margin-top: 0.1rem;
+    }
+    .toast-icon.success {
+      background: rgba(37, 211, 102, 0.15);
+      color: #25D366;
+      border: 1px solid rgba(37, 211, 102, 0.2);
+    }
+    .toast-icon.error {
+      background: rgba(255, 70, 70, 0.15);
+      color: #ff6b6b;
+      border: 1px solid rgba(255, 70, 70, 0.2);
+    }
+    .toast-icon.info {
+      background: rgba(247, 201, 72, 0.15);
+      color: #f7c948;
+      border: 1px solid rgba(247, 201, 72, 0.2);
+    }
+    .toast-content {
+      flex: 1;
+    }
+    .toast-title {
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: #f0f0f0;
+      margin-bottom: 0.2rem;
+    }
+    .toast-message {
+      font-weight: 300;
+      font-size: 0.85rem;
+      color: #b5b5c8;
+      line-height: 1.4;
+    }
+    .toast-close {
+      background: none;
+      border: none;
+      color: #7a7a8a;
+      cursor: pointer;
+      font-size: 1rem;
+      padding: 0.2rem;
+      transition: 0.2s;
+      flex-shrink: 0;
+    }
+    .toast-close:hover {
+      color: #f0f0f0;
+    }
+
+    @keyframes slideIn {
+      to { transform: translateX(0); }
+    }
+    @keyframes slideOut {
+      to { transform: translateX(120%); opacity: 0; }
+    }
+
+    /* === HEADER === */
+    .header {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    .logo-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 0.25rem;
+    }
+    .logo {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      border: 2px solid #f7c948;
+      box-shadow: 0 0 20px rgba(247, 201, 72, 0.2);
+      object-fit: cover;
+      background: #0a0a0f;
+    }
+    .brand {
+      font-size: 2.4rem;
+      font-weight: 800;
+      letter-spacing: 2px;
+      background: linear-gradient(135deg, #f7c948, #f0a500);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-shadow: 0 0 30px rgba(247, 201, 72, 0.15);
+    }
+    .subtitle {
+      font-weight: 300;
+      font-size: 1rem;
+      letter-spacing: 4px;
+      color: #b9b9c0;
+      margin-top: -0.25rem;
+      border-top: 1px solid rgba(247, 201, 72, 0.2);
+      padding-top: 0.3rem;
+      display: inline-block;
+    }
+    .subtitle i { color: #f7c948; margin: 0 4px; }
+
+    /* === ADMIN TOOLBAR === */
+    .admin-toolbar {
+      display: flex;
+      justify-content: flex-end;
+      gap: 1rem;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .admin-btn {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(247, 201, 72, 0.15);
+      color: #e0e0e8;
+      padding: 0.5rem 1.4rem;
+      border-radius: 60px;
+      font-weight: 500;
+      font-size: 0.9rem;
+      backdrop-filter: blur(8px);
+      cursor: pointer;
+      transition: 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-family: 'Inter', sans-serif;
+    }
+    .admin-btn i { color: #f7c948; }
+    .admin-btn:hover {
+      background: rgba(247, 201, 72, 0.08);
+      border-color: #f7c948;
+      transform: scale(1.02);
+    }
+    .admin-btn.primary {
+      background: linear-gradient(135deg, #f7c948, #f0a500);
+      color: #0a0a0f;
+      border: none;
+      font-weight: 700;
+    }
+    .admin-btn.primary i { color: #0a0a0f; }
+    .admin-btn.primary:hover {
+      transform: scale(1.04);
+      box-shadow: 0 0 30px rgba(247, 201, 72, 0.2);
+    }
+    .admin-btn.danger {
+      border-color: rgba(255, 70, 70, 0.2);
+      color: #ff6b6b;
+    }
+    .admin-btn.danger i { color: #ff6b6b; }
+    .admin-btn.danger:hover {
+      border-color: #ff6b6b;
+      background: rgba(255, 70, 70, 0.08);
+    }
+    .admin-btn.hidden { display: none; }
+
+    /* === BEATS LIST === */
+    .beats-list { display: flex; flex-direction: column; gap: 2rem; margin-top: 0.5rem; }
+
+    .beat-card {
+      background: rgba(20, 20, 30, 0.35);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-radius: 40px;
+      border: 1px solid rgba(247, 201, 72, 0.08);
+      padding: 1.5rem 2rem;
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.6), 0 0 0 1px rgba(247, 201, 72, 0.02);
+      transition: 0.25s ease;
+      flex-wrap: wrap;
+      position: relative;
+    }
+    .beat-card:hover {
+      border-color: rgba(247, 201, 72, 0.2);
+      box-shadow: 0 25px 50px rgba(0,0,0,0.8), 0 0 0 1px rgba(247, 201, 72, 0.05);
+    }
+    .card-edit-btn {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(247, 201, 72, 0.1);
+      color: #b0b0c0;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      backdrop-filter: blur(4px);
+      cursor: pointer;
+      transition: 0.2s;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+    }
+    .card-edit-btn.visible { display: flex; }
+    .card-edit-btn:hover {
+      background: rgba(247, 201, 72, 0.1);
+      color: #f7c948;
+      border-color: #f7c948;
+    }
+
+    /* === PLAYER === */
+    .player-wrapper {
+      flex: 0 0 200px;
+      width: 200px;
+      height: 200px;
+      border-radius: 24px;
+      position: relative;
+      overflow: hidden;
+      background: #12121a;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.7);
+    }
+    .player-bg {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: blur(8px) brightness(0.6);
+      transform: scale(1.05);
+    }
+    .player-overlay {
+      position: absolute;
+      inset: 0;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      background: rgba(10, 10, 15, 0.35);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 0.8rem;
+      color: white;
+    }
+    .player-artist {
+      font-size: 0.6rem;
+      font-weight: 400;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: #d4d4e0;
+      background: rgba(0,0,0,0.3);
+      padding: 0.15rem 0.6rem;
+      border-radius: 30px;
+      backdrop-filter: blur(4px);
+      margin-bottom: 0.2rem;
+    }
+    .player-title {
+      font-weight: 700;
+      font-size: 1.1rem;
+      text-align: center;
+      line-height: 1.2;
+      margin: 0.1rem 0 0.2rem;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.6);
+    }
+    .player-controls {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      margin-top: 0.2rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .btn-play {
+      background: #f7c948;
+      border: none;
+      color: #0a0a0f;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      font-size: 1.2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 16px rgba(247, 201, 72, 0.4);
+      transition: 0.2s;
+      cursor: pointer;
+    }
+    .btn-play:hover { transform: scale(1.04); background: #f5d058; }
+    .btn-next {
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.15);
+      color: #eee;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(6px);
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    .btn-next:hover { background: rgba(255,255,255,0.2); }
+    .btn-playlist {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      color: #d0d0dd;
+      padding: 0.15rem 0.6rem;
+      border-radius: 40px;
+      font-size: 0.65rem;
+      font-weight: 400;
+      backdrop-filter: blur(4px);
+      cursor: pointer;
+      letter-spacing: 0.3px;
+      white-space: nowrap;
+      transition: 0.2s;
+    }
+    .btn-playlist:hover { background: rgba(255,255,255,0.08); color: #fff; }
+    .progress-area {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      margin: 0.1rem 0 0.1rem;
+      padding: 0 0.2rem;
+    }
+    .progress-bar {
+      flex: 1;
+      height: 3px;
+      background: rgba(255,255,255,0.15);
+      border-radius: 10px;
+      appearance: none;
+      -webkit-appearance: none;
+      outline: none;
+    }
+    .progress-bar::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #f7c948;
+      cursor: pointer;
+      box-shadow: 0 0 12px rgba(247, 201, 72, 0.3);
+    }
+    .progress-bar::-moz-range-thumb {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #f7c948;
+      cursor: pointer;
+      border: none;
+    }
+    .time-display {
+      font-size: 0.55rem;
+      font-weight: 300;
+      color: #bfbfd0;
+      min-width: 32px;
+    }
+    .volume-wrap {
+      display: flex;
+      align-items: center;
+      gap: 0.2rem;
+      margin-top: 0.1rem;
+    }
+    .volume-wrap i { font-size: 0.65rem; color: #b0b0c0; }
+    .volume-slider {
+      width: 36px;
+      height: 3px;
+      background: rgba(255,255,255,0.15);
+      border-radius: 10px;
+      appearance: none;
+      -webkit-appearance: none;
+      outline: none;
+    }
+    .volume-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #f7c948;
+      cursor: pointer;
+    }
+    .volume-slider::-moz-range-thumb {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #f7c948;
+      border: none;
+    }
+    .badge-genre {
+      position: absolute;
+      top: 8px;
+      right: 10px;
+      background: rgba(0,0,0,0.55);
+      backdrop-filter: blur(6px);
+      padding: 0.1rem 0.6rem;
+      border-radius: 30px;
+      font-size: 0.5rem;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      color: #f7c948;
+      border: 1px solid rgba(247, 201, 72, 0.2);
+      text-transform: uppercase;
+    }
+
+    /* === BEAT INFO === */
+    .beat-info {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+      min-width: 160px;
+    }
+    .beat-title {
+      font-weight: 700;
+      font-size: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+    .beat-title i { color: #f7c948; font-size: 1rem; opacity: 0.7; }
+    .beat-meta {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      flex-wrap: wrap;
+      margin: 0.1rem 0;
+    }
+    .beat-genre {
+      font-size: 0.9rem;
+      color: #b5b5c8;
+      font-weight: 300;
+      letter-spacing: 0.2px;
+      background: rgba(255,255,255,0.04);
+      padding: 0.1rem 0.8rem;
+      border-radius: 30px;
+      border: 1px solid rgba(255,255,255,0.04);
+    }
+    .beat-genre i { color: #f7c948; margin-right: 4px; }
+    .beat-price {
+      display: inline-block;
+      background: rgba(247, 201, 72, 0.08);
+      border: 1px solid rgba(247, 201, 72, 0.15);
+      backdrop-filter: blur(4px);
+      padding: 0.15rem 1rem;
+      border-radius: 60px;
+      font-weight: 600;
+      font-size: 1rem;
+      color: #f7c948;
+    }
+    .beat-price i { margin-right: 6px; color: #f0a500; }
+    .beat-exclusivo {
+      font-size: 0.75rem;
+      color: #9a9aaa;
+      font-weight: 300;
+      letter-spacing: 0.5px;
+      margin-top: -0.1rem;
+    }
+    .beat-exclusivo i { color: #f7c948; margin-right: 4px; font-size: 0.7rem; }
+    .buy-wrap { margin-top: 0.6rem; }
+    .btn-whatsapp {
+      background: linear-gradient(135deg, #25D366, #1ebe5c);
+      border: 1px solid rgba(255,255,255,0.1);
+      color: white;
+      padding: 0.6rem 2rem;
+      border-radius: 60px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      box-shadow: 0 8px 20px rgba(37, 211, 102, 0.2);
+      transition: 0.2s;
+      cursor: pointer;
+      text-decoration: none;
+      letter-spacing: 0.3px;
+      backdrop-filter: blur(4px);
+    }
+    .btn-whatsapp i { font-size: 1.2rem; }
+    .btn-whatsapp:hover {
+      transform: scale(1.02);
+      box-shadow: 0 10px 28px rgba(37, 211, 102, 0.35);
+      background: linear-gradient(135deg, #2fd16e, #1ebe5c);
+    }
+
+    /* === FOOTER === */
+    .footer {
+      margin-top: 4rem;
+      padding: 1.5rem 0 0.5rem;
+      border-top: 1px solid rgba(247, 201, 72, 0.05);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.8rem;
+      color: #7a7a8a;
+      font-weight: 300;
+      font-size: 0.9rem;
+    }
+    .social-icons {
+      display: flex;
+      gap: 1.6rem;
+    }
+    .social-icons a {
+      color: #a0a0b0;
+      font-size: 1.2rem;
+      transition: 0.2s;
+    }
+    .social-icons a:hover {
+      color: #f7c948;
+      transform: translateY(-2px);
+    }
+
+    /* === MODALS === */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.7);
+      backdrop-filter: blur(6px);
+      z-index: 999;
+      justify-content: center;
+      align-items: center;
+    }
+    .modal-overlay.active { display: flex; }
+    .modal {
+      background: #12121a;
+      border: 1px solid rgba(247, 201, 72, 0.15);
+      border-radius: 40px;
+      padding: 2rem 2.5rem;
+      max-width: 520px;
+      width: 90%;
+      backdrop-filter: blur(20px);
+      box-shadow: 0 40px 80px rgba(0,0,0,0.8);
+      color: #f0f0f0;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+    .modal h2 {
+      font-weight: 700;
+      margin-bottom: 1.5rem;
+      color: #f7c948;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+    .modal label {
+      display: block;
+      font-weight: 400;
+      font-size: 0.8rem;
+      color: #b5b5c8;
+      margin: 0.8rem 0 0.2rem;
+      letter-spacing: 0.5px;
+    }
+    .modal input {
+      width: 100%;
+      padding: 0.6rem 1rem;
+      border-radius: 30px;
+      border: 1px solid rgba(247, 201, 72, 0.1);
+      background: rgba(255,255,255,0.04);
+      color: #f0f0f0;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.95rem;
+      outline: none;
+      transition: 0.2s;
+    }
+    .modal input:focus {
+      border-color: #f7c948;
+      background: rgba(255,255,255,0.06);
+    }
+    .modal input[type="file"] {
+      padding: 0.4rem;
+      background: rgba(255,255,255,0.02);
+      border: 1px dashed rgba(247, 201, 72, 0.2);
+    }
+    .modal input[type="file"]::-webkit-file-upload-button {
+      background: rgba(247, 201, 72, 0.1);
+      border: 1px solid rgba(247, 201, 72, 0.2);
+      color: #f7c948;
+      padding: 0.4rem 1rem;
+      border-radius: 30px;
+      cursor: pointer;
+      font-family: 'Inter', sans-serif;
+    }
+    .modal .file-status {
+      font-size: 0.75rem;
+      color: #9a9aaa;
+      margin-top: 0.2rem;
+    }
+    .modal .modal-actions {
+      display: flex;
+      gap: 0.8rem;
+      margin-top: 1.8rem;
+      justify-content: flex-end;
+    }
+    .modal .modal-actions button {
+      padding: 0.6rem 1.8rem;
+      border-radius: 60px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: 0.2s;
+      border: none;
+      font-family: 'Inter', sans-serif;
+    }
+    .modal .btn-cancel {
+      background: rgba(255,255,255,0.04);
+      color: #b0b0c0;
+      border: 1px solid rgba(255,255,255,0.06);
+    }
+    .modal .btn-cancel:hover { background: rgba(255,255,255,0.08); }
+    .modal .btn-save {
+      background: linear-gradient(135deg, #f7c948, #f0a500);
+      color: #0a0a0f;
+      font-weight: 700;
+    }
+    .modal .btn-save:hover { transform: scale(1.04); box-shadow: 0 0 30px rgba(247, 201, 72, 0.15); }
+    .modal .btn-login {
+      background: linear-gradient(135deg, #f7c948, #f0a500);
+      color: #0a0a0f;
+      font-weight: 700;
+      width: 100%;
+      padding: 0.7rem;
+    }
+    .modal .btn-login:hover { transform: scale(1.02); box-shadow: 0 0 30px rgba(247, 201, 72, 0.15); }
+    .modal .login-error {
+      color: #ff6b6b;
+      font-size: 0.8rem;
+      margin-top: 0.5rem;
+      display: none;
+    }
+
+    /* === LOADING === */
+    .loading-spinner {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 4rem;
+      color: #f7c948;
+      font-size: 1.2rem;
+      gap: 1rem;
+    }
+    .loading-spinner i {
+      font-size: 2rem;
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* === PREVIEW === */
+    .preview-container {
+      display: flex;
+      gap: 1rem;
+      margin: 0.5rem 0;
+      flex-wrap: wrap;
+    }
+    .preview-item {
+      background: rgba(255,255,255,0.04);
+      border-radius: 12px;
+      padding: 0.5rem;
+      border: 1px solid rgba(247, 201, 72, 0.1);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .preview-item img {
+      width: 60px;
+      height: 60px;
+      object-fit: cover;
+      border-radius: 8px;
+    }
+    .preview-item i {
+      font-size: 2rem;
+      color: #f7c948;
+    }
+
+    /* === RESPONSIVE === */
+    @media (max-width: 750px) {
+      .beat-card { flex-direction: column; align-items: center; text-align: center; padding: 1.5rem; }
+      .player-wrapper { flex: 0 0 180px; width: 180px; height: 180px; }
+      .beat-info { align-items: center; width: 100%; }
+      .beat-meta { justify-content: center; }
+      .buy-wrap { width: 100%; display: flex; justify-content: center; }
+      .admin-toolbar { justify-content: center; }
+      .modal { padding: 1.5rem; }
+      .toast-container { right: 1rem; left: 1rem; max-width: none; }
+    }
+    @media (max-width: 480px) {
+      .brand { font-size: 1.8rem; }
+      .player-wrapper { flex: 0 0 150px; width: 150px; height: 150px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- TOAST CONTAINER -->
+<div class="toast-container" id="toastContainer"></div>
+
+<div class="app">
+
+  <header class="header">
+    <div class="logo-wrapper">
+      <img src="logo.png" alt="Best Beats" class="logo">
+      <span class="brand">Best Beats</span>
+    </div>
+    <div class="subtitle"><i class="fas fa-headphones"></i> · ouça & compre <i class="fas fa-crown" style="margin-left: 6px;"></i></div>
+  </header>
+
+  <div class="admin-toolbar">
+    <button class="admin-btn primary hidden" id="newBeatBtn"><i class="fas fa-plus"></i> Lançar Beat</button>
+    <button class="admin-btn hidden" id="toggleEditMode"><i class="fas fa-edit"></i> Editar</button>
+    <button class="admin-btn" id="loginBtn"><i class="fas fa-user"></i> Login</button>
+    <button class="admin-btn danger hidden" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Sair</button>
+    <span id="userEmail" style="font-size:0.8rem; color:#b5b5c8; display:none;"></span>
+  </div>
+
+  <div id="loading" class="loading-spinner"><i class="fas fa-spinner"></i> Carregando beats...</div>
+  <div class="beats-list" id="beatsContainer"></div>
+
+  <footer class="footer">
+    <div class="social-icons">
+      <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+      <a href="#" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+    </div>
+    <div>© 2026 Best Beats · todos os direitos reservados</div>
+  </footer>
+</div>
+
+<!-- MODAL LOGIN -->
+<div class="modal-overlay" id="loginModal">
+  <div class="modal">
+    <h2><i class="fas fa-lock"></i> Acesso Admin</h2>
+    <form id="loginForm">
+      <label for="loginEmail">Email</label>
+      <input type="email" id="loginEmail" placeholder="seu@email.com" required>
+      <label for="loginPass">Senha</label>
+      <input type="password" id="loginPass" placeholder="••••••••" required>
+      <div class="login-error" id="loginError">Email ou senha inválidos.</div>
+      <div class="modal-actions" style="justify-content: center; flex-direction: column; gap: 0.8rem;">
+        <button type="submit" class="btn-login"><i class="fas fa-sign-in-alt"></i> Entrar</button>
+        <button type="button" class="btn-cancel" id="loginCancel" style="width:100%;">Cancelar</button>
+      </div>
+      <div style="margin-top: 1rem; text-align: center; font-size: 0.75rem; color: #7a7a8a;">
+        <i class="fas fa-info-circle"></i> Crie sua conta no Supabase primeiro
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- MODAL FORM COM UPLOAD -->
+<div class="modal-overlay" id="formModal">
+  <div class="modal">
+    <h2 id="modalTitle"><i class="fas fa-wave-square"></i> <span>Novo Beat</span></h2>
+    <form id="beatForm" enctype="multipart/form-data">
+      <label for="fTitle">Título *</label>
+      <input type="text" id="fTitle" placeholder="Ex: Aurora" required>
+      
+      <label for="fArtist">Artista *</label>
+      <input type="text" id="fArtist" placeholder="Ex: NXVX" required>
+      
+      <label for="fGenre">Gênero *</label>
+      <input type="text" id="fGenre" placeholder="Ex: Electronic" required>
+      
+      <label for="fPrice">Preço *</label>
+      <input type="text" id="fPrice" placeholder="Kz 3.500" required>
+      
+      <label for="fCoverFile">Imagem de Capa</label>
+      <input type="file" id="fCoverFile" accept="image/*">
+      <div class="file-status" id="coverStatus">Nenhum arquivo selecionado</div>
+      
+      <label for="fAudioFile">Áudio (MP3)</label>
+      <input type="file" id="fAudioFile" accept="audio/*">
+      <div class="file-status" id="audioStatus">Nenhum arquivo selecionado</div>
+      
+      <div class="preview-container" id="previewContainer"></div>
+      
+      <div class="modal-actions">
+        <button type="button" class="btn-cancel" id="formCancel">Cancelar</button>
+        <button type="submit" class="btn-save" id="modalSave">Salvar</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+  (function() {
+    // ============================================================
+    // 1. CONFIGURAÇÃO DO SUPABASE
+    // ============================================================
+    const SUPABASE_URL = 'https://bbghffltmiqcljuokbgz.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJiZ2hmZmx0bWlxY2xqdW9rYmd6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ2NzIyODgsImV4cCI6MjEwMDI0ODI4OH0.n1mYWDG2803VEbGQ8qyWlCkthtezu-3Yuh-k58bo0xE';
+
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    // ============================================================
+    // 2. TOAST NOTIFICATION SYSTEM
+    // ============================================================
+    function showToast(title, message, type = 'info', duration = 4000) {
+      const container = document.getElementById('toastContainer');
+      const toast = document.createElement('div');
+      toast.className = 'toast';
+
+      const icons = {
+        success: 'fa-check-circle',
+        error: 'fa-exclamation-circle',
+        info: 'fa-info-circle'
+      };
+
+      toast.innerHTML = `
+        <div class="toast-icon ${type}">
+          <i class="fas ${icons[type] || icons.info}"></i>
+        </div>
+        <div class="toast-content">
+          <div class="toast-title">${title}</div>
+          <div class="toast-message">${message}</div>
+        </div>
+        <button class="toast-close"><i class="fas fa-times"></i></button>
+      `;
+
+      container.appendChild(toast);
+
+      const closeBtn = toast.querySelector('.toast-close');
+      closeBtn.addEventListener('click', () => removeToast(toast));
+
+      if (duration > 0) {
+        setTimeout(() => removeToast(toast), duration);
+      }
+
+      return toast;
+    }
+
+    function removeToast(toast) {
+      if (toast.classList.contains('removing')) return;
+      toast.classList.add('removing');
+      setTimeout(() => {
+        if (toast.parentNode) toast.parentNode.removeChild(toast);
+      }, 350);
+    }
+
+    // ============================================================
+    // 3. ESTADO
+    // ============================================================
+    let beatsData = [];
+    let editMode = false;
+    let editingId = null;
+    let isLoggedIn = false;
+    let currentUser = null;
+    let selectedCoverFile = null;
+    let selectedAudioFile = null;
+
+    // ============================================================
+    // 4. DOM REFS
+    // ============================================================
+    const container = document.getElementById('beatsContainer');
+    const loading = document.getElementById('loading');
+    const loginModal = document.getElementById('loginModal');
+    const formModal = document.getElementById('formModal');
+    const modalTitle = document.getElementById('modalTitle');
+    const beatForm = document.getElementById('beatForm');
+    const fTitle = document.getElementById('fTitle');
+    const fArtist = document.getElementById('fArtist');
+    const fGenre = document.getElementById('fGenre');
+    const fPrice = document.getElementById('fPrice');
+    const fCoverFile = document.getElementById('fCoverFile');
+    const fAudioFile = document.getElementById('fAudioFile');
+    const coverStatus = document.getElementById('coverStatus');
+    const audioStatus = document.getElementById('audioStatus');
+    const previewContainer = document.getElementById('previewContainer');
+    const loginForm = document.getElementById('loginForm');
+    const loginError = document.getElementById('loginError');
+    const userEmail = document.getElementById('userEmail');
+
+    const newBeatBtn = document.getElementById('newBeatBtn');
+    const toggleEditBtn = document.getElementById('toggleEditMode');
+    const loginBtn = document.getElementById('loginBtn');
+    const logoutBtn = document.getElementById('logoutBtn');
+
+    // ============================================================
+    // 5. FUNÇÕES DE UPLOAD
+    // ============================================================
+    async function uploadFile(file, bucket, path) {
+      if (!file) return null;
+      
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${path}.${fileExt}`;
+      
+      const { data, error } = await supabase.storage
+        .from(bucket)
+        .upload(fileName, file, {
+          cacheControl: '3600',
+          upsert: true
+        });
+      
+      if (error) {
+        console.error('Erro no upload:', error);
+        throw error;
+      }
+      
+      const { data: urlData } = supabase.storage
+        .from(bucket)
+        .getPublicUrl(fileName);
+      
+      return urlData.publicUrl;
+    }
+
+    // ============================================================
+    // 6. CRUD COM SUPABASE
+    // ============================================================
+    async function loadBeats() {
+      try {
+        loading.style.display = 'flex';
+        container.innerHTML = '';
+        
+        const { data, error } = await supabase
+          .from('beats')
+          .select('*')
+          .order('id', { ascending: false });
+        
+        if (error) throw error;
+        
+        beatsData = data || [];
+        renderBeats();
+      } catch (error) {
+        console.error('Erro ao carregar beats:', error);
+        showToast('Erro ao carregar', 'Não foi possível carregar os beats. Verifique sua conexão.', 'error');
+      } finally {
+        loading.style.display = 'none';
+      }
+    }
+
+    async function saveBeatToSupabase(beatData, coverFile, audioFile) {
+      try {
+        let coverUrl = beatData.cover || null;
+        let audioUrl = beatData.audio || null;
+        
+        if (coverFile) {
+          const timestamp = Date.now();
+          const path = `beat-cover-${timestamp}`;
+          coverUrl = await uploadFile(coverFile, 'covers', path);
+        }
+        
+        if (audioFile) {
+          const timestamp = Date.now();
+          const path = `beat-audio-${timestamp}`;
+          audioUrl = await uploadFile(audioFile, 'audios', path);
+        }
+        
+        const newBeat = {
+          title: beatData.title,
+          artist: beatData.artist,
+          genre: beatData.genre,
+          price: beatData.price,
+          cover: coverUrl,
+          audio: audioUrl,
+          user_id: currentUser?.id
+        };
+        
+        if (editingId) {
+          const { error } = await supabase
+            .from('beats')
+            .update(newBeat)
+            .eq('id', editingId);
+          
+          if (error) throw error;
+          
+          showToast('Sucesso', 'O beat foi atualizado com sucesso.', 'success');
+        } else {
+          const { error } = await supabase
+            .from('beats')
+            .insert([newBeat]);
+          
+          if (error) throw error;
+          
+          showToast('Sucesso', 'Novo beat lançado com sucesso.', 'success');
+        }
+        
+        await loadBeats();
+        closeFormModal();
+      } catch (error) {
+        console.error('Erro ao salvar beat:', error);
+        showToast('Erro ao salvar', error.message || 'Ocorreu um erro ao salvar o beat.', 'error');
+      }
+    }
+
+    async function deleteBeat(id) {
+      if (!confirm('Tem certeza que deseja excluir este beat?')) return;
+      
+      try {
+        const { error } = await supabase
+          .from('beats')
+          .delete()
+          .eq('id', id);
+        
+        if (error) throw error;
+        
+        await loadBeats();
+        showToast('Sucesso', 'O beat foi excluído permanentemente.', 'success');
+      } catch (error) {
+        console.error('Erro ao excluir:', error);
+        showToast('Erro ao excluir', error.message || 'Não foi possível excluir o beat.', 'error');
+      }
+    }
+
+    // ============================================================
+    // 7. RENDERIZAÇÃO
+    // ============================================================
+    function renderBeats() {
+      container.innerHTML = '';
+      beatsData.forEach(beat => {
+        const card = createBeatCard(beat);
+        container.appendChild(card);
+      });
+      updateEditButtons();
+    }
+
+    function createBeatCard(beat) {
+      const card = document.createElement('div');
+      card.className = 'beat-card';
+      card.dataset.id = beat.id;
+
+      // Botão de editar
+      const editBtn = document.createElement('button');
+      editBtn.className = 'card-edit-btn';
+      if (isLoggedIn) editBtn.classList.add('visible');
+      editBtn.innerHTML = '<i class="fas fa-pen"></i>';
+      editBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (isLoggedIn) openEditModal(beat.id);
+      });
+      card.appendChild(editBtn);
+
+      // Botão de excluir
+      if (isLoggedIn) {
+        const deleteBtn = document.createElement('button');
+        deleteBtn.className = 'card-edit-btn';
+        deleteBtn.style.right = '52px';
+        deleteBtn.style.color = '#ff6b6b';
+        deleteBtn.innerHTML = '<i class="fas fa-trash"></i>';
+        deleteBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          deleteBeat(beat.id);
+        });
+        card.appendChild(deleteBtn);
+      }
+
+      // PLAYER
+      const playerWrapper = document.createElement('div');
+      playerWrapper.className = 'player-wrapper';
+      
+      const bgImg = document.createElement('img');
+      bgImg.className = 'player-bg';
+      bgImg.src = beat.cover || 'https://picsum.photos/seed/default/400/400';
+      bgImg.alt = `${beat.title} cover`;
+      bgImg.loading = 'lazy';
+
+      const overlay = document.createElement('div');
+      overlay.className = 'player-overlay';
+      
+      const artistSpan = document.createElement('div');
+      artistSpan.className = 'player-artist';
+      artistSpan.textContent = beat.artist;
+      
+      const titleSpan = document.createElement('div');
+      titleSpan.className = 'player-title';
+      titleSpan.textContent = beat.title;
+
+      const controls = document.createElement('div');
+      controls.className = 'player-controls';
+      
+      const playBtn = document.createElement('button');
+      playBtn.className = 'btn-play';
+      playBtn.innerHTML = '<i class="fas fa-play"></i>';
+      playBtn.setAttribute('data-playing', 'false');
+      
+      const nextBtn = document.createElement('button');
+      nextBtn.className = 'btn-next';
+      nextBtn.innerHTML = '<i class="fas fa-forward"></i>';
+      
+      const playlistBtn = document.createElement('button');
+      playlistBtn.className = 'btn-playlist';
+      playlistBtn.innerHTML = '<i class="fas fa-plus"></i> Add';
+      
+      controls.appendChild(playBtn);
+      controls.appendChild(nextBtn);
+      controls.appendChild(playlistBtn);
+
+      const progressArea = document.createElement('div');
+      progressArea.className = 'progress-area';
+      
+      const progress = document.createElement('input');
+      progress.type = 'range';
+      progress.className = 'progress-bar';
+      progress.min = 0;
+      progress.max = 100;
+      progress.value = 0;
+      
+      const timeDisplay = document.createElement('span');
+      timeDisplay.className = 'time-display';
+      timeDisplay.textContent = '0:00';
+      
+      progressArea.appendChild(progress);
+      progressArea.appendChild(timeDisplay);
+
+      const volumeWrap = document.createElement('div');
+      volumeWrap.className = 'volume-wrap';
+      const volIcon = document.createElement('i');
+      volIcon.className = 'fas fa-volume-low';
+      const volSlider = document.createElement('input');
+      volSlider.type = 'range';
+      volSlider.className = 'volume-slider';
+      volSlider.min = 0;
+      volSlider.max = 100;
+      volSlider.value = 70;
+      
+      volumeWrap.appendChild(volIcon);
+      volumeWrap.appendChild(volSlider);
+
+      const genreBadge = document.createElement('span');
+      genreBadge.className = 'badge-genre';
+      genreBadge.textContent = beat.genre;
+
+      overlay.appendChild(artistSpan);
+      overlay.appendChild(titleSpan);
+      overlay.appendChild(controls);
+      overlay.appendChild(progressArea);
+      overlay.appendChild(volumeWrap);
+      overlay.appendChild(genreBadge);
+      
+      playerWrapper.appendChild(bgImg);
+      playerWrapper.appendChild(overlay);
+
+      // INFO
+      const infoDiv = document.createElement('div');
+      infoDiv.className = 'beat-info';
+      
+      const titleInfo = document.createElement('div');
+      titleInfo.className = 'beat-title';
+      titleInfo.innerHTML = `${beat.title} <i class="fas fa-wave-square"></i>`;
+      
+      const metaDiv = document.createElement('div');
+      metaDiv.className = 'beat-meta';
+      
+      const genreSpan = document.createElement('span');
+      genreSpan.className = 'beat-genre';
+      genreSpan.innerHTML = `<i class="fas fa-tag"></i> ${beat.genre}`;
+      
+      const priceSpan = document.createElement('span');
+      priceSpan.className = 'beat-price';
+      priceSpan.innerHTML = `<i class="fas fa-coins"></i> ${beat.price}`;
+      
+      metaDiv.appendChild(genreSpan);
+      metaDiv.appendChild(priceSpan);
+      
+      const exclusivo = document.createElement('div');
+      exclusivo.className = 'beat-exclusivo';
+      exclusivo.innerHTML = `<i class="fas fa-certificate"></i> exclusivo · apenas aqui`;
+      
+      const buyWrap = document.createElement('div');
+      buyWrap.className = 'buy-wrap';
+      
+      const buyBtn = document.createElement('a');
+      buyBtn.className = 'btn-whatsapp';
+      buyBtn.href = '#';
+      buyBtn.innerHTML = `<i class="fab fa-whatsapp"></i> Comprar`;
+      buyBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        const msg = encodeURIComponent(`Olá! Gostaria de comprar o beat "${beat.title}" de ${beat.artist}.`);
+        const phone = '5511999999999';
+        window.open(`https://wa.me/${phone}?text=${msg}`, '_blank');
+      });
+      
+      buyWrap.appendChild(buyBtn);
+      
+      infoDiv.appendChild(titleInfo);
+      infoDiv.appendChild(metaDiv);
+      infoDiv.appendChild(exclusivo);
+      infoDiv.appendChild(buyWrap);
+
+      card.appendChild(playerWrapper);
+      card.appendChild(infoDiv);
+
+      // ÁUDIO
+      const audio = new Audio(beat.audio || '');
+      audio.volume = 0.7;
+      let isPlaying = false;
+
+      playBtn.addEventListener('click', () => {
+        if (!beat.audio) {
+          showToast('Áudio indisponível', 'Este beat não possui um arquivo de áudio.', 'error');
+          return;
+        }
+        if (isPlaying) {
+          audio.pause();
+          playBtn.innerHTML = '<i class="fas fa-play"></i>';
+          isPlaying = false;
+        } else {
+          audio.play().catch(() => {});
+          playBtn.innerHTML = '<i class="fas fa-pause"></i>';
+          isPlaying = true;
+        }
+      });
+
+      nextBtn.addEventListener('click', () => {
+        if (!beat.audio) return;
+        audio.currentTime = 0;
+        if (!isPlaying) {
+          audio.play().catch(() => {});
+          playBtn.innerHTML = '<i class="fas fa-pause"></i>';
+          isPlaying = true;
+        }
+      });
+
+      audio.addEventListener('timeupdate', () => {
+        if (audio.duration) {
+          const percent = (audio.currentTime / audio.duration) * 100;
+          progress.value = percent;
+          const mins = Math.floor(audio.currentTime / 60);
+          const secs = Math.floor(audio.currentTime % 60);
+          timeDisplay.textContent = `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+        }
+      });
+
+      progress.addEventListener('input', () => {
+        if (audio.duration) {
+          audio.currentTime = (progress.value / 100) * audio.duration;
+        }
+      });
+
+      volSlider.addEventListener('input', () => {
+        audio.volume = volSlider.value / 100;
+        volIcon.className = audio.volume === 0 ? 'fas fa-volume-mute' : 'fas fa-volume-low';
+      });
+
+      audio.addEventListener('ended', () => {
+        playBtn.innerHTML = '<i class="fas fa-play"></i>';
+        isPlaying = false;
+        progress.value = 0;
+        timeDisplay.textContent = '0:00';
+      });
+
+      return card;
+    }
+
+    function updateEditButtons() {
+      document.querySelectorAll('.card-edit-btn').forEach(btn => {
+        if (isLoggedIn) btn.classList.add('visible');
+        else btn.classList.remove('visible');
+      });
+      
+      if (isLoggedIn) {
+        newBeatBtn.classList.remove('hidden');
+        toggleEditBtn.classList.remove('hidden');
+        logoutBtn.classList.remove('hidden');
+        loginBtn.classList.add('hidden');
+        userEmail.style.display = 'inline';
+        userEmail.textContent = currentUser?.email || '';
+      } else {
+        newBeatBtn.classList.add('hidden');
+        toggleEditBtn.classList.add('hidden');
+        logoutBtn.classList.add('hidden');
+        loginBtn.classList.remove('hidden');
+        userEmail.style.display = 'none';
+        editMode = false;
+        toggleEditBtn.innerHTML = '<i class="fas fa-edit"></i> Editar';
+      }
+    }
+
+    // ============================================================
+    // 8. MODAL FORM
+    // ============================================================
+    function openFormModal(beat = null) {
+      if (!isLoggedIn) return;
+      
+      selectedCoverFile = null;
+      selectedAudioFile = null;
+      fCoverFile.value = '';
+      fAudioFile.value = '';
+      coverStatus.textContent = 'Nenhum arquivo selecionado';
+      audioStatus.textContent = 'Nenhum arquivo selecionado';
+      previewContainer.innerHTML = '';
+      
+      if (beat) {
+        modalTitle.querySelector('span').textContent = 'Editar Beat';
+        fTitle.value = beat.title;
+        fArtist.value = beat.artist;
+        fGenre.value = beat.genre;
+        fPrice.value = beat.price;
+        editingId = beat.id;
+        
+        if (beat.cover) {
+          const div = document.createElement('div');
+          div.className = 'preview-item';
+          div.innerHTML = `<img src="${beat.cover}" alt="capa"> <span>Capa atual</span>`;
+          previewContainer.appendChild(div);
+        }
+        if (beat.audio) {
+          const div = document.createElement('div');
+          div.className = 'preview-item';
+          div.innerHTML = `<i class="fas fa-music"></i> <span>Áudio atual</span>`;
+          previewContainer.appendChild(div);
+        }
+      } else {
+        modalTitle.querySelector('span').textContent = 'Novo Beat';
+        beatForm.reset();
+        editingId = null;
+      }
+      
+      formModal.classList.add('active');
+    }
+
+    function closeFormModal() {
+      formModal.classList.remove('active');
+      editingId = null;
+      selectedCoverFile = null;
+      selectedAudioFile = null;
+    }
+
+    function openEditModal(id) {
+      const beat = beatsData.find(b => b.id === id);
+      if (beat) openFormModal(beat);
+    }
+
+    // ============================================================
+    // 9. EVENTOS DO FORMULÁRIO
+    // ============================================================
+    fCoverFile.addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (file) {
+        selectedCoverFile = file;
+        coverStatus.textContent = `📷 ${file.name} (${(file.size/1024).toFixed(1)} KB)`;
+      } else {
+        selectedCoverFile = null;
+        coverStatus.textContent = 'Nenhum arquivo selecionado';
+      }
+    });
+
+    fAudioFile.addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (file) {
+        selectedAudioFile = file;
+        audioStatus.textContent = `🎵 ${file.name} (${(file.size/1024).toFixed(1)} KB)`;
+      } else {
+        selectedAudioFile = null;
+        audioStatus.textContent = 'Nenhum arquivo selecionado';
+      }
+    });
+
+    beatForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const title = fTitle.value.trim();
+      const artist = fArtist.value.trim();
+      const genre = fGenre.value.trim();
+      const price = fPrice.value.trim();
+      
+      if (!title || !artist || !genre || !price) {
+        showToast('Campos obrigatórios', 'Preencha todos os campos marcados com asterisco.', 'error');
+        return;
+      }
+      
+      if (!editingId && !selectedAudioFile) {
+        showToast('Áudio obrigatório', 'Para lançar um novo beat, você precisa enviar um arquivo de áudio.', 'error');
+        return;
+      }
+      
+      const beatData = { title, artist, genre, price };
+      await saveBeatToSupabase(beatData, selectedCoverFile, selectedAudioFile);
+    });
+
+    // ============================================================
+    // 10. AUTENTICAÇÃO
+    // ============================================================
+    async function doLogin(e) {
+      e.preventDefault();
+      const email = document.getElementById('loginEmail').value.trim();
+      const password = document.getElementById('loginPass').value.trim();
+      
+      try {
+        const { data, error } = await supabase.auth.signInWithPassword({
+          email,
+          password
+        });
+        
+        if (error) throw error;
+        
+        currentUser = data.user;
+        isLoggedIn = true;
+        loginError.style.display = 'none';
+        loginModal.classList.remove('active');
+        updateEditButtons();
+        await loadBeats();
+        showToast('Login realizado', `Bem-vindo, ${currentUser.email}. Você agora tem acesso ao painel administrativo.`, 'success');
+      } catch (error) {
+        console.error('Erro no login:', error);
+        loginError.style.display = 'block';
+        loginError.textContent = error.message || 'Email ou senha inválidos.';
+      }
+    }
+
+    async function doLogout() {
+      try {
+        await supabase.auth.signOut();
+        isLoggedIn = false;
+        currentUser = null;
+        editMode = false;
+        toggleEditBtn.innerHTML = '<i class="fas fa-edit"></i> Editar';
+        updateEditButtons();
+        await loadBeats();
+        showToast('Sessão encerrada', 'Você saiu do modo administrador com sucesso.', 'info');
+      } catch (error) {
+        console.error('Erro no logout:', error);
+      }
+    }
+
+    async function checkSession() {
+      try {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (session) {
+          currentUser = session.user;
+          isLoggedIn = true;
+          updateEditButtons();
+        }
+      } catch (error) {
+        console.error('Erro ao verificar sessão:', error);
+      }
+    }
+
+    // ============================================================
+    // 11. EVENTOS
+    // ============================================================
+    newBeatBtn.addEventListener('click', () => openFormModal(null));
+    
+    toggleEditBtn.addEventListener('click', function() {
+      if (!isLoggedIn) return;
+      editMode = !editMode;
+      this.innerHTML = editMode ? '<i class="fas fa-edit"></i> Desativar Edição' : '<i class="fas fa-edit"></i> Editar';
+      document.querySelectorAll('.card-edit-btn').forEach(btn => {
+        if (editMode && isLoggedIn) btn.style.display = 'flex';
+        else btn.style.display = 'none';
+      });
+    });
+
+    loginBtn.addEventListener('click', () => {
+      loginModal.classList.add('active');
+      loginError.style.display = 'none';
+    });
+
+    logoutBtn.addEventListener('click', doLogout);
+    document.getElementById('loginCancel').addEventListener('click', () => loginModal.classList.remove('active'));
+    document.getElementById('formCancel').addEventListener('click', closeFormModal);
+    
+    formModal.addEventListener('click', (e) => {
+      if (e.target === formModal) closeFormModal();
+    });
+    loginModal.addEventListener('click', (e) => {
+      if (e.target === loginModal) loginModal.classList.remove('active');
+    });
+
+    loginForm.addEventListener('submit', doLogin);
+
+    // ============================================================
+    // 12. INICIALIZAÇÃO
+    // ============================================================
+    async function init() {
+      await checkSession();
+      await loadBeats();
+      
+      console.log('Best Beats conectado ao Supabase');
+      console.log('Tabela: beats');
+      console.log('Buckets: covers, audios');
+    }
+
+    init();
+
+  })();
+</script>
+</body>
+</html>
