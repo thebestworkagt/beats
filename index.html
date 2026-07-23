@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Best Beats</title>
   
-  <!-- Favicon -->
   <link rel="icon" type="image/png" href="logo1.png">
   <link rel="apple-touch-icon" href="logo1.png">
   
@@ -424,7 +423,6 @@
     }
     .beat-card:hover { border-color: var(--border-hover); box-shadow: 0 25px 50px rgba(0,0,0,0.8), 0 0 0 1px var(--border-hover); }
     
-    /* BADGE POPULAR - CORRIGIDO */
     .beat-card .popularity-badge {
       position: absolute;
       top: -0.3rem;
@@ -1761,7 +1759,7 @@
     }
 
     // ============================================================
-    // 9. PLAYS - CORRIGIDO
+    // 9. PLAYS - CORRIGIDO (SEM RECARREGAR A PÁGINA)
     // ============================================================
     async function incrementPlays(beatId) {
       try {
@@ -1795,11 +1793,10 @@
           beat.plays = newPlays;
         }
         
-        // Atualiza a interface imediatamente
+        // Atualiza a interface imediatamente (SEM RECARREGAR)
         updateBeatPlaysDisplay(beatId, newPlays);
         
-        // Recarrega os beats para manter sincronizado
-        await loadBeats();
+        // NÃO chama loadBeats() aqui para evitar recarregar a página
         
       } catch (error) {
         console.error('❌ Erro ao incrementar plays:', error);
@@ -2069,7 +2066,7 @@
       card.className = 'beat-card';
       card.dataset.id = beat.id;
 
-      // BADGE POPULAR - CORRIGIDO POSIÇÃO
+      // BADGE POPULAR
       if ((beat.plays || 0) > 3) {
         const badge = document.createElement('div');
         badge.className = 'popularity-badge';
@@ -2307,7 +2304,7 @@
           playBtn.innerHTML = '<i class="fas fa-pause"></i>';
           isPlaying = true;
           
-          // INCREMENTA PLAYS
+          // INCREMENTA PLAYS (sem recarregar)
           console.log('▶️ Play iniciado para beat:', beat.id);
           incrementPlays(beat.id);
           
@@ -2811,7 +2808,7 @@
       await loadBeats();
       updateUI();
       initGlobalPlayer();
-      console.log('Best Beats v10.0 - Correções: Plays, áudio duplicado e badge Popular!');
+      console.log('Best Beats v10.0 - Correções: Plays sem recarregar a página!');
       console.log('📱 WhatsApp: +244 926 261 011');
       console.log('📧 Email: agtbeatsxpalha@email.com');
     }
