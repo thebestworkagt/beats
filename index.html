@@ -553,6 +553,14 @@
       transition: 0.2s;
     }
     .btn-playlist:hover { background: rgba(255,255,255,0.08); color: #fff; }
+    .btn-playlist.added {
+      background: rgba(37, 211, 102, 0.1);
+      color: #25D366;
+      border-color: rgba(37, 211, 102, 0.15);
+    }
+    .btn-playlist.added:hover {
+      background: rgba(37, 211, 102, 0.15);
+    }
     .progress-area {
       width: 100%;
       display: flex;
@@ -899,6 +907,90 @@
       display: none;
     }
 
+    /* === PLAYLIST MODAL === */
+    #playlistContainer {
+      max-height: 400px;
+      overflow-y: auto;
+      padding-right: 0.5rem;
+    }
+    #playlistContainer::-webkit-scrollbar {
+      width: 4px;
+    }
+    #playlistContainer::-webkit-scrollbar-track {
+      background: rgba(255,255,255,0.02);
+      border-radius: 10px;
+    }
+    #playlistContainer::-webkit-scrollbar-thumb {
+      background: #f7c948;
+      border-radius: 10px;
+    }
+    .playlist-item {
+      background: rgba(255,255,255,0.04);
+      border-radius: 16px;
+      padding: 1rem 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      border: 1px solid rgba(247, 201, 72, 0.06);
+      transition: 0.2s;
+      margin-bottom: 0.8rem;
+    }
+    .playlist-item:hover {
+      border-color: rgba(247, 201, 72, 0.12);
+      background: rgba(255,255,255,0.06);
+    }
+    .playlist-item img {
+      width: 60px;
+      height: 60px;
+      border-radius: 12px;
+      object-fit: cover;
+      flex-shrink: 0;
+    }
+    .playlist-item .info {
+      flex: 1;
+    }
+    .playlist-item .info .title {
+      font-weight: 600;
+      font-size: 1rem;
+    }
+    .playlist-item .info .sub {
+      font-size: 0.8rem;
+      color: #b5b5c8;
+    }
+    .playlist-item .btn-remove {
+      background: rgba(255, 70, 70, 0.08);
+      color: #ff6b6b;
+      border: 1px solid rgba(255, 70, 70, 0.08);
+      padding: 0.3rem 1rem;
+      border-radius: 30px;
+      cursor: pointer;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.8rem;
+      transition: 0.2s;
+    }
+    .playlist-item .btn-remove:hover {
+      background: rgba(255, 70, 70, 0.15);
+      border-color: rgba(255, 70, 70, 0.2);
+    }
+    .empty-playlist {
+      text-align: center;
+      padding: 3rem 0;
+      color: #7a7a8a;
+    }
+    .empty-playlist i {
+      font-size: 3rem;
+      display: block;
+      opacity: 0.3;
+      margin-bottom: 1rem;
+    }
+    .empty-playlist p {
+      font-weight: 300;
+    }
+    .empty-playlist .sub {
+      font-size: 0.8rem;
+      margin-top: 0.3rem;
+    }
+
     /* === LOADING SPINNER (oculto) === */
     .loading-spinner {
       display: none;
@@ -972,6 +1064,8 @@
       .modal { padding: 1.5rem; }
       .toast-container { right: 1rem; left: 1rem; max-width: none; }
       .hamburger-dropdown { right: -10px; min-width: 200px; }
+      .playlist-item { flex-wrap: wrap; justify-content: center; text-align: center; }
+      .playlist-item .info { width: 100%; }
     }
     @media (max-width: 480px) {
       .brand { font-size: 1.8rem; }
@@ -1032,6 +1126,13 @@
         <button class="dropdown-item" id="dropdownToggleEdit" style="display:none;">
           <i class="fas fa-edit"></i> Editar
         </button>
+        
+        <!-- Playlist - visível para todos -->
+        <button class="dropdown-item" id="dropdownPlaylist">
+          <i class="fas fa-music"></i> Minha Playlist
+          <span id="playlistCount" style="background:rgba(247,201,72,0.1);color:#f7c948;font-size:0.7rem;padding:0.1rem 0.6rem;border-radius:30px;margin-left:auto;">0</span>
+        </button>
+        
         <div class="dropdown-divider" id="dividerBeforeLogout" style="display:none;"></div>
         <button class="dropdown-item danger" id="dropdownLogout" style="display:none;">
           <i class="fas fa-sign-out-alt"></i> Sair
@@ -1039,7 +1140,7 @@
         
         <!-- Rodapé informativo -->
         <div style="padding: 0.6rem 1.2rem; font-size: 0.65rem; color: #4a4a5a; border-top: 1px solid rgba(255,255,255,0.03); margin-top: 0.2rem;">
-          Best Beat s v9.0
+          Best Beats v9.0
         </div>
       </div>
     </div>
@@ -1121,6 +1222,24 @@
   </div>
 </div>
 
+<!-- MODAL PLAYLIST -->
+<div class="modal-overlay" id="playlistModal">
+  <div class="modal" style="max-width: 700px;">
+    <h2><i class="fas fa-music"></i> Minha Playlist</h2>
+    <div id="playlistContainer">
+      <!-- Os beats salvos aparecerão aqui -->
+    </div>
+    <div class="empty-playlist" id="emptyPlaylist" style="display:none;">
+      <i class="fas fa-headphones"></i>
+      <p>Sua playlist está vazia</p>
+      <p class="sub">Adicione beats clicando em "Add" nos cards</p>
+    </div>
+    <div class="modal-actions">
+      <button type="button" class="btn-cancel" id="playlistCancel">Fechar</button>
+    </div>
+  </div>
+</div>
+
 <script>
   (function() {
     // ============================================================
@@ -1177,7 +1296,115 @@
     }
 
     // ============================================================
-    // 3. SHARE FUNCTION
+    // 3. PLAYLIST FUNCTIONS
+    // ============================================================
+    function getPlaylist() {
+      try {
+        return JSON.parse(localStorage.getItem('favoriteBeats') || '[]');
+      } catch {
+        return [];
+      }
+    }
+
+    function savePlaylist(ids) {
+      localStorage.setItem('favoriteBeats', JSON.stringify(ids));
+      updatePlaylistCount();
+    }
+
+    function togglePlaylist(beatId) {
+      let playlist = getPlaylist();
+      const index = playlist.indexOf(beatId);
+      
+      if (index > -1) {
+        playlist.splice(index, 1);
+        savePlaylist(playlist);
+        return false; // removido
+      } else {
+        playlist.push(beatId);
+        savePlaylist(playlist);
+        return true; // adicionado
+      }
+    }
+
+    function isInPlaylist(beatId) {
+      return getPlaylist().includes(beatId);
+    }
+
+    function updatePlaylistCount() {
+      const count = getPlaylist().length;
+      const el = document.getElementById('playlistCount');
+      if (el) el.textContent = count;
+    }
+
+    function updatePlaylistButtons(beatId) {
+      const cards = document.querySelectorAll('.beat-card');
+      cards.forEach(card => {
+        if (parseInt(card.dataset.id) === beatId) {
+          const btn = card.querySelector('.btn-playlist');
+          if (btn) {
+            if (isInPlaylist(beatId)) {
+              btn.innerHTML = '<i class="fas fa-check"></i> Added';
+              btn.classList.add('added');
+            } else {
+              btn.innerHTML = '<i class="fas fa-plus"></i> Add';
+              btn.classList.remove('added');
+            }
+          }
+        }
+      });
+    }
+
+    // ============================================================
+    // 4. PLAYLIST MODAL
+    // ============================================================
+    function openPlaylistModal() {
+      const container = document.getElementById('playlistContainer');
+      const emptyMsg = document.getElementById('emptyPlaylist');
+      const playlist = getPlaylist();
+      
+      if (playlist.length === 0) {
+        container.innerHTML = '';
+        emptyMsg.style.display = 'block';
+      } else {
+        emptyMsg.style.display = 'none';
+        container.innerHTML = '';
+        
+        playlist.forEach(id => {
+          const beat = beatsData.find(b => b.id === id);
+          if (beat) {
+            const item = document.createElement('div');
+            item.className = 'playlist-item';
+            item.innerHTML = `
+              <img src="${beat.cover || 'https://picsum.photos/seed/default/100/100'}" alt="${beat.title}">
+              <div class="info">
+                <div class="title">${beat.title}</div>
+                <div class="sub">${beat.artist} · ${beat.genre} · ${beat.price}</div>
+              </div>
+              <button class="btn-remove" data-id="${beat.id}">
+                <i class="fas fa-trash"></i> Remover
+              </button>
+            `;
+            
+            const removeBtn = item.querySelector('.btn-remove');
+            removeBtn.addEventListener('click', () => {
+              const newPlaylist = getPlaylist().filter(id => id !== beat.id);
+              savePlaylist(newPlaylist);
+              updatePlaylistButtons(beat.id);
+              showToast('Removido', `${beat.title} foi removido da sua playlist.`, 'info');
+              openPlaylistModal(); // Recarrega
+            });
+            
+            container.appendChild(item);
+          }
+        });
+      }
+      
+      document.getElementById('playlistModal').classList.add('active');
+      mainDropdown.classList.remove('active');
+    }
+
+    // ============================================================
+    // 5. SHARE FUNCTION
     // ============================================================
     function showShareToast(message = 'Link copiado para a área de transferência') {
       const toast = document.getElementById('shareToast');
@@ -1224,7 +1451,7 @@
     }
 
     // ============================================================
-    // 4. URL AMIGÁVEL
+    // 6. URL AMIGÁVEL
     // ============================================================
     function detectBeatFromUrl() {
       const params = new URLSearchParams(window.location.search);
@@ -1256,7 +1483,7 @@
     }
 
     // ============================================================
-    // 5. ESTADO
+    // 7. ESTADO
     // ============================================================
     let beatsData = [];
     let editMode = false;
@@ -1267,7 +1494,7 @@
     let selectedAudioFile = null;
 
     // ============================================================
-    // 6. DOM REFS
+    // 8. DOM REFS
     // ============================================================
     const container = document.getElementById('beatsContainer');
     const loading = document.getElementById('loading');
@@ -1304,7 +1531,7 @@
     const dropdownLogout = document.getElementById('dropdownLogout');
 
     // ============================================================
-    // 7. FUNÇÕES DE UPLOAD
+    // 9. FUNÇÕES DE UPLOAD
     // ============================================================
     async function uploadFile(file, bucket, path) {
       if (!file) return null;
@@ -1332,7 +1559,7 @@
     }
 
     // ============================================================
-    // 8. CRUD COM SUPABASE
+    // 10. CRUD COM SUPABASE
     // ============================================================
     async function loadBeats() {
       try {
@@ -1349,6 +1576,7 @@
         beatsData = data || [];
         renderBeats();
         detectBeatFromUrl();
+        updatePlaylistCount();
       } catch (error) {
         console.error('Erro ao carregar beats:', error);
         showToast('Erro ao carregar', 'Não foi possível carregar os beats. Verifique sua conexão.', 'error');
@@ -1431,7 +1659,7 @@
     }
 
     // ============================================================
-    // 9. RENDERIZAÇÃO - CORRIGIDA
+    // 11. RENDERIZAÇÃO
     // ============================================================
     function renderBeats() {
       container.innerHTML = '';
@@ -1473,21 +1701,18 @@
       }
 
       // ============================================================
-      // PLAYER - CORRIGIDO
+      // PLAYER
       // ============================================================
       
-      // 1. CRIAR O playerWrapper PRIMEIRO
       const playerWrapper = document.createElement('div');
       playerWrapper.className = 'player-wrapper';
       
-      // 2. IMAGEM DE FUNDO
       const bgImg = document.createElement('img');
       bgImg.className = 'player-bg';
       bgImg.src = beat.cover || 'https://picsum.photos/seed/default/400/400';
       bgImg.alt = `${beat.title} cover`;
       bgImg.loading = 'lazy';
 
-      // 3. OVERLAY
       const overlay = document.createElement('div');
       overlay.className = 'player-overlay';
       
@@ -1499,7 +1724,6 @@
       titleSpan.className = 'player-title';
       titleSpan.textContent = beat.title;
 
-      // 4. CONTROLES
       const controls = document.createElement('div');
       controls.className = 'player-controls';
       
@@ -1512,33 +1736,35 @@
       nextBtn.className = 'btn-next';
       nextBtn.innerHTML = '<i class="fas fa-forward"></i>';
       
-      // 5. BOTÃO PLAYLIST - CRIADO APENAS UMA VEZ
+      // Botão PLAYLIST com estado
       const playlistBtn = document.createElement('button');
       playlistBtn.className = 'btn-playlist';
-      playlistBtn.innerHTML = '<i class="fas fa-plus"></i> Add';
+      if (isInPlaylist(beat.id)) {
+        playlistBtn.innerHTML = '<i class="fas fa-check"></i> Added';
+        playlistBtn.classList.add('added');
+      } else {
+        playlistBtn.innerHTML = '<i class="fas fa-plus"></i> Add';
+      }
+      
       playlistBtn.addEventListener('click', (e) => {
         e.stopPropagation();
-        
-        let saved = JSON.parse(localStorage.getItem('favoriteBeats') || '[]');
-        
-        if (!saved.includes(beat.id)) {
-          saved.push(beat.id);
-          localStorage.setItem('favoriteBeats', JSON.stringify(saved));
+        const added = togglePlaylist(beat.id);
+        if (added) {
           showToast('Adicionado', `${beat.title} foi adicionado à sua playlist.`, 'success');
           playlistBtn.innerHTML = '<i class="fas fa-check"></i> Added';
+          playlistBtn.classList.add('added');
         } else {
-          saved = saved.filter(id => id !== beat.id);
-          localStorage.setItem('favoriteBeats', JSON.stringify(saved));
           showToast('Removido', `${beat.title} foi removido da sua playlist.`, 'info');
           playlistBtn.innerHTML = '<i class="fas fa-plus"></i> Add';
+          playlistBtn.classList.remove('added');
         }
+        updatePlaylistCount();
       });
       
       controls.appendChild(playBtn);
       controls.appendChild(nextBtn);
       controls.appendChild(playlistBtn);
 
-      // 6. PROGRESSO
       const progressArea = document.createElement('div');
       progressArea.className = 'progress-area';
       
@@ -1556,7 +1782,6 @@
       progressArea.appendChild(progress);
       progressArea.appendChild(timeDisplay);
 
-      // 7. VOLUME
       const volumeWrap = document.createElement('div');
       volumeWrap.className = 'volume-wrap';
       const volIcon = document.createElement('i');
@@ -1571,12 +1796,10 @@
       volumeWrap.appendChild(volIcon);
       volumeWrap.appendChild(volSlider);
 
-      // 8. BADGE GÊNERO
       const genreBadge = document.createElement('span');
       genreBadge.className = 'badge-genre';
       genreBadge.textContent = beat.genre;
 
-      // 9. MONTAR OVERLAY
       overlay.appendChild(artistSpan);
       overlay.appendChild(titleSpan);
       overlay.appendChild(controls);
@@ -1584,7 +1807,6 @@
       overlay.appendChild(volumeWrap);
       overlay.appendChild(genreBadge);
       
-      // 10. MONTAR PLAYER
       playerWrapper.appendChild(bgImg);
       playerWrapper.appendChild(overlay);
 
@@ -1616,7 +1838,6 @@
       exclusivo.className = 'beat-exclusivo';
       exclusivo.innerHTML = `<i class="fas fa-certificate"></i> exclusivo · apenas aqui`;
       
-      // Ações: Compartilhar + Comprar
       const actionsDiv = document.createElement('div');
       actionsDiv.className = 'beat-actions';
       
@@ -1647,9 +1868,6 @@
       infoDiv.appendChild(exclusivo);
       infoDiv.appendChild(actionsDiv);
 
-      // ============================================================
-      // MONTAR CARD - playerWrapper agora existe!
-      // ============================================================
       card.appendChild(playerWrapper);
       card.appendChild(infoDiv);
 
@@ -1718,16 +1936,14 @@
     }
 
     // ============================================================
-    // 10. UI UPDATE
+    // 12. UI UPDATE
     // ============================================================
     function updateUI() {
       if (isLoggedIn && currentUser) {
-        // Mostra info do usuário com avatar
         userInfoDisplay.style.display = 'flex';
         userNameDisplay.textContent = currentUser.user_metadata?.name || 'Administrador';
         userEmailDisplay.textContent = currentUser.email || 'usuario@email.com';
         
-        // Avatar no botão
         avatarContainer.innerHTML = `<img src="eu.jpg" alt="Admin" class="admin-avatar-small">`;
         
         dividerAfterUser.style.display = 'block';
@@ -1743,7 +1959,6 @@
         
         menuLabel.textContent = 'Admin';
       } else {
-        // Mostra opção de login
         userInfoDisplay.style.display = 'none';
         avatarContainer.innerHTML = '';
         dividerAfterUser.style.display = 'none';
@@ -1755,15 +1970,16 @@
         menuLabel.textContent = 'Menu';
       }
 
-      // Botões de editar nos cards
       document.querySelectorAll('.card-edit-btn').forEach(btn => {
         if (isLoggedIn) btn.classList.add('visible');
         else btn.classList.remove('visible');
       });
+      
+      updatePlaylistCount();
     }
 
     // ============================================================
-    // 11. MODAL FORM
+    // 13. MODAL FORM
     // ============================================================
     function openFormModal(beat = null) {
       if (!isLoggedIn) return;
@@ -1819,7 +2035,7 @@
     }
 
     // ============================================================
-    // 12. EVENTOS DO FORMULÁRIO
+    // 14. EVENTOS DO FORMULÁRIO
     // ============================================================
     fCoverFile.addEventListener('change', (e) => {
       const file = e.target.files[0];
@@ -1828,7 +2044,7 @@
         coverStatus.textContent = `📷 ${file.name} (${(file.size/1024).toFixed(1)} KB)`;
       } else {
         selectedCoverFile = null;
-        coverStatus.textContent = 'Nenhum arquivo selecionado';
+        coverStatus.textContent = 'Selecionar';
       }
     });
 
@@ -1839,7 +2055,7 @@
         audioStatus.textContent = `🎵 ${file.name} (${(file.size/1024).toFixed(1)} KB)`;
       } else {
         selectedAudioFile = null;
-        audioStatus.textContent = 'Nenhum arquivo selecionado';
+        audioStatus.textContent = 'Selecionar';
       }
     });
 
@@ -1866,7 +2082,7 @@
     });
 
     // ============================================================
-    // 13. AUTENTICAÇÃO
+    // 15. AUTENTICAÇÃO
     // ============================================================
     async function doLogin(e) {
       e.preventDefault();
@@ -1925,19 +2141,17 @@
     }
 
     // ============================================================
-    // 14. EVENTOS DO MENU
+    // 16. EVENTOS DO MENU
     // ============================================================
     menuBtn.addEventListener('click', (e) => {
       e.stopPropagation();
       mainDropdown.classList.toggle('active');
     });
 
-    // Fecha dropdown ao clicar fora
     document.addEventListener('click', () => {
       mainDropdown.classList.remove('active');
     });
 
-    // Itens do dropdown
     dropdownLogin.addEventListener('click', () => {
       loginModal.classList.add('active');
       loginError.style.display = 'none';
@@ -1962,13 +2176,18 @@
       mainDropdown.classList.remove('active');
     });
 
+    dropdownPlaylist.addEventListener('click', openPlaylistModal);
+
     dropdownLogout.addEventListener('click', doLogout);
 
     // ============================================================
-    // 15. OUTROS EVENTOS
+    // 17. OUTROS EVENTOS
     // ============================================================
     document.getElementById('loginCancel').addEventListener('click', () => loginModal.classList.remove('active'));
     document.getElementById('formCancel').addEventListener('click', closeFormModal);
+    document.getElementById('playlistCancel').addEventListener('click', () => {
+      document.getElementById('playlistModal').classList.remove('active');
+    });
     
     formModal.addEventListener('click', (e) => {
       if (e.target === formModal) closeFormModal();
@@ -1976,17 +2195,21 @@
     loginModal.addEventListener('click', (e) => {
       if (e.target === loginModal) loginModal.classList.remove('active');
     });
+    document.getElementById('playlistModal').addEventListener('click', (e) => {
+      if (e.target === document.getElementById('playlistModal')) {
+        document.getElementById('playlistModal').classList.remove('active');
+      }
+    });
 
     loginForm.addEventListener('submit', doLogin);
 
-    // Logo clicável - volta para a página inicial
     document.getElementById('logoLink').addEventListener('click', (e) => {
       e.preventDefault();
       window.location.href = window.location.pathname;
     });
 
     // ============================================================
-    // 16. INICIALIZAÇÃO
+    // 18. INICIALIZAÇÃO
     // ============================================================
     async function init() {
       await checkSession();
@@ -1994,6 +2217,7 @@
       updateUI();
       
       console.log('Best Beats conectado ao Supabase');
+      console.log('Playlist salva no localStorage');
       console.log('URLs amigáveis: ?beat=nome-do-beat');
     }
 
