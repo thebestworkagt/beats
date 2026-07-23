@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt">
+<html lang="pt" data-theme="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,23 +14,60 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  
   <style>
-    /* === ESTILOS COMPLETOS === */
+    /* ============================================================
+       CSS COMPLETO - BEST BEATS V10
+       ============================================================ */
+    
+    /* ----- VARIÁVEIS ----- */
+    :root {
+      --bg-primary: #08080e;
+      --bg-secondary: #12121a;
+      --bg-card: rgba(20, 20, 30, 0.35);
+      --text-primary: #f0f0f0;
+      --text-secondary: #b5b5c8;
+      --text-muted: #7a7a8a;
+      --gold: #f7c948;
+      --gold-dark: #f0a500;
+      --gold-glow: rgba(247, 201, 72, 0.15);
+      --border-color: rgba(247, 201, 72, 0.08);
+      --border-hover: rgba(247, 201, 72, 0.2);
+      --shadow: 0 20px 40px rgba(0,0,0,0.6);
+      --radius: 40px;
+      --radius-sm: 16px;
+      --transition: 0.25s ease;
+    }
+    
+    [data-theme="light"] {
+      --bg-primary: #f0f0f0;
+      --bg-secondary: #ffffff;
+      --bg-card: rgba(255, 255, 255, 0.6);
+      --text-primary: #0a0a0f;
+      --text-secondary: #4a4a5a;
+      --text-muted: #8a8a9a;
+      --border-color: rgba(0, 0, 0, 0.08);
+      --border-hover: rgba(0, 0, 0, 0.2);
+      --shadow: 0 20px 40px rgba(0,0,0,0.1);
+    }
+
+    /* ----- RESET ----- */
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
-      background: #08080e;
-      background-image: radial-gradient(circle at 10% 20%, #12121e 0%, #08080e 90%);
+      background: var(--bg-primary);
+      background-image: radial-gradient(circle at 10% 20%, var(--bg-secondary) 0%, var(--bg-primary) 90%);
       min-height: 100vh;
       font-family: 'Inter', sans-serif;
-      color: #f0f0f0;
+      color: var(--text-primary);
       display: flex;
       justify-content: center;
-      padding: 2rem 1rem;
+      padding: 2rem 1rem 6rem 1rem;
       position: relative;
+      transition: background 0.3s ease;
     }
     .app { max-width: 1100px; width: 100%; }
 
-    /* === TOAST === */
+    /* ----- TOAST ----- */
     .toast-container {
       position: fixed;
       top: 2rem;
@@ -46,11 +83,10 @@
     .toast {
       background: rgba(18, 18, 26, 0.92);
       backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border: 1px solid rgba(247, 201, 72, 0.12);
-      border-radius: 16px;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
       padding: 1.2rem 1.6rem;
-      box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+      box-shadow: var(--shadow);
       display: flex;
       align-items: flex-start;
       gap: 1rem;
@@ -72,25 +108,16 @@
     }
     .toast-icon.success { background: rgba(37, 211, 102, 0.15); color: #25D366; border: 1px solid rgba(37, 211, 102, 0.2); }
     .toast-icon.error { background: rgba(255, 70, 70, 0.15); color: #ff6b6b; border: 1px solid rgba(255, 70, 70, 0.2); }
-    .toast-icon.info { background: rgba(247, 201, 72, 0.15); color: #f7c948; border: 1px solid rgba(247, 201, 72, 0.2); }
+    .toast-icon.info { background: var(--gold-glow); color: var(--gold); border: 1px solid var(--border-color); }
     .toast-content { flex: 1; }
-    .toast-title { font-weight: 600; font-size: 0.9rem; color: #f0f0f0; margin-bottom: 0.2rem; }
-    .toast-message { font-weight: 300; font-size: 0.85rem; color: #b5b5c8; line-height: 1.4; }
-    .toast-close {
-      background: none;
-      border: none;
-      color: #7a7a8a;
-      cursor: pointer;
-      font-size: 1rem;
-      padding: 0.2rem;
-      transition: 0.2s;
-      flex-shrink: 0;
-    }
-    .toast-close:hover { color: #f0f0f0; }
+    .toast-title { font-weight: 600; font-size: 0.9rem; color: var(--text-primary); margin-bottom: 0.2rem; }
+    .toast-message { font-weight: 300; font-size: 0.85rem; color: var(--text-secondary); line-height: 1.4; }
+    .toast-close { background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 1rem; padding: 0.2rem; transition: 0.2s; flex-shrink: 0; }
+    .toast-close:hover { color: var(--text-primary); }
     @keyframes slideIn { to { transform: translateX(0); } }
     @keyframes slideOut { to { transform: translateX(120%); opacity: 0; } }
 
-    /* === LOADING === */
+    /* ----- LOADING ----- */
     .loading-wrapper {
       display: flex;
       flex-direction: column;
@@ -99,18 +126,13 @@
       padding: 4rem 2rem;
       gap: 2rem;
     }
-    .loading-wave {
-      display: flex;
-      gap: 0.4rem;
-      align-items: center;
-      justify-content: center;
-    }
+    .loading-wave { display: flex; gap: 0.4rem; align-items: center; justify-content: center; }
     .loading-wave span {
       display: inline-block;
       width: 12px;
       height: 12px;
       border-radius: 50%;
-      background: #f7c948;
+      background: var(--gold);
       animation: wave 1.2s ease-in-out infinite;
     }
     .loading-wave span:nth-child(1) { animation-delay: 0s; }
@@ -122,36 +144,29 @@
     .loading-wave span:nth-child(7) { animation-delay: 0.9s; }
     .loading-wave span:nth-child(8) { animation-delay: 1.05s; }
     @keyframes wave {
-      0%, 40%, 100% { transform: scale(0.6); opacity: 0.3; background: #f7c948; }
-      20% { transform: scale(1.2); opacity: 1; background: #f0a500; box-shadow: 0 0 20px rgba(247, 201, 72, 0.4); }
+      0%, 40%, 100% { transform: scale(0.6); opacity: 0.3; background: var(--gold); }
+      20% { transform: scale(1.2); opacity: 1; background: var(--gold-dark); box-shadow: 0 0 20px var(--gold-glow); }
     }
     .loading-text {
       font-size: 1rem;
       font-weight: 300;
-      color: #b5b5c8;
+      color: var(--text-secondary);
       letter-spacing: 4px;
       text-transform: uppercase;
       animation: pulse 1.5s ease-in-out infinite;
     }
     @keyframes pulse { 0%, 100% { opacity: 0.6; } 50% { opacity: 1; } }
-    .loading-progress {
-      width: 200px;
-      height: 2px;
-      background: rgba(255,255,255,0.05);
-      border-radius: 10px;
-      overflow: hidden;
-      margin-top: 0.5rem;
-    }
+    .loading-progress { width: 200px; height: 2px; background: rgba(255,255,255,0.05); border-radius: 10px; overflow: hidden; margin-top: 0.5rem; }
     .loading-progress-bar {
       height: 100%;
       width: 0%;
-      background: linear-gradient(90deg, #f7c948, #f0a500);
+      background: linear-gradient(90deg, var(--gold), var(--gold-dark));
       border-radius: 10px;
       animation: progress 2s ease-in-out infinite;
     }
     @keyframes progress { 0% { width: 0%; } 50% { width: 70%; } 100% { width: 100%; } }
 
-    /* === HEADER === */
+    /* ----- HEADER ----- */
     .header {
       display: flex;
       flex-direction: column;
@@ -174,15 +189,15 @@
       height: 80px;
       border-radius: 50%;
       border: none;
-      box-shadow: 0 0 30px rgba(247, 201, 72, 0.15);
+      box-shadow: 0 0 30px var(--gold-glow);
       object-fit: cover;
-      background: #0a0a0f;
+      background: var(--bg-secondary);
     }
     .brand {
       font-size: 2.4rem;
       font-weight: 800;
       letter-spacing: 2px;
-      background: linear-gradient(135deg, #f7c948, #f0a500);
+      background: linear-gradient(135deg, var(--gold), var(--gold-dark));
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
@@ -191,29 +206,134 @@
       font-weight: 300;
       font-size: 1rem;
       letter-spacing: 4px;
-      color: #b9b9c0;
+      color: var(--text-secondary);
       margin-top: 0.3rem;
       display: inline-block;
     }
 
-    /* === ADMIN TOOLBAR === */
+    /* ----- THEME TOGGLE ----- */
+    .theme-toggle {
+      position: fixed;
+      bottom: 80px;
+      right: 20px;
+      z-index: 100;
+      background: var(--bg-card);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--border-color);
+      color: var(--text-primary);
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      cursor: pointer;
+      transition: 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      box-shadow: var(--shadow);
+    }
+    .theme-toggle:hover { transform: scale(1.05); border-color: var(--gold); }
+
+    /* ----- ADMIN TOOLBAR ----- */
     .admin-toolbar {
       display: flex;
-      justify-content: flex-end;
+      justify-content: space-between;
+      align-items: center;
       margin-bottom: 2rem;
-      position: relative;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+    .admin-toolbar-left {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .admin-toolbar-right {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      flex-wrap: wrap;
     }
 
-    /* === HAMBURGER MENU === */
+    /* ----- SEARCH & FILTERS ----- */
+    .search-container {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: var(--bg-card);
+      backdrop-filter: blur(8px);
+      border: 1px solid var(--border-color);
+      border-radius: 60px;
+      padding: 0.3rem 0.3rem 0.3rem 1.2rem;
+      transition: 0.2s;
+    }
+    .search-container:focus-within { border-color: var(--gold); }
+    .search-container i { color: var(--text-muted); font-size: 0.9rem; }
+    .search-container input {
+      background: transparent;
+      border: none;
+      color: var(--text-primary);
+      font-family: 'Inter', sans-serif;
+      font-size: 0.9rem;
+      padding: 0.4rem 0;
+      width: 180px;
+      outline: none;
+    }
+    .search-container input::placeholder { color: var(--text-muted); }
+    .search-container .clear-search {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      padding: 0.3rem 0.8rem;
+      font-size: 0.8rem;
+      display: none;
+    }
+    .search-container .clear-search.visible { display: block; }
+
+    .filter-select {
+      background: var(--bg-card);
+      backdrop-filter: blur(8px);
+      border: 1px solid var(--border-color);
+      border-radius: 60px;
+      color: var(--text-primary);
+      font-family: 'Inter', sans-serif;
+      font-size: 0.85rem;
+      padding: 0.5rem 1.2rem;
+      cursor: pointer;
+      outline: none;
+      transition: 0.2s;
+    }
+    .filter-select:focus { border-color: var(--gold); }
+    .filter-select option { background: var(--bg-secondary); }
+
+    .sort-select {
+      background: var(--bg-card);
+      backdrop-filter: blur(8px);
+      border: 1px solid var(--border-color);
+      border-radius: 60px;
+      color: var(--text-primary);
+      font-family: 'Inter', sans-serif;
+      font-size: 0.85rem;
+      padding: 0.5rem 1.2rem;
+      cursor: pointer;
+      outline: none;
+      transition: 0.2s;
+    }
+    .sort-select:focus { border-color: var(--gold); }
+    .sort-select option { background: var(--bg-secondary); }
+
+    /* ----- HAMBURGER MENU ----- */
     .hamburger-menu { position: relative; display: inline-block; }
     .hamburger-btn {
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(247, 201, 72, 0.15);
-      color: #e0e0e8;
+      background: var(--bg-card);
+      backdrop-filter: blur(8px);
+      border: 1px solid var(--border-color);
+      color: var(--text-primary);
       padding: 0.7rem 1.2rem;
       border-radius: 60px;
       font-size: 1.1rem;
-      backdrop-filter: blur(8px);
       cursor: pointer;
       transition: 0.2s;
       display: flex;
@@ -221,30 +341,29 @@
       gap: 0.5rem;
       font-family: 'Inter', sans-serif;
     }
-    .hamburger-btn:hover { background: rgba(247, 201, 72, 0.08); border-color: #f7c948; }
-    .hamburger-btn i { color: #f7c948; }
+    .hamburger-btn:hover { border-color: var(--gold); background: var(--gold-glow); }
+    .hamburger-btn i { color: var(--gold); }
     .hamburger-btn .btn-label { font-size: 0.85rem; font-weight: 400; }
     .admin-avatar-small {
       width: 28px;
       height: 28px;
       border-radius: 50%;
       object-fit: cover;
-      border: 2px solid #f7c948;
+      border: 2px solid var(--gold);
       margin-right: 0.2rem;
     }
     .hamburger-dropdown {
       position: absolute;
       top: 115%;
       right: 0;
-      background: rgba(18, 18, 26, 0.95);
+      background: var(--bg-secondary);
       backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border: 1px solid rgba(247, 201, 72, 0.1);
-      border-radius: 16px;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
       padding: 0.5rem;
       min-width: 220px;
       display: none;
-      box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+      box-shadow: var(--shadow);
       z-index: 100;
     }
     .hamburger-dropdown.active { display: block; animation: dropdownIn 0.2s ease forwards; }
@@ -255,7 +374,7 @@
       gap: 0.8rem;
       padding: 0.6rem 1.2rem;
       border-radius: 12px;
-      color: #d0d0dd;
+      color: var(--text-secondary);
       font-weight: 400;
       font-size: 0.9rem;
       cursor: pointer;
@@ -266,50 +385,62 @@
       text-align: left;
       font-family: 'Inter', sans-serif;
     }
-    .hamburger-dropdown .dropdown-item:hover { background: rgba(247, 201, 72, 0.06); color: #f7c948; }
-    .hamburger-dropdown .dropdown-item i { width: 20px; color: #f7c948; }
+    .hamburger-dropdown .dropdown-item:hover { background: var(--gold-glow); color: var(--gold); }
+    .hamburger-dropdown .dropdown-item i { width: 20px; color: var(--gold); }
     .hamburger-dropdown .dropdown-item.danger { color: #ff6b6b; }
     .hamburger-dropdown .dropdown-item.danger i { color: #ff6b6b; }
     .hamburger-dropdown .dropdown-item.danger:hover { background: rgba(255, 70, 70, 0.06); }
-    .hamburger-dropdown .dropdown-divider { height: 1px; background: rgba(255,255,255,0.04); margin: 0.3rem 0.8rem; }
+    .hamburger-dropdown .dropdown-divider { height: 1px; background: var(--border-color); margin: 0.3rem 0.8rem; }
     .user-info-display {
       display: flex;
       align-items: center;
       gap: 0.8rem;
       padding: 0.6rem 1.2rem;
-      border-bottom: 1px solid rgba(255,255,255,0.04);
+      border-bottom: 1px solid var(--border-color);
       margin-bottom: 0.3rem;
     }
-    .user-info-display .admin-avatar { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid #f7c948; }
+    .user-info-display .admin-avatar { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid var(--gold); }
     .user-info-display .user-details { display: flex; flex-direction: column; }
-    .user-info-display .user-name { font-weight: 600; font-size: 0.9rem; color: #f0f0f0; }
-    .user-info-display .user-email { font-size: 0.75rem; color: #7a7a8a; }
+    .user-info-display .user-name { font-weight: 600; font-size: 0.9rem; color: var(--text-primary); }
+    .user-info-display .user-email { font-size: 0.75rem; color: var(--text-muted); }
 
-    /* === BEATS LIST === */
+    /* ----- BEATS LIST ----- */
     .beats-list { display: flex; flex-direction: column; gap: 2rem; margin-top: 0.5rem; }
     .beat-card {
-      background: rgba(20, 20, 30, 0.35);
+      background: var(--bg-card);
       backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
-      border-radius: 40px;
-      border: 1px solid rgba(247, 201, 72, 0.08);
+      border-radius: var(--radius);
+      border: 1px solid var(--border-color);
       padding: 1.5rem 2rem;
       display: flex;
       align-items: center;
       gap: 2rem;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.6), 0 0 0 1px rgba(247, 201, 72, 0.02);
-      transition: 0.25s ease;
+      box-shadow: var(--shadow);
+      transition: var(--transition);
       flex-wrap: wrap;
       position: relative;
     }
-    .beat-card:hover { border-color: rgba(247, 201, 72, 0.2); box-shadow: 0 25px 50px rgba(0,0,0,0.8), 0 0 0 1px rgba(247, 201, 72, 0.05); }
+    .beat-card:hover { border-color: var(--border-hover); box-shadow: 0 25px 50px rgba(0,0,0,0.8), 0 0 0 1px var(--border-hover); }
+    .beat-card .popularity-badge {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      background: var(--gold-glow);
+      color: var(--gold);
+      border: 1px solid var(--border-color);
+      padding: 0.15rem 0.8rem;
+      border-radius: 30px;
+      font-size: 0.6rem;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
     .card-edit-btn {
       position: absolute;
       top: 12px;
       right: 12px;
       background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(247, 201, 72, 0.1);
-      color: #b0b0c0;
+      border: 1px solid var(--border-color);
+      color: var(--text-muted);
       width: 32px;
       height: 32px;
       border-radius: 50%;
@@ -322,9 +453,9 @@
       font-size: 0.8rem;
     }
     .card-edit-btn.visible { display: flex; }
-    .card-edit-btn:hover { background: rgba(247, 201, 72, 0.1); color: #f7c948; border-color: #f7c948; }
+    .card-edit-btn:hover { background: var(--gold-glow); color: var(--gold); border-color: var(--gold); }
 
-    /* === PLAYER === */
+    /* ----- PLAYER ----- */
     .player-wrapper {
       flex: 0 0 200px;
       width: 200px;
@@ -332,7 +463,7 @@
       border-radius: 24px;
       position: relative;
       overflow: hidden;
-      background: #12121a;
+      background: var(--bg-secondary);
       box-shadow: 0 12px 30px rgba(0,0,0,0.7);
     }
     .player-bg {
@@ -348,7 +479,6 @@
       position: absolute;
       inset: 0;
       backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
       background: rgba(10, 10, 15, 0.35);
       display: flex;
       flex-direction: column;
@@ -386,7 +516,7 @@
       justify-content: center;
     }
     .btn-play {
-      background: #f7c948;
+      background: var(--gold);
       border: none;
       color: #0a0a0f;
       width: 40px;
@@ -396,11 +526,11 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 4px 16px rgba(247, 201, 72, 0.4);
+      box-shadow: 0 4px 16px var(--gold-glow);
       transition: 0.2s;
       cursor: pointer;
     }
-    .btn-play:hover { transform: scale(1.04); background: #f5d058; }
+    .btn-play:hover { transform: scale(1.04); background: var(--gold-dark); }
     .btn-next {
       background: rgba(255,255,255,0.08);
       border: 1px solid rgba(255,255,255,0.15);
@@ -456,11 +586,11 @@
       width: 10px;
       height: 10px;
       border-radius: 50%;
-      background: #f7c948;
+      background: var(--gold);
       cursor: pointer;
-      box-shadow: 0 0 12px rgba(247, 201, 72, 0.3);
+      box-shadow: 0 0 12px var(--gold-glow);
     }
-    .progress-bar::-moz-range-thumb { width: 10px; height: 10px; border-radius: 50%; background: #f7c948; cursor: pointer; border: none; }
+    .progress-bar::-moz-range-thumb { width: 10px; height: 10px; border-radius: 50%; background: var(--gold); cursor: pointer; border: none; }
     .time-display { font-size: 0.55rem; font-weight: 300; color: #bfbfd0; min-width: 32px; }
     .volume-wrap { display: flex; align-items: center; gap: 0.2rem; margin-top: 0.1rem; }
     .volume-wrap i { font-size: 0.65rem; color: #b0b0c0; }
@@ -473,8 +603,8 @@
       -webkit-appearance: none;
       outline: none;
     }
-    .volume-slider::-webkit-slider-thumb { width: 8px; height: 8px; border-radius: 50%; background: #f7c948; cursor: pointer; }
-    .volume-slider::-moz-range-thumb { width: 8px; height: 8px; border-radius: 50%; background: #f7c948; border: none; }
+    .volume-slider::-webkit-slider-thumb { width: 8px; height: 8px; border-radius: 50%; background: var(--gold); cursor: pointer; }
+    .volume-slider::-moz-range-thumb { width: 8px; height: 8px; border-radius: 50%; background: var(--gold); border: none; }
     .badge-genre {
       position: absolute;
       top: 8px;
@@ -486,12 +616,12 @@
       font-size: 0.5rem;
       font-weight: 600;
       letter-spacing: 0.5px;
-      color: #f7c948;
-      border: 1px solid rgba(247, 201, 72, 0.2);
+      color: var(--gold);
+      border: 1px solid var(--border-color);
       text-transform: uppercase;
     }
 
-    /* === BEAT INFO === */
+    /* ----- BEAT INFO ----- */
     .beat-info {
       flex: 1;
       display: flex;
@@ -507,7 +637,7 @@
       gap: 0.5rem;
       flex-wrap: wrap;
     }
-    .beat-title i { color: #f7c948; font-size: 1rem; opacity: 0.7; }
+    .beat-title i { color: var(--gold); font-size: 1rem; opacity: 0.7; }
     .beat-meta {
       display: flex;
       align-items: center;
@@ -517,35 +647,52 @@
     }
     .beat-genre {
       font-size: 0.9rem;
-      color: #b5b5c8;
+      color: var(--text-secondary);
       font-weight: 300;
       letter-spacing: 0.2px;
       background: rgba(255,255,255,0.04);
       padding: 0.1rem 0.8rem;
       border-radius: 30px;
-      border: 1px solid rgba(255,255,255,0.04);
+      border: 1px solid var(--border-color);
     }
-    .beat-genre i { color: #f7c948; margin-right: 4px; }
+    .beat-genre i { color: var(--gold); margin-right: 4px; }
     .beat-price {
       display: inline-block;
-      background: rgba(247, 201, 72, 0.08);
-      border: 1px solid rgba(247, 201, 72, 0.15);
+      background: var(--gold-glow);
+      border: 1px solid var(--border-color);
       backdrop-filter: blur(4px);
       padding: 0.15rem 1rem;
       border-radius: 60px;
       font-weight: 600;
       font-size: 1rem;
-      color: #f7c948;
+      color: var(--gold);
     }
-    .beat-price i { margin-right: 6px; color: #f0a500; }
+    .beat-price i { margin-right: 6px; color: var(--gold-dark); }
     .beat-exclusivo {
       font-size: 0.75rem;
-      color: #9a9aaa;
+      color: var(--text-muted);
       font-weight: 300;
       letter-spacing: 0.5px;
       margin-top: -0.1rem;
     }
-    .beat-exclusivo i { color: #f7c948; margin-right: 4px; font-size: 0.7rem; }
+    .beat-exclusivo i { color: var(--gold); margin-right: 4px; font-size: 0.7rem; }
+    .beat-stats {
+      display: flex;
+      gap: 1rem;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+    .beat-stats i { color: var(--gold); margin-right: 3px; }
+    .beat-rating {
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+    .beat-rating .stars {
+      color: var(--gold);
+      font-size: 0.8rem;
+      letter-spacing: 1px;
+    }
     .beat-actions {
       display: flex;
       gap: 0.8rem;
@@ -554,8 +701,8 @@
     }
     .btn-share {
       background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(247, 201, 72, 0.1);
-      color: #b5b5c8;
+      border: 1px solid var(--border-color);
+      color: var(--text-secondary);
       padding: 0.4rem 1.2rem;
       border-radius: 60px;
       font-size: 0.8rem;
@@ -568,7 +715,7 @@
       font-family: 'Inter', sans-serif;
       backdrop-filter: blur(4px);
     }
-    .btn-share:hover { background: rgba(247, 201, 72, 0.08); border-color: #f7c948; color: #f7c948; }
+    .btn-share:hover { background: var(--gold-glow); border-color: var(--gold); color: var(--gold); }
     .btn-share i { font-size: 0.9rem; }
     .btn-whatsapp {
       background: linear-gradient(135deg, #25D366, #1ebe5c);
@@ -591,26 +738,71 @@
     }
     .btn-whatsapp i { font-size: 1.1rem; }
     .btn-whatsapp:hover { transform: scale(1.02); box-shadow: 0 10px 28px rgba(37, 211, 102, 0.35); background: linear-gradient(135deg, #2fd16e, #1ebe5c); }
-    .buy-wrap { margin-top: 0.3rem; }
+    .btn-cart {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--border-color);
+      color: var(--text-secondary);
+      padding: 0.4rem 1.2rem;
+      border-radius: 60px;
+      font-size: 0.8rem;
+      font-weight: 400;
+      cursor: pointer;
+      transition: 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-family: 'Inter', sans-serif;
+    }
+    .btn-cart:hover { background: var(--gold-glow); border-color: var(--gold); color: var(--gold); }
+    .btn-cart.in-cart { background: rgba(37, 211, 102, 0.1); color: #25D366; border-color: rgba(37, 211, 102, 0.15); }
 
-    /* === FOOTER === */
+    /* ----- CART BUTTON ----- */
+    .cart-btn {
+      background: var(--bg-card);
+      backdrop-filter: blur(8px);
+      border: 1px solid var(--border-color);
+      color: var(--text-primary);
+      padding: 0.5rem 1.2rem;
+      border-radius: 60px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-family: 'Inter', sans-serif;
+    }
+    .cart-btn:hover { border-color: var(--gold); background: var(--gold-glow); }
+    .cart-btn i { color: var(--gold); }
+    .cart-btn .cart-count {
+      background: var(--gold);
+      color: #0a0a0f;
+      font-size: 0.7rem;
+      font-weight: 700;
+      padding: 0.1rem 0.5rem;
+      border-radius: 30px;
+      min-width: 20px;
+      text-align: center;
+    }
+
+    /* ----- FOOTER ----- */
     .footer {
       margin-top: 4rem;
       padding: 1.5rem 0 0.5rem;
-      border-top: 1px solid rgba(247, 201, 72, 0.05);
+      border-top: 1px solid var(--border-color);
       display: flex;
       flex-direction: column;
       align-items: center;
       gap: 0.8rem;
-      color: #7a7a8a;
+      color: var(--text-muted);
       font-weight: 300;
       font-size: 0.9rem;
     }
     .social-icons { display: flex; gap: 1.6rem; }
-    .social-icons a { color: #a0a0b0; font-size: 1.2rem; transition: 0.2s; }
-    .social-icons a:hover { color: #f7c948; transform: translateY(-2px); }
+    .social-icons a { color: var(--text-muted); font-size: 1.2rem; transition: 0.2s; }
+    .social-icons a:hover { color: var(--gold); transform: translateY(-2px); }
 
-    /* === MODALS === */
+    /* ----- MODALS ----- */
     .modal-overlay {
       display: none;
       position: fixed;
@@ -623,22 +815,22 @@
     }
     .modal-overlay.active { display: flex; }
     .modal {
-      background: #12121a;
-      border: 1px solid rgba(247, 201, 72, 0.15);
-      border-radius: 40px;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius);
       padding: 2rem 2.5rem;
       max-width: 520px;
       width: 90%;
       backdrop-filter: blur(20px);
-      box-shadow: 0 40px 80px rgba(0,0,0,0.8);
-      color: #f0f0f0;
+      box-shadow: var(--shadow);
+      color: var(--text-primary);
       max-height: 90vh;
       overflow-y: auto;
     }
     .modal h2 {
       font-weight: 700;
       margin-bottom: 1.5rem;
-      color: #f7c948;
+      color: var(--gold);
       display: flex;
       align-items: center;
       gap: 0.6rem;
@@ -647,38 +839,42 @@
       display: block;
       font-weight: 400;
       font-size: 0.8rem;
-      color: #b5b5c8;
+      color: var(--text-secondary);
       margin: 0.8rem 0 0.2rem;
       letter-spacing: 0.5px;
     }
-    .modal input {
+    .modal input, .modal select, .modal textarea {
       width: 100%;
       padding: 0.6rem 1rem;
       border-radius: 30px;
-      border: 1px solid rgba(247, 201, 72, 0.1);
+      border: 1px solid var(--border-color);
       background: rgba(255,255,255,0.04);
-      color: #f0f0f0;
+      color: var(--text-primary);
       font-family: 'Inter', sans-serif;
       font-size: 0.95rem;
       outline: none;
       transition: 0.2s;
     }
-    .modal input:focus { border-color: #f7c948; background: rgba(255,255,255,0.06); }
+    .modal input:focus, .modal select:focus, .modal textarea:focus {
+      border-color: var(--gold);
+      background: rgba(255,255,255,0.06);
+    }
+    .modal textarea { border-radius: 16px; min-height: 80px; resize: vertical; }
     .modal input[type="file"] {
       padding: 0.4rem;
       background: rgba(255,255,255,0.02);
-      border: 1px dashed rgba(247, 201, 72, 0.2);
+      border: 1px dashed var(--border-color);
     }
     .modal input[type="file"]::-webkit-file-upload-button {
-      background: rgba(247, 201, 72, 0.1);
-      border: 1px solid rgba(247, 201, 72, 0.2);
-      color: #f7c948;
+      background: var(--gold-glow);
+      border: 1px solid var(--border-color);
+      color: var(--gold);
       padding: 0.4rem 1rem;
       border-radius: 30px;
       cursor: pointer;
       font-family: 'Inter', sans-serif;
     }
-    .modal .file-status { font-size: 0.75rem; color: #9a9aaa; margin-top: 0.2rem; }
+    .modal .file-status { font-size: 0.75rem; color: var(--text-muted); margin-top: 0.2rem; }
     .modal .modal-actions {
       display: flex;
       gap: 0.8rem;
@@ -695,15 +891,34 @@
       border: none;
       font-family: 'Inter', sans-serif;
     }
-    .modal .btn-cancel { background: rgba(255,255,255,0.04); color: #b0b0c0; border: 1px solid rgba(255,255,255,0.06); }
+    .modal .btn-cancel {
+      background: rgba(255,255,255,0.04);
+      color: var(--text-muted);
+      border: 1px solid var(--border-color);
+    }
     .modal .btn-cancel:hover { background: rgba(255,255,255,0.08); }
-    .modal .btn-save { background: linear-gradient(135deg, #f7c948, #f0a500); color: #0a0a0f; font-weight: 700; }
-    .modal .btn-save:hover { transform: scale(1.04); box-shadow: 0 0 30px rgba(247, 201, 72, 0.15); }
-    .modal .btn-login { background: linear-gradient(135deg, #f7c948, #f0a500); color: #0a0a0f; font-weight: 700; width: 100%; padding: 0.7rem; }
-    .modal .btn-login:hover { transform: scale(1.02); box-shadow: 0 0 30px rgba(247, 201, 72, 0.15); }
+    .modal .btn-save {
+      background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+      color: #0a0a0f;
+      font-weight: 700;
+    }
+    .modal .btn-save:hover { transform: scale(1.04); box-shadow: 0 0 30px var(--gold-glow); }
+    .modal .btn-primary {
+      background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+      color: #0a0a0f;
+      font-weight: 700;
+      padding: 0.6rem 1.8rem;
+      border-radius: 60px;
+      border: none;
+      cursor: pointer;
+      transition: 0.2s;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.9rem;
+    }
+    .modal .btn-primary:hover { transform: scale(1.04); box-shadow: 0 0 30px var(--gold-glow); }
     .modal .login-error { color: #ff6b6b; font-size: 0.8rem; margin-top: 0.5rem; display: none; }
 
-    /* === PLAYLIST MODAL === */
+    /* ----- PLAYLIST MODAL ----- */
     #playlistContainer {
       max-height: 450px;
       overflow-y: auto;
@@ -711,38 +926,28 @@
     }
     #playlistContainer::-webkit-scrollbar { width: 4px; }
     #playlistContainer::-webkit-scrollbar-track { background: rgba(255,255,255,0.02); border-radius: 10px; }
-    #playlistContainer::-webkit-scrollbar-thumb { background: #f7c948; border-radius: 10px; }
+    #playlistContainer::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 10px; }
     .playlist-item {
       background: rgba(255,255,255,0.04);
-      border-radius: 16px;
+      border-radius: var(--radius-sm);
       padding: 1rem 1.5rem;
       display: flex;
       align-items: center;
       gap: 1.5rem;
-      border: 1px solid rgba(247, 201, 72, 0.06);
+      border: 1px solid var(--border-color);
       transition: 0.2s;
       margin-bottom: 0.8rem;
     }
-    .playlist-item:hover { border-color: rgba(247, 201, 72, 0.12); background: rgba(255,255,255,0.06); }
-    .playlist-item .cover {
-      width: 60px;
-      height: 60px;
-      border-radius: 12px;
-      object-fit: cover;
-      flex-shrink: 0;
-    }
+    .playlist-item:hover { border-color: var(--border-hover); background: rgba(255,255,255,0.06); }
+    .playlist-item .cover { width: 60px; height: 60px; border-radius: 12px; object-fit: cover; flex-shrink: 0; }
     .playlist-item .info { flex: 1; }
     .playlist-item .info .title { font-weight: 600; font-size: 1rem; }
-    .playlist-item .info .sub { font-size: 0.8rem; color: #b5b5c8; }
-    .playlist-item .actions {
-      display: flex;
-      gap: 0.5rem;
-      align-items: center;
-    }
+    .playlist-item .info .sub { font-size: 0.8rem; color: var(--text-secondary); }
+    .playlist-item .actions { display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap; }
     .playlist-item .btn-play-mini {
-      background: rgba(247, 201, 72, 0.1);
-      color: #f7c948;
-      border: 1px solid rgba(247, 201, 72, 0.15);
+      background: var(--gold-glow);
+      color: var(--gold);
+      border: 1px solid var(--border-color);
       width: 40px;
       height: 40px;
       border-radius: 50%;
@@ -754,7 +959,7 @@
       font-size: 0.9rem;
     }
     .playlist-item .btn-play-mini:hover { background: rgba(247, 201, 72, 0.2); transform: scale(1.05); }
-    .playlist-item .btn-play-mini.playing { background: #f7c948; color: #0a0a0f; }
+    .playlist-item .btn-play-mini.playing { background: var(--gold); color: #0a0a0f; }
     .playlist-item .btn-remove {
       background: rgba(255, 70, 70, 0.08);
       color: #ff6b6b;
@@ -767,42 +972,55 @@
       transition: 0.2s;
     }
     .playlist-item .btn-remove:hover { background: rgba(255, 70, 70, 0.15); border-color: rgba(255, 70, 70, 0.2); }
-    .playlist-item .progress-mini {
-      width: 80px;
-      height: 3px;
-      background: rgba(255,255,255,0.1);
-      border-radius: 10px;
-      overflow: hidden;
-    }
-    .playlist-item .progress-mini-bar {
-      height: 100%;
-      width: 0%;
-      background: #f7c948;
-      border-radius: 10px;
-      transition: width 0.1s;
-    }
-    .playlist-item .time-mini {
-      font-size: 0.7rem;
-      color: #7a7a8a;
-      min-width: 35px;
-    }
-    .empty-playlist { text-align: center; padding: 3rem 0; color: #7a7a8a; }
+    .playlist-item .progress-mini { width: 80px; height: 3px; background: rgba(255,255,255,0.1); border-radius: 10px; overflow: hidden; }
+    .playlist-item .progress-mini-bar { height: 100%; width: 0%; background: var(--gold); border-radius: 10px; transition: width 0.1s; }
+    .playlist-item .time-mini { font-size: 0.7rem; color: var(--text-muted); min-width: 35px; }
+    .empty-playlist { text-align: center; padding: 3rem 0; color: var(--text-muted); }
     .empty-playlist i { font-size: 3rem; display: block; opacity: 0.3; margin-bottom: 1rem; }
     .empty-playlist p { font-weight: 300; }
     .empty-playlist .sub { font-size: 0.8rem; margin-top: 0.3rem; }
 
-    /* === SHARE TOAST === */
+    /* ----- CART MODAL ----- */
+    .cart-item {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 0.8rem 0;
+      border-bottom: 1px solid var(--border-color);
+    }
+    .cart-item:last-child { border-bottom: none; }
+    .cart-item .info { flex: 1; }
+    .cart-item .info .title { font-weight: 600; }
+    .cart-item .info .sub { font-size: 0.8rem; color: var(--text-secondary); }
+    .cart-item .remove-item {
+      background: none;
+      border: none;
+      color: #ff6b6b;
+      cursor: pointer;
+      font-size: 1rem;
+      padding: 0.2rem 0.5rem;
+    }
+    .cart-total {
+      text-align: right;
+      padding-top: 1rem;
+      border-top: 2px solid var(--border-color);
+      font-size: 1.2rem;
+      font-weight: 700;
+    }
+    .cart-total span { color: var(--gold); }
+
+    /* ----- SHARE TOAST ----- */
     .share-toast {
       position: fixed;
       bottom: 2rem;
       left: 50%;
       transform: translateX(-50%);
-      background: rgba(18, 18, 26, 0.95);
+      background: var(--bg-secondary);
       backdrop-filter: blur(20px);
-      border: 1px solid rgba(247, 201, 72, 0.15);
-      border-radius: 16px;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
       padding: 0.8rem 2rem;
-      color: #f0f0f0;
+      color: var(--text-primary);
       font-size: 0.9rem;
       z-index: 1000;
       opacity: 0;
@@ -811,42 +1029,150 @@
       pointer-events: none;
     }
     .share-toast.visible { opacity: 1; transform: translateX(-50%) translateY(0); pointer-events: auto; }
-    .share-toast i { color: #f7c948; margin-right: 0.5rem; }
+    .share-toast i { color: var(--gold); margin-right: 0.5rem; }
 
+    /* ----- PREVIEW ----- */
     .preview-container { display: flex; gap: 1rem; margin: 0.5rem 0; flex-wrap: wrap; }
-    .preview-item { background: rgba(255,255,255,0.04); border-radius: 12px; padding: 0.5rem; border: 1px solid rgba(247, 201, 72, 0.1); display: flex; align-items: center; gap: 0.5rem; }
+    .preview-item { background: rgba(255,255,255,0.04); border-radius: 12px; padding: 0.5rem; border: 1px solid var(--border-color); display: flex; align-items: center; gap: 0.5rem; }
     .preview-item img { width: 60px; height: 60px; object-fit: cover; border-radius: 8px; }
-    .preview-item i { font-size: 2rem; color: #f7c948; }
+    .preview-item i { font-size: 2rem; color: var(--gold); }
 
     .loading-spinner { display: none; }
 
-    /* === RESPONSIVE === */
+    /* ----- GLOBAL PLAYER ----- */
+    .global-player {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: var(--bg-secondary);
+      backdrop-filter: blur(20px);
+      border-top: 1px solid var(--border-color);
+      padding: 0.8rem 2rem;
+      z-index: 998;
+      display: none;
+      align-items: center;
+      gap: 1.5rem;
+      box-shadow: 0 -10px 40px rgba(0,0,0,0.3);
+    }
+    .global-player.active { display: flex; }
+    .global-player .gp-info {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      min-width: 150px;
+    }
+    .global-player .gp-info img {
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
+      object-fit: cover;
+    }
+    .global-player .gp-info .gp-title { font-weight: 600; font-size: 0.9rem; }
+    .global-player .gp-info .gp-artist { font-size: 0.75rem; color: var(--text-muted); }
+    .global-player .gp-controls {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+    }
+    .global-player .gp-controls button {
+      background: none;
+      border: none;
+      color: var(--text-primary);
+      font-size: 1.2rem;
+      cursor: pointer;
+      transition: 0.2s;
+      padding: 0.2rem 0.4rem;
+    }
+    .global-player .gp-controls button:hover { color: var(--gold); }
+    .global-player .gp-controls .gp-play {
+      background: var(--gold);
+      color: #0a0a0f;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.9rem;
+    }
+    .global-player .gp-controls .gp-play:hover { background: var(--gold-dark); transform: scale(1.05); }
+    .global-player .gp-progress {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      min-width: 100px;
+    }
+    .global-player .gp-progress .gp-bar {
+      flex: 1;
+      height: 3px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 10px;
+      cursor: pointer;
+      position: relative;
+    }
+    .global-player .gp-progress .gp-bar .gp-fill {
+      height: 100%;
+      width: 0%;
+      background: var(--gold);
+      border-radius: 10px;
+      transition: width 0.1s;
+    }
+    .global-player .gp-progress .gp-time {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      min-width: 70px;
+    }
+    .global-player .gp-close {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: 1rem;
+      padding: 0.2rem 0.5rem;
+      transition: 0.2s;
+    }
+    .global-player .gp-close:hover { color: #ff6b6b; }
+
+    /* ----- RESPONSIVE ----- */
     @media (max-width: 750px) {
       .beat-card { flex-direction: column; align-items: center; text-align: center; padding: 1.5rem; }
       .player-wrapper { flex: 0 0 180px; width: 180px; height: 180px; }
       .beat-info { align-items: center; width: 100%; }
       .beat-meta { justify-content: center; }
       .beat-actions { justify-content: center; }
-      .buy-wrap { width: 100%; display: flex; justify-content: center; }
-      .admin-toolbar { justify-content: center; }
+      .admin-toolbar { flex-direction: column; align-items: stretch; }
+      .admin-toolbar-left { justify-content: center; flex-wrap: wrap; }
+      .admin-toolbar-right { justify-content: center; }
+      .search-container { width: 100%; }
+      .search-container input { width: 100%; }
       .modal { padding: 1.5rem; }
       .toast-container { right: 1rem; left: 1rem; max-width: none; }
       .hamburger-dropdown { right: -10px; min-width: 200px; }
       .playlist-item { flex-wrap: wrap; justify-content: center; text-align: center; }
       .playlist-item .info { width: 100%; }
       .playlist-item .actions { flex-wrap: wrap; justify-content: center; }
+      .global-player { flex-wrap: wrap; padding: 0.8rem 1rem; gap: 0.8rem; }
+      .global-player .gp-info { min-width: 100px; }
+      .global-player .gp-progress { min-width: 50px; }
+      .theme-toggle { bottom: 100px; right: 12px; width: 38px; height: 38px; font-size: 1rem; }
     }
     @media (max-width: 480px) {
       .brand { font-size: 1.8rem; }
       .player-wrapper { flex: 0 0 150px; width: 150px; height: 150px; }
       .hamburger-btn .btn-label { display: none; }
       .logo { width: 60px; height: 60px; }
+      .global-player .gp-info img { width: 30px; height: 30px; }
+      .global-player .gp-info .gp-title { font-size: 0.8rem; }
+      .global-player .gp-controls button { font-size: 1rem; }
+      .global-player .gp-controls .gp-play { width: 30px; height: 30px; font-size: 0.8rem; }
     }
   </style>
 </head>
 <body>
 
-<!-- TOAST CONTAINER -->
+<!-- TOAST -->
 <div class="toast-container" id="toastContainer"></div>
 
 <!-- SHARE TOAST -->
@@ -854,8 +1180,37 @@
   <i class="fas fa-check-circle"></i> Link copiado para a área de transferência
 </div>
 
+<!-- THEME TOGGLE -->
+<button class="theme-toggle" id="themeToggle" title="Alternar tema">
+  <i class="fas fa-moon"></i>
+</button>
+
+<!-- GLOBAL PLAYER -->
+<div class="global-player" id="globalPlayer">
+  <div class="gp-info">
+    <img id="gpCover" src="" alt="Capa">
+    <div>
+      <div class="gp-title" id="gpTitle">Título</div>
+      <div class="gp-artist" id="gpArtist">Artista</div>
+    </div>
+  </div>
+  <div class="gp-controls">
+    <button id="gpPrev"><i class="fas fa-step-backward"></i></button>
+    <button class="gp-play" id="gpPlay"><i class="fas fa-play"></i></button>
+    <button id="gpNext"><i class="fas fa-step-forward"></i></button>
+  </div>
+  <div class="gp-progress">
+    <div class="gp-bar" id="gpBar">
+      <div class="gp-fill" id="gpFill"></div>
+    </div>
+    <span class="gp-time" id="gpTime">0:00 / 0:00</span>
+  </div>
+  <button class="gp-close" id="gpClose"><i class="fas fa-times"></i></button>
+</div>
+
 <div class="app">
 
+  <!-- HEADER -->
   <header class="header">
     <a href="?" class="logo-wrapper" id="logoLink">
       <img src="logo.png" alt="Best Beats" class="logo">
@@ -864,51 +1219,92 @@
     <div class="subtitle">ouça e compre</div>
   </header>
 
+  <!-- ADMIN TOOLBAR -->
   <div class="admin-toolbar">
-    <div class="hamburger-menu">
-      <button class="hamburger-btn" id="menuBtn">
-        <span id="avatarContainer"></span>
-        <i class="fas fa-bars"></i>
-        <span class="btn-label" id="menuLabel">Menu</span>
+    <div class="admin-toolbar-left">
+      <!-- Search -->
+      <div class="search-container">
+        <i class="fas fa-search"></i>
+        <input type="text" id="searchInput" placeholder="Buscar beat ou artista...">
+        <button class="clear-search" id="clearSearch"><i class="fas fa-times"></i></button>
+      </div>
+      <!-- Filter -->
+      <select class="filter-select" id="filterGenre">
+        <option value="all">Todos os gêneros</option>
+      </select>
+      <!-- Sort -->
+      <select class="sort-select" id="sortBy">
+        <option value="recent">Mais recentes</option>
+        <option value="popular">Mais populares</option>
+        <option value="price-low">Menor preço</option>
+        <option value="price-high">Maior preço</option>
+        <option value="rating">Melhor avaliação</option>
+      </select>
+    </div>
+    <div class="admin-toolbar-right">
+      <!-- Cart -->
+      <button class="cart-btn" id="cartBtn">
+        <i class="fas fa-shopping-cart"></i>
+        <span class="cart-count" id="cartCount">0</span>
       </button>
-      <div class="hamburger-dropdown" id="mainDropdown">
-        <div class="user-info-display" id="userInfoDisplay" style="display:none;">
-          <img src="eu.jpg" alt="Admin" class="admin-avatar" id="adminAvatar">
-          <div class="user-details">
-            <span class="user-name" id="userNameDisplay">Administrador</span>
-            <span class="user-email" id="userEmailDisplay">usuario@email.com</span>
+      <!-- Menu -->
+      <div class="hamburger-menu">
+        <button class="hamburger-btn" id="menuBtn">
+          <span id="avatarContainer"></span>
+          <i class="fas fa-bars"></i>
+          <span class="btn-label" id="menuLabel">Menu</span>
+        </button>
+        <div class="hamburger-dropdown" id="mainDropdown">
+          <div class="user-info-display" id="userInfoDisplay" style="display:none;">
+            <img src="eu.jpg" alt="Admin" class="admin-avatar" id="adminAvatar">
+            <div class="user-details">
+              <span class="user-name" id="userNameDisplay">Administrador</span>
+              <span class="user-email" id="userEmailDisplay">usuario@email.com</span>
+            </div>
           </div>
-        </div>
-        <div class="dropdown-divider" id="dividerAfterUser" style="display:none;"></div>
-        
-        <button class="dropdown-item" id="dropdownLogin" style="display:flex;">
-          <i class="fas fa-sign-in-alt"></i> Admin
-        </button>
-        
-        <button class="dropdown-item" id="dropdownNewBeat" style="display:none;">
-          <i class="fas fa-plus"></i> Lançar
-        </button>
-        <button class="dropdown-item" id="dropdownToggleEdit" style="display:none;">
-          <i class="fas fa-edit"></i> Editar
-        </button>
-        
-        <button class="dropdown-item" id="dropdownPlaylist">
-          <i class="fas fa-music"></i> Minha Playlist
-          <span id="playlistCount" style="background:rgba(247,201,72,0.1);color:#f7c948;font-size:0.7rem;padding:0.1rem 0.6rem;border-radius:30px;margin-left:auto;">0</span>
-        </button>
-        
-        <div class="dropdown-divider" id="dividerBeforeLogout" style="display:none;"></div>
-        <button class="dropdown-item danger" id="dropdownLogout" style="display:none;">
-          <i class="fas fa-sign-out-alt"></i> Sair
-        </button>
-        
-        <div style="padding: 0.6rem 1.2rem; font-size: 0.65rem; color: #4a4a5a; border-top: 1px solid rgba(255,255,255,0.03); margin-top: 0.2rem;">
-          Best Beats v9.0
+          <div class="dropdown-divider" id="dividerAfterUser" style="display:none;"></div>
+          
+          <button class="dropdown-item" id="dropdownLogin" style="display:flex;">
+            <i class="fas fa-sign-in-alt"></i> Admin
+          </button>
+          
+          <button class="dropdown-item" id="dropdownNewBeat" style="display:none;">
+            <i class="fas fa-plus"></i> Lançar Beat
+          </button>
+          <button class="dropdown-item" id="dropdownToggleEdit" style="display:none;">
+            <i class="fas fa-edit"></i> Editar
+          </button>
+          <button class="dropdown-item" id="dropdownDashboard" style="display:none;">
+            <i class="fas fa-chart-bar"></i> Dashboard
+          </button>
+          
+          <button class="dropdown-item" id="dropdownPlaylist">
+            <i class="fas fa-music"></i> Minha Playlist
+            <span id="playlistCount" style="background:rgba(247,201,72,0.1);color:#f7c948;font-size:0.7rem;padding:0.1rem 0.6rem;border-radius:30px;margin-left:auto;">0</span>
+          </button>
+          
+          <button class="dropdown-item" id="dropdownProfile">
+            <i class="fas fa-user"></i> Perfil do Produtor
+          </button>
+          
+          <button class="dropdown-item" id="dropdownAbout">
+            <i class="fas fa-info-circle"></i> Sobre & Contato
+          </button>
+          
+          <div class="dropdown-divider" id="dividerBeforeLogout" style="display:none;"></div>
+          <button class="dropdown-item danger" id="dropdownLogout" style="display:none;">
+            <i class="fas fa-sign-out-alt"></i> Sair
+          </button>
+          
+          <div style="padding: 0.6rem 1.2rem; font-size: 0.65rem; color: var(--text-muted); border-top: 1px solid var(--border-color); margin-top: 0.2rem;">
+            Best Beats v10.0
+          </div>
         </div>
       </div>
     </div>
   </div>
 
+  <!-- LOADING -->
   <div id="loading" class="loading-wrapper">
     <div class="loading-wave">
       <span></span><span></span><span></span><span></span>
@@ -920,11 +1316,15 @@
     </div>
   </div>
 
+  <!-- BEATS LIST -->
   <div class="beats-list" id="beatsContainer"></div>
 
+  <!-- FOOTER -->
   <footer class="footer">
     <div class="social-icons">
       <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+      <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+      <a href="#" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
       <a href="#" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
     </div>
     <div>© 2026 Best Beats · todos os direitos reservados</div>
@@ -942,14 +1342,14 @@
       <input type="password" id="loginPass" placeholder="••••••••" required>
       <div class="login-error" id="loginError">Email ou senha inválidos.</div>
       <div class="modal-actions" style="justify-content: center; flex-direction: column; gap: 0.8rem;">
-        <button type="submit" class="btn-login"><i class="fas fa-sign-in-alt"></i> Entrar</button>
+        <button type="submit" class="btn-primary" style="width:100%;"><i class="fas fa-sign-in-alt"></i> Entrar</button>
         <button type="button" class="btn-cancel" id="loginCancel" style="width:100%;">Cancelar</button>
       </div>
     </form>
   </div>
 </div>
 
-<!-- MODAL FORM -->
+<!-- MODAL BEAT FORM -->
 <div class="modal-overlay" id="formModal">
   <div class="modal">
     <h2 id="modalTitle"><i class="fas fa-wave-square"></i> <span>Novo Beat</span></h2>
@@ -962,6 +1362,10 @@
       <input type="text" id="fGenre" placeholder="Ex: Trap" required>
       <label for="fPrice">Preço *</label>
       <input type="text" id="fPrice" placeholder="Kz 3.500" required>
+      <label for="fBpm">BPM</label>
+      <input type="text" id="fBpm" placeholder="Ex: 140">
+      <label for="fKey">Tom</label>
+      <input type="text" id="fKey" placeholder="Ex: A Minor">
       <label for="fCoverFile">Imagem de Capa</label>
       <input type="file" id="fCoverFile" accept="image/*">
       <div class="file-status" id="coverStatus">Selecionar</div>
@@ -993,6 +1397,117 @@
   </div>
 </div>
 
+<!-- MODAL CART -->
+<div class="modal-overlay" id="cartModal">
+  <div class="modal" style="max-width: 600px;">
+    <h2><i class="fas fa-shopping-cart"></i> Meu Carrinho</h2>
+    <div id="cartContainer"></div>
+    <div class="empty-cart" id="emptyCart" style="text-align:center;padding:2rem 0;color:var(--text-muted);">
+      <i class="fas fa-shopping-bag" style="font-size:2rem;display:block;opacity:0.3;margin-bottom:1rem;"></i>
+      <p>Seu carrinho está vazio</p>
+    </div>
+    <div class="cart-total" id="cartTotal" style="display:none;">
+      Total: <span id="cartTotalValue">Kz 0</span>
+    </div>
+    <div class="modal-actions">
+      <button type="button" class="btn-cancel" id="cartCancel">Fechar</button>
+      <button type="button" class="btn-save" id="cartCheckout">
+        <i class="fab fa-whatsapp"></i> Finalizar Compra
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL DASHBOARD -->
+<div class="modal-overlay" id="dashboardModal">
+  <div class="modal" style="max-width: 600px;">
+    <h2><i class="fas fa-chart-bar"></i> Dashboard</h2>
+    <div id="dashboardContent" style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+      <div style="background:var(--bg-card);border-radius:var(--radius-sm);padding:1.5rem;text-align:center;border:1px solid var(--border-color);">
+        <div style="font-size:2rem;font-weight:800;color:var(--gold);" id="totalBeats">0</div>
+        <div style="font-size:0.8rem;color:var(--text-muted);">Total de Beats</div>
+      </div>
+      <div style="background:var(--bg-card);border-radius:var(--radius-sm);padding:1.5rem;text-align:center;border:1px solid var(--border-color);">
+        <div style="font-size:2rem;font-weight:800;color:var(--gold);" id="totalPlays">0</div>
+        <div style="font-size:0.8rem;color:var(--text-muted);">Total de Plays</div>
+      </div>
+      <div style="background:var(--bg-card);border-radius:var(--radius-sm);padding:1.5rem;text-align:center;border:1px solid var(--border-color);">
+        <div style="font-size:2rem;font-weight:800;color:var(--gold);" id="avgRating">0.0</div>
+        <div style="font-size:0.8rem;color:var(--text-muted);">Avaliação Média</div>
+      </div>
+      <div style="background:var(--bg-card);border-radius:var(--radius-sm);padding:1.5rem;text-align:center;border:1px solid var(--border-color);">
+        <div style="font-size:2rem;font-weight:800;color:var(--gold);" id="topGenre">-</div>
+        <div style="font-size:0.8rem;color:var(--text-muted);">Gênero Mais Popular</div>
+      </div>
+    </div>
+    <div style="margin-top:1.5rem;background:var(--bg-card);border-radius:var(--radius-sm);padding:1.2rem;border:1px solid var(--border-color);">
+      <div style="font-weight:600;margin-bottom:0.5rem;">Beats Mais Ouvidos</div>
+      <div id="topBeats"></div>
+    </div>
+    <div class="modal-actions">
+      <button type="button" class="btn-cancel" id="dashboardCancel">Fechar</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL PROFILE -->
+<div class="modal-overlay" id="profileModal">
+  <div class="modal" style="max-width: 500px;">
+    <h2><i class="fas fa-user"></i> Perfil do Produtor</h2>
+    <form id="profileForm">
+      <label for="profName">Nome</label>
+      <input type="text" id="profName" placeholder="Seu nome">
+      <label for="profBio">Biografia</label>
+      <textarea id="profBio" placeholder="Conte um pouco sobre você..."></textarea>
+      <label for="profSocial">Instagram</label>
+      <input type="text" id="profSocial" placeholder="@seuinstagram">
+      <div class="modal-actions">
+        <button type="button" class="btn-cancel" id="profileCancel">Fechar</button>
+        <button type="submit" class="btn-save">Salvar Perfil</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- MODAL ABOUT -->
+<div class="modal-overlay" id="aboutModal">
+  <div class="modal" style="max-width: 500px;">
+    <h2><i class="fas fa-info-circle"></i> Sobre</h2>
+    <div style="color:var(--text-secondary);line-height:1.8;">
+      <p><strong style="color:var(--gold);">Best Beats</strong> é uma plataforma dedicada a produtores musicais que desejam vender seus beats de forma simples e direta.</p>
+      <p style="margin-top:1rem;">Compre beats exclusivos diretamente via WhatsApp e impulsione sua carreira musical.</p>
+      <hr style="border-color:var(--border-color);margin:1rem 0;">
+      <p><i class="fas fa-envelope" style="color:var(--gold);width:20px;"></i> contato@bestbeats.com</p>
+      <p><i class="fas fa-phone" style="color:var(--gold);width:20px;"></i> +244 900 000 000</p>
+      <p><i class="fas fa-map-marker-alt" style="color:var(--gold);width:20px;"></i> Luanda, Angola</p>
+    </div>
+    <div class="modal-actions">
+      <button type="button" class="btn-cancel" id="aboutCancel">Fechar</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL RATING -->
+<div class="modal-overlay" id="ratingModal">
+  <div class="modal" style="max-width: 400px;">
+    <h2><i class="fas fa-star"></i> Avaliar Beat</h2>
+    <p style="color:var(--text-secondary);margin-bottom:1rem;">Como você avalia este beat?</p>
+    <div style="display:flex;gap:0.5rem;font-size:2rem;justify-content:center;margin-bottom:1.5rem;" id="ratingStars">
+      <span data-value="1" style="cursor:pointer;color:var(--text-muted);transition:0.2s;">★</span>
+      <span data-value="2" style="cursor:pointer;color:var(--text-muted);transition:0.2s;">★</span>
+      <span data-value="3" style="cursor:pointer;color:var(--text-muted);transition:0.2s;">★</span>
+      <span data-value="4" style="cursor:pointer;color:var(--text-muted);transition:0.2s;">★</span>
+      <span data-value="5" style="cursor:pointer;color:var(--text-muted);transition:0.2s;">★</span>
+    </div>
+    <input type="hidden" id="ratingBeatId" value="">
+    <input type="hidden" id="ratingValue" value="0">
+    <div class="modal-actions">
+      <button type="button" class="btn-cancel" id="ratingCancel">Cancelar</button>
+      <button type="button" class="btn-save" id="ratingSubmit">Enviar Avaliação</button>
+    </div>
+  </div>
+</div>
+
 <script>
   (function() {
     // ============================================================
@@ -1004,7 +1519,33 @@
     const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
     // ============================================================
-    // 2. TOAST
+    // 2. ESTADO GLOBAL
+    // ============================================================
+    let beatsData = [];
+    let filteredBeats = [];
+    let editMode = false;
+    let editingId = null;
+    let isLoggedIn = false;
+    let currentUser = null;
+    let selectedCoverFile = null;
+    let selectedAudioFile = null;
+    let playlistAudio = null;
+    let playlistAudioId = null;
+    
+    // Global Player
+    let gpAudio = null;
+    let gpCurrentIndex = -1;
+    let gpPlaylist = [];
+    let gpIsPlaying = false;
+    
+    // Cart
+    let cart = JSON.parse(localStorage.getItem('bestBeatsCart') || '[]');
+    
+    // Ratings
+    let userRatings = JSON.parse(localStorage.getItem('bestBeatsRatings') || '{}');
+
+    // ============================================================
+    // 3. TOAST
     // ============================================================
     function showToast(title, message, type = 'info', duration = 4000) {
       const container = document.getElementById('toastContainer');
@@ -1029,7 +1570,7 @@
     }
 
     // ============================================================
-    // 3. PLAYLIST FUNCTIONS
+    // 4. PLAYLIST
     // ============================================================
     function getPlaylist() {
       try { return JSON.parse(localStorage.getItem('favoriteBeats') || '[]'); } catch { return []; }
@@ -1050,27 +1591,33 @@
       const el = document.getElementById('playlistCount');
       if (el) el.textContent = count;
     }
-    function updatePlaylistButtons(beatId) {
-      document.querySelectorAll('.beat-card').forEach(card => {
-        if (parseInt(card.dataset.id) === beatId) {
-          const btn = card.querySelector('.btn-playlist');
-          if (btn) {
-            if (isInPlaylist(beatId)) {
-              btn.innerHTML = '<i class="fas fa-check"></i> Added';
-              btn.classList.add('added');
-            } else {
-              btn.innerHTML = '<i class="fas fa-plus"></i> Add';
-              btn.classList.remove('added');
-            }
-          }
-        }
-      });
+
+    // ============================================================
+    // 5. CART
+    // ============================================================
+    function updateCart() {
+      localStorage.setItem('bestBeatsCart', JSON.stringify(cart));
+      document.getElementById('cartCount').textContent = cart.length;
+    }
+    function toggleCart(beatId) {
+      const index = cart.indexOf(beatId);
+      if (index > -1) { cart.splice(index, 1); updateCart(); return false; }
+      else { cart.push(beatId); updateCart(); return true; }
+    }
+    function getCartBeats() {
+      return beatsData.filter(b => cart.includes(b.id));
+    }
+    function getCartTotal() {
+      return getCartBeats().reduce((sum, b) => {
+        const price = parseFloat(b.price.replace(/[^0-9.]/g, ''));
+        return sum + (isNaN(price) ? 0 : price);
+      }, 0);
     }
 
     // ============================================================
-    // 4. SHARE
+    // 6. SHARE
     // ============================================================
-    function showShareToast(message = 'Link copiado para a área de transferência') {
+    function showShareToast(message) {
       const toast = document.getElementById('shareToast');
       toast.innerHTML = `<i class="fas fa-check-circle"></i> ${message}`;
       toast.classList.add('visible');
@@ -1092,122 +1639,209 @@
       textArea.style.opacity = '0';
       document.body.appendChild(textArea);
       textArea.select();
-      try { document.execCommand('copy'); showShareToast('Link do beat copiado para a área de transferência'); }
-      catch (err) { showShareToast('Copie o link manualmente: ' + text, 5000); }
+      try { document.execCommand('copy'); showShareToast('Link do beat copiado'); }
+      catch (err) { showShareToast('Copie o link manualmente: ' + text); }
       document.body.removeChild(textArea);
     }
 
     // ============================================================
-    // 5. URL AMIGÁVEL
+    // 7. THEME
     // ============================================================
-    function detectBeatFromUrl() {
-      const params = new URLSearchParams(window.location.search);
-      const slug = params.get('beat');
-      if (slug) {
-        setTimeout(() => {
-          document.querySelectorAll('.beat-card').forEach(card => {
-            const title = card.querySelector('.beat-title')?.textContent?.trim();
-            if (title) {
-              const cardSlug = title.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
-              if (cardSlug === slug) {
-                card.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                card.style.borderColor = '#f7c948';
-                card.style.boxShadow = '0 0 40px rgba(247, 201, 72, 0.15)';
-                setTimeout(() => { card.style.borderColor = ''; card.style.boxShadow = ''; }, 3000);
-              }
-            }
-          });
-        }, 800);
+    function toggleTheme() {
+      const html = document.documentElement;
+      const current = html.getAttribute('data-theme');
+      const next = current === 'dark' ? 'light' : 'dark';
+      html.setAttribute('data-theme', next);
+      localStorage.setItem('bestBeatsTheme', next);
+      document.getElementById('themeToggle').innerHTML = next === 'dark' ? '<i class="fas fa-moon"></i>' : '<i class="fas fa-sun"></i>';
+    }
+    function loadTheme() {
+      const saved = localStorage.getItem('bestBeatsTheme') || 'dark';
+      document.documentElement.setAttribute('data-theme', saved);
+      document.getElementById('themeToggle').innerHTML = saved === 'dark' ? '<i class="fas fa-moon"></i>' : '<i class="fas fa-sun"></i>';
+    }
+
+    // ============================================================
+    // 8. RATING
+    // ============================================================
+    function rateBeat(beatId, rating) {
+      userRatings[beatId] = rating;
+      localStorage.setItem('bestBeatsRatings', JSON.stringify(userRatings));
+      renderBeats();
+    }
+    function getBeatRating(beatId) {
+      return userRatings[beatId] || 0;
+    }
+    function getBeatAverageRating(beatId) {
+      // Se tivéssemos múltiplas avaliações por beat, faríamos média
+      return getBeatRating(beatId);
+    }
+
+    // ============================================================
+    // 9. GLOBAL PLAYER
+    // ============================================================
+    function initGlobalPlayer() {
+      const gp = document.getElementById('globalPlayer');
+      const playBtn = document.getElementById('gpPlay');
+      const prevBtn = document.getElementById('gpPrev');
+      const nextBtn = document.getElementById('gpNext');
+      const closeBtn = document.getElementById('gpClose');
+      const bar = document.getElementById('gpBar');
+      const fill = document.getElementById('gpFill');
+      const time = document.getElementById('gpTime');
+
+      playBtn.addEventListener('click', () => {
+        if (!gpAudio) return;
+        if (gpIsPlaying) {
+          gpAudio.pause();
+          playBtn.innerHTML = '<i class="fas fa-play"></i>';
+          gpIsPlaying = false;
+        } else {
+          gpAudio.play().catch(() => {});
+          playBtn.innerHTML = '<i class="fas fa-pause"></i>';
+          gpIsPlaying = true;
+        }
+      });
+
+      prevBtn.addEventListener('click', () => {
+        if (gpPlaylist.length === 0) return;
+        gpCurrentIndex = (gpCurrentIndex - 1 + gpPlaylist.length) % gpPlaylist.length;
+        playGlobalBeat(gpPlaylist[gpCurrentIndex]);
+      });
+
+      nextBtn.addEventListener('click', () => {
+        if (gpPlaylist.length === 0) return;
+        gpCurrentIndex = (gpCurrentIndex + 1) % gpPlaylist.length;
+        playGlobalBeat(gpPlaylist[gpCurrentIndex]);
+      });
+
+      closeBtn.addEventListener('click', () => {
+        if (gpAudio) { gpAudio.pause(); gpAudio = null; }
+        gp.classList.remove('active');
+        gpIsPlaying = false;
+      });
+
+      bar.addEventListener('click', (e) => {
+        if (!gpAudio || !gpAudio.duration) return;
+        const rect = bar.getBoundingClientRect();
+        const pct = (e.clientX - rect.left) / rect.width;
+        gpAudio.currentTime = pct * gpAudio.duration;
+      });
+
+      if (gpAudio) {
+        gpAudio.addEventListener('timeupdate', () => {
+          if (gpAudio.duration) {
+            const pct = (gpAudio.currentTime / gpAudio.duration) * 100;
+            fill.style.width = pct + '%';
+            const m = Math.floor(gpAudio.currentTime / 60);
+            const s = Math.floor(gpAudio.currentTime % 60);
+            const tm = Math.floor(gpAudio.duration / 60);
+            const ts = Math.floor(gpAudio.duration % 60);
+            time.textContent = `${m}:${s < 10 ? '0' : ''}${s} / ${tm}:${ts < 10 ? '0' : ''}${ts}`;
+          }
+        });
+        gpAudio.addEventListener('ended', () => {
+          playBtn.innerHTML = '<i class="fas fa-play"></i>';
+          gpIsPlaying = false;
+          if (gpPlaylist.length > 1) {
+            gpCurrentIndex = (gpCurrentIndex + 1) % gpPlaylist.length;
+            playGlobalBeat(gpPlaylist[gpCurrentIndex]);
+          }
+        });
       }
     }
 
-    // ============================================================
-    // 6. ESTADO
-    // ============================================================
-    let beatsData = [];
-    let editMode = false;
-    let editingId = null;
-    let isLoggedIn = false;
-    let currentUser = null;
-    let selectedCoverFile = null;
-    let selectedAudioFile = null;
-    let playlistAudio = null;
-    let playlistAudioId = null;
+    function playGlobalBeat(beatId) {
+      const beat = beatsData.find(b => b.id === beatId);
+      if (!beat || !beat.audio) { showToast('Erro', 'Áudio indisponível.', 'error'); return; }
 
-    // ============================================================
-    // 7. DOM REFS
-    // ============================================================
-    const container = document.getElementById('beatsContainer');
-    const loading = document.getElementById('loading');
-    const loginModal = document.getElementById('loginModal');
-    const formModal = document.getElementById('formModal');
-    const modalTitle = document.getElementById('modalTitle');
-    const beatForm = document.getElementById('beatForm');
-    const fTitle = document.getElementById('fTitle');
-    const fArtist = document.getElementById('fArtist');
-    const fGenre = document.getElementById('fGenre');
-    const fPrice = document.getElementById('fPrice');
-    const fCoverFile = document.getElementById('fCoverFile');
-    const fAudioFile = document.getElementById('fAudioFile');
-    const coverStatus = document.getElementById('coverStatus');
-    const audioStatus = document.getElementById('audioStatus');
-    const previewContainer = document.getElementById('previewContainer');
-    const loginForm = document.getElementById('loginForm');
-    const loginError = document.getElementById('loginError');
+      const gp = document.getElementById('globalPlayer');
+      document.getElementById('gpCover').src = beat.cover || 'https://picsum.photos/seed/default/100/100';
+      document.getElementById('gpTitle').textContent = beat.title;
+      document.getElementById('gpArtist').textContent = beat.artist;
 
-    const menuBtn = document.getElementById('menuBtn');
-    const mainDropdown = document.getElementById('mainDropdown');
-    const menuLabel = document.getElementById('menuLabel');
-    const avatarContainer = document.getElementById('avatarContainer');
-    const userInfoDisplay = document.getElementById('userInfoDisplay');
-    const userNameDisplay = document.getElementById('userNameDisplay');
-    const userEmailDisplay = document.getElementById('userEmailDisplay');
-    const dividerAfterUser = document.getElementById('dividerAfterUser');
-    const dropdownLogin = document.getElementById('dropdownLogin');
-    const dropdownNewBeat = document.getElementById('dropdownNewBeat');
-    const dropdownToggleEdit = document.getElementById('dropdownToggleEdit');
-    const dividerBeforeLogout = document.getElementById('dividerBeforeLogout');
-    const dropdownLogout = document.getElementById('dropdownLogout');
+      if (gpAudio) { gpAudio.pause(); gpAudio = null; }
 
-    // ============================================================
-    // 8. UPLOAD
-    // ============================================================
-    async function uploadFile(file, bucket, path) {
-      if (!file) return null;
-      const fileExt = file.name.split('.').pop();
-      const fileName = `${path}.${fileExt}`;
-      const { data, error } = await supabase.storage.from(bucket).upload(fileName, file, { cacheControl: '3600', upsert: true });
-      if (error) { console.error('Erro no upload:', error); throw error; }
-      const { data: urlData } = supabase.storage.from(bucket).getPublicUrl(fileName);
-      return urlData.publicUrl;
+      gpAudio = new Audio(beat.audio);
+      gpAudio.volume = 0.7;
+      gpAudio.play().catch(() => {});
+      gpIsPlaying = true;
+      document.getElementById('gpPlay').innerHTML = '<i class="fas fa-pause"></i>';
+      gp.classList.add('active');
+
+      gpAudio.addEventListener('timeupdate', () => {
+        if (gpAudio.duration) {
+          const pct = (gpAudio.currentTime / gpAudio.duration) * 100;
+          document.getElementById('gpFill').style.width = pct + '%';
+          const m = Math.floor(gpAudio.currentTime / 60);
+          const s = Math.floor(gpAudio.currentTime % 60);
+          const tm = Math.floor(gpAudio.duration / 60);
+          const ts = Math.floor(gpAudio.duration % 60);
+          document.getElementById('gpTime').textContent = `${m}:${s < 10 ? '0' : ''}${s} / ${tm}:${ts < 10 ? '0' : ''}${ts}`;
+        }
+      });
+      gpAudio.addEventListener('ended', () => {
+        document.getElementById('gpPlay').innerHTML = '<i class="fas fa-play"></i>';
+        gpIsPlaying = false;
+        if (gpPlaylist.length > 1) {
+          gpCurrentIndex = (gpCurrentIndex + 1) % gpPlaylist.length;
+          playGlobalBeat(gpPlaylist[gpCurrentIndex]);
+        }
+      });
     }
 
     // ============================================================
-    // 9. CRUD
+    // 10. CRUD
     // ============================================================
     async function loadBeats() {
       try {
-        loading.style.display = 'flex';
-        container.innerHTML = '';
+        document.getElementById('loading').style.display = 'flex';
+        document.getElementById('beatsContainer').innerHTML = '';
         const { data, error } = await supabase.from('beats').select('*').order('id', { ascending: false });
         if (error) throw error;
         beatsData = data || [];
-        renderBeats();
-        detectBeatFromUrl();
+        // Atualiza gêneros no filtro
+        const genres = [...new Set(beatsData.map(b => b.genre).filter(Boolean))];
+        const filterSelect = document.getElementById('filterGenre');
+        const currentVal = filterSelect.value;
+        filterSelect.innerHTML = '<option value="all">Todos os gêneros</option>';
+        genres.forEach(g => {
+          const opt = document.createElement('option');
+          opt.value = g;
+          opt.textContent = g;
+          filterSelect.appendChild(opt);
+        });
+        filterSelect.value = currentVal;
+        applyFilters();
         updatePlaylistCount();
+        updateCart();
+        detectBeatFromUrl();
       } catch (error) {
         console.error('Erro ao carregar beats:', error);
-        showToast('Erro ao carregar', 'Não foi possível carregar os beats. Verifique sua conexão.', 'error');
-      } finally { loading.style.display = 'none'; }
+        showToast('Erro ao carregar', 'Não foi possível carregar os beats.', 'error');
+      } finally {
+        document.getElementById('loading').style.display = 'none';
+      }
     }
 
     async function saveBeatToSupabase(beatData, coverFile, audioFile) {
       try {
         let coverUrl = beatData.cover || null;
         let audioUrl = beatData.audio || null;
-        if (coverFile) { const timestamp = Date.now(); coverUrl = await uploadFile(coverFile, 'covers', `beat-cover-${timestamp}`); }
-        if (audioFile) { const timestamp = Date.now(); audioUrl = await uploadFile(audioFile, 'audios', `beat-audio-${timestamp}`); }
-        const newBeat = { title: beatData.title, artist: beatData.artist, genre: beatData.genre, price: beatData.price, cover: coverUrl, audio: audioUrl, user_id: currentUser?.id };
+        if (coverFile) { const ts = Date.now(); coverUrl = await uploadFile(coverFile, 'covers', `beat-cover-${ts}`); }
+        if (audioFile) { const ts = Date.now(); audioUrl = await uploadFile(audioFile, 'audios', `beat-audio-${ts}`); }
+        const newBeat = {
+          title: beatData.title,
+          artist: beatData.artist,
+          genre: beatData.genre,
+          price: beatData.price,
+          bpm: beatData.bpm || null,
+          key: beatData.key || null,
+          cover: coverUrl,
+          audio: audioUrl,
+          plays: beatData.plays || 0,
+          user_id: currentUser?.id
+        };
         if (editingId) {
           const { error } = await supabase.from('beats').update(newBeat).eq('id', editingId);
           if (error) throw error;
@@ -1225,6 +1859,16 @@
       }
     }
 
+    async function uploadFile(file, bucket, path) {
+      if (!file) return null;
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${path}.${fileExt}`;
+      const { data, error } = await supabase.storage.from(bucket).upload(fileName, file, { cacheControl: '3600', upsert: true });
+      if (error) { console.error('Erro no upload:', error); throw error; }
+      const { data: urlData } = supabase.storage.from(bucket).getPublicUrl(fileName);
+      return urlData.publicUrl;
+    }
+
     async function deleteBeat(id) {
       if (!confirm('Tem certeza que deseja excluir este beat?')) return;
       try {
@@ -1238,12 +1882,69 @@
       }
     }
 
+    async function incrementPlays(beatId) {
+      try {
+        const beat = beatsData.find(b => b.id === beatId);
+        if (!beat) return;
+        const newPlays = (beat.plays || 0) + 1;
+        const { error } = await supabase.from('beats').update({ plays: newPlays }).eq('id', beatId);
+        if (error) throw error;
+        // Atualiza localmente
+        beat.plays = newPlays;
+      } catch (error) {
+        console.error('Erro ao incrementar plays:', error);
+      }
+    }
+
     // ============================================================
-    // 10. RENDERIZAÇÃO
+    // 11. FILTERS & SEARCH
+    // ============================================================
+    function applyFilters() {
+      const search = document.getElementById('searchInput').value.toLowerCase();
+      const genre = document.getElementById('filterGenre').value;
+      const sort = document.getElementById('sortBy').value;
+
+      filteredBeats = beatsData.filter(b => {
+        const matchSearch = b.title.toLowerCase().includes(search) || b.artist.toLowerCase().includes(search);
+        const matchGenre = genre === 'all' || b.genre === genre;
+        return matchSearch && matchGenre;
+      });
+
+      switch(sort) {
+        case 'recent': filteredBeats.sort((a, b) => b.id - a.id); break;
+        case 'popular': filteredBeats.sort((a, b) => (b.plays || 0) - (a.plays || 0)); break;
+        case 'price-low': filteredBeats.sort((a, b) => parseFloat(a.price.replace(/[^0-9.]/g, '')) - parseFloat(b.price.replace(/[^0-9.]/g, ''))); break;
+        case 'price-high': filteredBeats.sort((a, b) => parseFloat(b.price.replace(/[^0-9.]/g, '')) - parseFloat(a.price.replace(/[^0-9.]/g, ''))); break;
+        case 'rating': filteredBeats.sort((a, b) => (getBeatAverageRating(b.id) || 0) - (getBeatAverageRating(a.id) || 0)); break;
+      }
+
+      renderBeats();
+    }
+
+    // ============================================================
+    // 12. RENDER
     // ============================================================
     function renderBeats() {
+      const container = document.getElementById('beatsContainer');
+      const list = filteredBeats.length > 0 ? filteredBeats : beatsData;
+      
+      if (list.length === 0) {
+        container.innerHTML = `
+          <div style="text-align:center;padding:4rem 0;color:var(--text-muted);">
+            <i class="fas fa-search" style="font-size:3rem;display:block;opacity:0.3;margin-bottom:1rem;"></i>
+            <p style="font-size:1.2rem;font-weight:300;">Nenhum beat encontrado</p>
+            <p style="font-size:0.9rem;">Tente ajustar sua busca ou filtros</p>
+          </div>
+        `;
+        updateUI();
+        return;
+      }
+
       container.innerHTML = '';
-      beatsData.forEach(beat => { const card = createBeatCard(beat); container.appendChild(card); });
+      list.forEach(beat => {
+        const card = createBeatCard(beat);
+        container.appendChild(card);
+      });
       updateUI();
     }
 
@@ -1252,6 +1953,15 @@
       card.className = 'beat-card';
       card.dataset.id = beat.id;
 
+      // Popularity badge
+      if ((beat.plays || 0) > 10) {
+        const badge = document.createElement('div');
+        badge.className = 'popularity-badge';
+        badge.innerHTML = '<i class="fas fa-fire"></i> Popular';
+        card.appendChild(badge);
+      }
+
+      // Edit buttons
       const editBtn = document.createElement('button');
       editBtn.className = 'card-edit-btn';
       if (isLoggedIn) editBtn.classList.add('visible');
@@ -1362,12 +2072,61 @@
       const exclusivo = document.createElement('div');
       exclusivo.className = 'beat-exclusivo';
       exclusivo.innerHTML = `<i class="fas fa-certificate"></i> exclusivo · apenas aqui`;
+      
+      // Stats
+      const statsDiv = document.createElement('div');
+      statsDiv.className = 'beat-stats';
+      statsDiv.innerHTML = `
+        <span><i class="fas fa-headphones"></i> ${beat.plays || 0} plays</span>
+        <span class="beat-rating">
+          <i class="fas fa-star"></i> 
+          <span class="stars">${'★'.repeat(Math.round(getBeatAverageRating(beat.id) || 0))}${'☆'.repeat(5 - Math.round(getBeatAverageRating(beat.id) || 0))}</span>
+          <span style="font-size:0.7rem;color:var(--text-muted);">${getBeatAverageRating(beat.id) ? getBeatAverageRating(beat.id).toFixed(1) : '0.0'}</span>
+        </span>
+        ${beat.bpm ? `<span><i class="fas fa-waveform"></i> ${beat.bpm} BPM</span>` : ''}
+        ${beat.key ? `<span><i class="fas fa-music"></i> ${beat.key}</span>` : ''}
+      `;
+      
+      // Actions
       const actionsDiv = document.createElement('div');
       actionsDiv.className = 'beat-actions';
+      
       const shareBtn = document.createElement('button');
       shareBtn.className = 'btn-share';
       shareBtn.innerHTML = '<i class="fas fa-share-alt"></i> Compartilhar';
       shareBtn.addEventListener('click', (e) => { e.preventDefault(); shareBeat(beat); });
+      
+      const rateBtn = document.createElement('button');
+      rateBtn.className = 'btn-share';
+      rateBtn.innerHTML = '<i class="fas fa-star"></i> Avaliar';
+      rateBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        document.getElementById('ratingBeatId').value = beat.id;
+        document.getElementById('ratingValue').value = getBeatRating(beat.id) || 0;
+        const stars = document.querySelectorAll('#ratingStars span');
+        stars.forEach(s => {
+          const val = parseInt(s.dataset.value);
+          if (val <= (getBeatRating(beat.id) || 0)) {
+            s.style.color = 'var(--gold)';
+          } else {
+            s.style.color = 'var(--text-muted)';
+          }
+        });
+        document.getElementById('ratingModal').classList.add('active');
+      });
+      
+      const cartBtn = document.createElement('button');
+      cartBtn.className = 'btn-cart';
+      if (cart.includes(beat.id)) { cartBtn.classList.add('in-cart'); cartBtn.innerHTML = '<i class="fas fa-check"></i> No Carrinho'; }
+      else { cartBtn.innerHTML = '<i class="fas fa-shopping-cart"></i> Comprar'; }
+      cartBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        const added = toggleCart(beat.id);
+        if (added) { cartBtn.classList.add('in-cart'); cartBtn.innerHTML = '<i class="fas fa-check"></i> No Carrinho'; showToast('Adicionado', `${beat.title} foi adicionado ao carrinho.`, 'success'); }
+        else { cartBtn.classList.remove('in-cart'); cartBtn.innerHTML = '<i class="fas fa-shopping-cart"></i> Comprar'; showToast('Removido', `${beat.title} foi removido do carrinho.`, 'info'); }
+        updateCart();
+      });
+      
       const buyBtn = document.createElement('a');
       buyBtn.className = 'btn-whatsapp';
       buyBtn.href = '#';
@@ -1377,23 +2136,39 @@
         const msg = encodeURIComponent(`Olá! Gostaria de comprar o beat "${beat.title}" de ${beat.artist}.`);
         window.open(`https://wa.me/5511999999999?text=${msg}`, '_blank');
       });
+      
       actionsDiv.appendChild(shareBtn);
+      actionsDiv.appendChild(rateBtn);
+      actionsDiv.appendChild(cartBtn);
       actionsDiv.appendChild(buyBtn);
+      
       infoDiv.appendChild(titleInfo);
       infoDiv.appendChild(metaDiv);
       infoDiv.appendChild(exclusivo);
+      infoDiv.appendChild(statsDiv);
       infoDiv.appendChild(actionsDiv);
       card.appendChild(playerWrapper);
       card.appendChild(infoDiv);
 
-      // ÁUDIO
+      // AUDIO
       const audio = new Audio(beat.audio || '');
       audio.volume = 0.7;
       let isPlaying = false;
       playBtn.addEventListener('click', () => {
         if (!beat.audio) { showToast('Áudio indisponível', 'Este beat não possui um arquivo de áudio.', 'error'); return; }
         if (isPlaying) { audio.pause(); playBtn.innerHTML = '<i class="fas fa-play"></i>'; isPlaying = false; }
-        else { audio.play().catch(() => {}); playBtn.innerHTML = '<i class="fas fa-pause"></i>'; isPlaying = true; }
+        else { 
+          audio.play().catch(() => {});
+          playBtn.innerHTML = '<i class="fas fa-pause"></i>';
+          isPlaying = true;
+          incrementPlays(beat.id);
+          // Adiciona à fila do global player
+          if (!gpPlaylist.includes(beat.id)) {
+            gpPlaylist.push(beat.id);
+            gpCurrentIndex = gpPlaylist.indexOf(beat.id);
+          }
+          playGlobalBeat(beat.id);
+        }
       });
       nextBtn.addEventListener('click', () => {
         if (!beat.audio) return;
@@ -1410,41 +2185,69 @@
         }
       });
       progress.addEventListener('input', () => { if (audio.duration) audio.currentTime = (progress.value / 100) * audio.duration; });
-      volSlider.addEventListener('input', () => { audio.volume = volSlider.value / 100; volIcon.className = audio.volume === 0 ? 'fas fa-volume-mute' : 'fas fa-volume-low'; });
-      audio.addEventListener('ended', () => { playBtn.innerHTML = '<i class="fas fa-play"></i>'; isPlaying = false; progress.value = 0; timeDisplay.textContent = '0:00'; });
+      volSlider.addEventListener('input', () => {
+        audio.volume = volSlider.value / 100;
+        volIcon.className = audio.volume === 0 ? 'fas fa-volume-mute' : 'fas fa-volume-low';
+      });
+      audio.addEventListener('ended', () => {
+        playBtn.innerHTML = '<i class="fas fa-play"></i>';
+        isPlaying = false;
+        progress.value = 0;
+        timeDisplay.textContent = '0:00';
+      });
 
       return card;
     }
 
     // ============================================================
-    // 11. PLAYLIST MODAL COM PLAYER
+    // 13. MODALS
     // ============================================================
+    function openFormModal(beat = null) {
+      if (!isLoggedIn) return;
+      selectedCoverFile = null; selectedAudioFile = null;
+      document.getElementById('fCoverFile').value = '';
+      document.getElementById('fAudioFile').value = '';
+      document.getElementById('coverStatus').textContent = 'Selecionar';
+      document.getElementById('audioStatus').textContent = 'Selecionar';
+      document.getElementById('previewContainer').innerHTML = '';
+      if (beat) {
+        document.getElementById('modalTitle').querySelector('span').textContent = 'Editar Beat';
+        document.getElementById('fTitle').value = beat.title;
+        document.getElementById('fArtist').value = beat.artist;
+        document.getElementById('fGenre').value = beat.genre;
+        document.getElementById('fPrice').value = beat.price;
+        document.getElementById('fBpm').value = beat.bpm || '';
+        document.getElementById('fKey').value = beat.key || '';
+        editingId = beat.id;
+        if (beat.cover) { const div = document.createElement('div'); div.className = 'preview-item'; div.innerHTML = `<img src="${beat.cover}" alt="capa"> <span>Capa atual</span>`; document.getElementById('previewContainer').appendChild(div); }
+        if (beat.audio) { const div = document.createElement('div'); div.className = 'preview-item'; div.innerHTML = `<i class="fas fa-music"></i> <span>Áudio atual</span>`; document.getElementById('previewContainer').appendChild(div); }
+      } else {
+        document.getElementById('modalTitle').querySelector('span').textContent = 'Novo Beat';
+        document.getElementById('beatForm').reset();
+        document.getElementById('fBpm').value = '';
+        document.getElementById('fKey').value = '';
+        editingId = null;
+      }
+      document.getElementById('formModal').classList.add('active');
+      document.getElementById('mainDropdown').classList.remove('active');
+    }
+    function closeFormModal() { document.getElementById('formModal').classList.remove('active'); editingId = null; selectedCoverFile = null; selectedAudioFile = null; }
+    function openEditModal(id) { const beat = beatsData.find(b => b.id === id); if (beat) openFormModal(beat); }
+
     function openPlaylistModal() {
       const container = document.getElementById('playlistContainer');
       const emptyMsg = document.getElementById('emptyPlaylist');
       const playlist = getPlaylist();
-      
-      // Para o áudio da playlist se estiver tocando
-      if (playlistAudio) {
-        playlistAudio.pause();
-        playlistAudio = null;
-        playlistAudioId = null;
-      }
-      
-      if (playlist.length === 0) {
-        container.innerHTML = '';
-        emptyMsg.style.display = 'block';
-      } else {
+      if (playlistAudio) { playlistAudio.pause(); playlistAudio = null; playlistAudioId = null; }
+      if (playlist.length === 0) { container.innerHTML = ''; emptyMsg.style.display = 'block'; }
+      else {
         emptyMsg.style.display = 'none';
         container.innerHTML = '';
-        
         playlist.forEach(id => {
           const beat = beatsData.find(b => b.id === id);
           if (beat) {
             const item = document.createElement('div');
             item.className = 'playlist-item';
-            item.dataset.id = beat.id;
-            
             item.innerHTML = `
               <img src="${beat.cover || 'https://picsum.photos/seed/default/100/100'}" alt="${beat.title}" class="cover">
               <div class="info">
@@ -1455,66 +2258,35 @@
                 <button class="btn-play-mini" data-id="${beat.id}" data-audio="${beat.audio || ''}">
                   <i class="fas fa-play"></i>
                 </button>
-                <div class="progress-mini">
-                  <div class="progress-mini-bar" id="playlist-progress-${beat.id}"></div>
-                </div>
+                <div class="progress-mini"><div class="progress-mini-bar" id="playlist-progress-${beat.id}"></div></div>
                 <span class="time-mini" id="playlist-time-${beat.id}">0:00</span>
-                <button class="btn-remove" data-id="${beat.id}">
-                  <i class="fas fa-trash"></i> Remover
-                </button>
+                <button class="btn-remove" data-id="${beat.id}"><i class="fas fa-trash"></i> Remover</button>
               </div>
             `;
-            
-            // Evento de remover
             const removeBtn = item.querySelector('.btn-remove');
             removeBtn.addEventListener('click', () => {
               const newPlaylist = getPlaylist().filter(id => id !== beat.id);
               savePlaylist(newPlaylist);
               updatePlaylistButtons(beat.id);
               showToast('Removido', `${beat.title} foi removido da sua playlist.`, 'info');
-              openPlaylistModal(); // Recarrega
+              openPlaylistModal();
             });
-            
-            // Evento de PLAY na playlist
             const playMiniBtn = item.querySelector('.btn-play-mini');
             const progressMini = item.querySelector('.progress-mini-bar');
             const timeMini = document.getElementById(`playlist-time-${beat.id}`);
-            
             playMiniBtn.addEventListener('click', () => {
               const audioUrl = playMiniBtn.dataset.audio;
-              if (!audioUrl) {
-                showToast('Áudio indisponível', 'Este beat não possui áudio para reprodução.', 'error');
-                return;
-              }
-              
-              // Se já está tocando o mesmo, pausa
+              if (!audioUrl) { showToast('Áudio indisponível', 'Este beat não possui áudio.', 'error'); return; }
               if (playlistAudioId === beat.id && playlistAudio && !playlistAudio.paused) {
-                playlistAudio.pause();
-                playMiniBtn.innerHTML = '<i class="fas fa-play"></i>';
-                playMiniBtn.classList.remove('playing');
-                playlistAudioId = null;
-                return;
+                playlistAudio.pause(); playMiniBtn.innerHTML = '<i class="fas fa-play"></i>'; playMiniBtn.classList.remove('playing'); playlistAudioId = null; return;
               }
-              
-              // Para o áudio anterior
-              if (playlistAudio) {
-                playlistAudio.pause();
-                document.querySelectorAll('.btn-play-mini').forEach(b => {
-                  b.innerHTML = '<i class="fas fa-play"></i>';
-                  b.classList.remove('playing');
-                });
-              }
-              
-              // Cria novo áudio
+              if (playlistAudio) { playlistAudio.pause(); document.querySelectorAll('.btn-play-mini').forEach(b => { b.innerHTML = '<i class="fas fa-play"></i>'; b.classList.remove('playing'); }); }
               playlistAudio = new Audio(audioUrl);
               playlistAudio.volume = 0.7;
               playlistAudioId = beat.id;
-              
               playMiniBtn.innerHTML = '<i class="fas fa-pause"></i>';
               playMiniBtn.classList.add('playing');
-              
               playlistAudio.play().catch(() => {});
-              
               playlistAudio.addEventListener('timeupdate', () => {
                 if (playlistAudio.duration) {
                   const percent = (playlistAudio.currentTime / playlistAudio.duration) * 100;
@@ -1524,7 +2296,6 @@
                   if (timeMini) timeMini.textContent = `${mins}:${secs < 10 ? '0' : ''}${secs}`;
                 }
               });
-              
               playlistAudio.addEventListener('ended', () => {
                 playMiniBtn.innerHTML = '<i class="fas fa-play"></i>';
                 playMiniBtn.classList.remove('playing');
@@ -1532,106 +2303,155 @@
                 if (timeMini) timeMini.textContent = '0:00';
                 playlistAudioId = null;
               });
-              
-              playlistAudio.addEventListener('error', () => {
-                showToast('Erro no áudio', 'Não foi possível reproduzir este áudio.', 'error');
-                playMiniBtn.innerHTML = '<i class="fas fa-play"></i>';
-                playMiniBtn.classList.remove('playing');
-              });
             });
-            
             container.appendChild(item);
           }
         });
       }
-      
       document.getElementById('playlistModal').classList.add('active');
-      mainDropdown.classList.remove('active');
+      document.getElementById('mainDropdown').classList.remove('active');
+    }
+
+    function openCartModal() {
+      const container = document.getElementById('cartContainer');
+      const emptyMsg = document.getElementById('emptyCart');
+      const totalDiv = document.getElementById('cartTotal');
+      const cartBeats = getCartBeats();
+      if (cartBeats.length === 0) { container.innerHTML = ''; emptyMsg.style.display = 'block'; totalDiv.style.display = 'none'; }
+      else {
+        emptyMsg.style.display = 'none';
+        totalDiv.style.display = 'block';
+        container.innerHTML = '';
+        cartBeats.forEach(beat => {
+          const item = document.createElement('div');
+          item.className = 'cart-item';
+          item.innerHTML = `
+            <img src="${beat.cover || 'https://picsum.photos/seed/default/50/50'}" style="width:50px;height:50px;border-radius:8px;object-fit:cover;flex-shrink:0;">
+            <div class="info">
+              <div class="title">${beat.title}</div>
+              <div class="sub">${beat.artist} · ${beat.price}</div>
+            </div>
+            <button class="remove-item" data-id="${beat.id}"><i class="fas fa-times"></i></button>
+          `;
+          const removeBtn = item.querySelector('.remove-item');
+          removeBtn.addEventListener('click', () => {
+            cart = cart.filter(id => id !== beat.id);
+            updateCart();
+            openCartModal();
+            updatePlaylistButtons(beat.id);
+          });
+          container.appendChild(item);
+        });
+        document.getElementById('cartTotalValue').textContent = `Kz ${getCartTotal().toFixed(2)}`;
+      }
+      document.getElementById('cartModal').classList.add('active');
+    }
+
+    function openDashboard() {
+      const totalBeats = beatsData.length;
+      const totalPlays = beatsData.reduce((sum, b) => sum + (b.plays || 0), 0);
+      const ratings = Object.values(userRatings).filter(r => r > 0);
+      const avgRating = ratings.length > 0 ? (ratings.reduce((a, b) => a + b, 0) / ratings.length) : 0;
+      const genres = {};
+      beatsData.forEach(b => { genres[b.genre] = (genres[b.genre] || 0) + 1; });
+      const topGenre = Object.keys(genres).sort((a, b) => genres[b] - genres[a])[0] || '-';
+      document.getElementById('totalBeats').textContent = totalBeats;
+      document.getElementById('totalPlays').textContent = totalPlays;
+      document.getElementById('avgRating').textContent = avgRating ? avgRating.toFixed(1) : '0.0';
+      document.getElementById('topGenre').textContent = topGenre;
+      const topBeats = [...beatsData].sort((a, b) => (b.plays || 0) - (a.plays || 0)).slice(0, 5);
+      const topContainer = document.getElementById('topBeats');
+      topContainer.innerHTML = '';
+      topBeats.forEach((b, i) => {
+        const div = document.createElement('div');
+        div.style.cssText = 'display:flex;justify-content:space-between;padding:0.3rem 0;border-bottom:1px solid var(--border-color);font-size:0.85rem;';
+        div.innerHTML = `<span>${i+1}. ${b.title}</span><span style="color:var(--gold);">${b.plays || 0} plays</span>`;
+        topContainer.appendChild(div);
+      });
+      document.getElementById('dashboardModal').classList.add('active');
     }
 
     // ============================================================
-    // 12. UI UPDATE
+    // 14. UI UPDATE
     // ============================================================
     function updateUI() {
       if (isLoggedIn && currentUser) {
-        userInfoDisplay.style.display = 'flex';
-        userNameDisplay.textContent = currentUser.user_metadata?.name || 'Administrador';
-        userEmailDisplay.textContent = currentUser.email || 'usuario@email.com';
-        avatarContainer.innerHTML = `<img src="eu.jpg" alt="Admin" class="admin-avatar-small">`;
-        dividerAfterUser.style.display = 'block';
-        dropdownLogin.style.display = 'none';
-        dropdownNewBeat.style.display = 'flex';
-        dropdownToggleEdit.style.display = 'flex';
-        dividerBeforeLogout.style.display = 'block';
-        dropdownLogout.style.display = 'flex';
-        dropdownToggleEdit.innerHTML = editMode ? '<i class="fas fa-edit"></i> Desativar Edição' : '<i class="fas fa-edit"></i> Editar';
-        menuLabel.textContent = 'Admin';
+        document.getElementById('userInfoDisplay').style.display = 'flex';
+        document.getElementById('userNameDisplay').textContent = currentUser.user_metadata?.name || 'Administrador';
+        document.getElementById('userEmailDisplay').textContent = currentUser.email || 'usuario@email.com';
+        document.getElementById('avatarContainer').innerHTML = `<img src="eu.jpg" alt="Admin" class="admin-avatar-small">`;
+        document.getElementById('dividerAfterUser').style.display = 'block';
+        document.getElementById('dropdownLogin').style.display = 'none';
+        document.getElementById('dropdownNewBeat').style.display = 'flex';
+        document.getElementById('dropdownToggleEdit').style.display = 'flex';
+        document.getElementById('dropdownDashboard').style.display = 'flex';
+        document.getElementById('dividerBeforeLogout').style.display = 'block';
+        document.getElementById('dropdownLogout').style.display = 'flex';
+        document.getElementById('dropdownToggleEdit').innerHTML = editMode ? '<i class="fas fa-edit"></i> Desativar Edição' : '<i class="fas fa-edit"></i> Editar';
+        document.getElementById('menuLabel').textContent = 'Admin';
       } else {
-        userInfoDisplay.style.display = 'none';
-        avatarContainer.innerHTML = '';
-        dividerAfterUser.style.display = 'none';
-        dropdownLogin.style.display = 'flex';
-        dropdownNewBeat.style.display = 'none';
-        dropdownToggleEdit.style.display = 'none';
-        dividerBeforeLogout.style.display = 'none';
-        dropdownLogout.style.display = 'none';
-        menuLabel.textContent = 'Menu';
+        document.getElementById('userInfoDisplay').style.display = 'none';
+        document.getElementById('avatarContainer').innerHTML = '';
+        document.getElementById('dividerAfterUser').style.display = 'none';
+        document.getElementById('dropdownLogin').style.display = 'flex';
+        document.getElementById('dropdownNewBeat').style.display = 'none';
+        document.getElementById('dropdownToggleEdit').style.display = 'none';
+        document.getElementById('dropdownDashboard').style.display = 'none';
+        document.getElementById('dividerBeforeLogout').style.display = 'none';
+        document.getElementById('dropdownLogout').style.display = 'none';
+        document.getElementById('menuLabel').textContent = 'Menu';
       }
       document.querySelectorAll('.card-edit-btn').forEach(btn => {
         if (isLoggedIn) btn.classList.add('visible');
         else btn.classList.remove('visible');
       });
       updatePlaylistCount();
+      updateCart();
+    }
+
+    function updatePlaylistButtons(beatId) {
+      document.querySelectorAll('.beat-card').forEach(card => {
+        if (parseInt(card.dataset.id) === beatId) {
+          const btn = card.querySelector('.btn-playlist');
+          if (btn) {
+            if (isInPlaylist(beatId)) {
+              btn.innerHTML = '<i class="fas fa-check"></i> Added';
+              btn.classList.add('added');
+            } else {
+              btn.innerHTML = '<i class="fas fa-plus"></i> Add';
+              btn.classList.remove('added');
+            }
+          }
+        }
+      });
     }
 
     // ============================================================
-    // 13. MODAL FORM
+    // 15. URL DETECT
     // ============================================================
-    function openFormModal(beat = null) {
-      if (!isLoggedIn) return;
-      selectedCoverFile = null; selectedAudioFile = null;
-      fCoverFile.value = ''; fAudioFile.value = '';
-      coverStatus.textContent = 'Selecionar'; audioStatus.textContent = 'Selecionar';
-      previewContainer.innerHTML = '';
-      if (beat) {
-        modalTitle.querySelector('span').textContent = 'Editar Beat';
-        fTitle.value = beat.title; fArtist.value = beat.artist; fGenre.value = beat.genre; fPrice.value = beat.price;
-        editingId = beat.id;
-        if (beat.cover) { const div = document.createElement('div'); div.className = 'preview-item'; div.innerHTML = `<img src="${beat.cover}" alt="capa"> <span>Capa atual</span>`; previewContainer.appendChild(div); }
-        if (beat.audio) { const div = document.createElement('div'); div.className = 'preview-item'; div.innerHTML = `<i class="fas fa-music"></i> <span>Áudio atual</span>`; previewContainer.appendChild(div); }
-      } else {
-        modalTitle.querySelector('span').textContent = 'Novo Beat';
-        beatForm.reset(); editingId = null;
+    function detectBeatFromUrl() {
+      const params = new URLSearchParams(window.location.search);
+      const slug = params.get('beat');
+      if (slug) {
+        setTimeout(() => {
+          document.querySelectorAll('.beat-card').forEach(card => {
+            const title = card.querySelector('.beat-title')?.textContent?.trim();
+            if (title) {
+              const cardSlug = title.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+              if (cardSlug === slug) {
+                card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                card.style.borderColor = 'var(--gold)';
+                card.style.boxShadow = '0 0 40px var(--gold-glow)';
+                setTimeout(() => { card.style.borderColor = ''; card.style.boxShadow = ''; }, 3000);
+              }
+            }
+          });
+        }, 800);
       }
-      formModal.classList.add('active');
-      mainDropdown.classList.remove('active');
     }
-    function closeFormModal() { formModal.classList.remove('active'); editingId = null; selectedCoverFile = null; selectedAudioFile = null; }
-    function openEditModal(id) { const beat = beatsData.find(b => b.id === id); if (beat) openFormModal(beat); }
 
     // ============================================================
-    // 14. EVENTOS FORM
-    // ============================================================
-    fCoverFile.addEventListener('change', (e) => {
-      const file = e.target.files[0];
-      if (file) { selectedCoverFile = file; coverStatus.textContent = `📷 ${file.name} (${(file.size/1024).toFixed(1)} KB)`; }
-      else { selectedCoverFile = null; coverStatus.textContent = 'Selecionar'; }
-    });
-    fAudioFile.addEventListener('change', (e) => {
-      const file = e.target.files[0];
-      if (file) { selectedAudioFile = file; audioStatus.textContent = `🎵 ${file.name} (${(file.size/1024).toFixed(1)} KB)`; }
-      else { selectedAudioFile = null; audioStatus.textContent = 'Selecionar'; }
-    });
-    beatForm.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const title = fTitle.value.trim(), artist = fArtist.value.trim(), genre = fGenre.value.trim(), price = fPrice.value.trim();
-      if (!title || !artist || !genre || !price) { showToast('Campos obrigatórios', 'Preencha todos os campos marcados com asterisco.', 'error'); return; }
-      if (!editingId && !selectedAudioFile) { showToast('Áudio obrigatório', 'Para lançar um novo beat, você precisa enviar um arquivo de áudio.', 'error'); return; }
-      await saveBeatToSupabase({ title, artist, genre, price }, selectedCoverFile, selectedAudioFile);
-    });
-
-    // ============================================================
-    // 15. AUTENTICAÇÃO
+    // 16. AUTH
     // ============================================================
     async function doLogin(e) {
       e.preventDefault();
@@ -1641,24 +2461,27 @@
         const { data, error } = await supabase.auth.signInWithPassword({ email, password });
         if (error) throw error;
         currentUser = data.user; isLoggedIn = true;
-        loginError.style.display = 'none'; loginModal.classList.remove('active');
-        mainDropdown.classList.remove('active');
-        await loadBeats(); updateUI();
-        showToast('Login realizado', `Bem-vindo, ${currentUser.email}. Você agora tem acesso ao painel administrativo.`, 'success');
+        document.getElementById('loginError').style.display = 'none';
+        document.getElementById('loginModal').classList.remove('active');
+        document.getElementById('mainDropdown').classList.remove('active');
+        await loadBeats();
+        updateUI();
+        showToast('Login realizado', `Bem-vindo, ${currentUser.email}.`, 'success');
       } catch (error) {
-        console.error('Erro no login:', error);
-        loginError.style.display = 'block';
-        loginError.textContent = error.message || 'Email ou senha inválidos.';
+        document.getElementById('loginError').style.display = 'block';
+        document.getElementById('loginError').textContent = error.message || 'Email ou senha inválidos.';
       }
     }
     async function doLogout() {
       try {
         await supabase.auth.signOut();
         isLoggedIn = false; currentUser = null; editMode = false;
-        mainDropdown.classList.remove('active');
+        document.getElementById('mainDropdown').classList.remove('active');
         if (playlistAudio) { playlistAudio.pause(); playlistAudio = null; playlistAudioId = null; }
-        await loadBeats(); updateUI();
-        showToast('Sessão encerrada', 'Você saiu do modo administrador com sucesso.', 'info');
+        if (gpAudio) { gpAudio.pause(); gpAudio = null; }
+        await loadBeats();
+        updateUI();
+        showToast('Sessão encerrada', 'Você saiu do modo administrador.', 'info');
       } catch (error) { console.error('Erro no logout:', error); }
     }
     async function checkSession() {
@@ -1669,13 +2492,45 @@
     }
 
     // ============================================================
-    // 16. EVENTOS MENU
+    // 17. EVENTOS
     // ============================================================
-    menuBtn.addEventListener('click', (e) => { e.stopPropagation(); mainDropdown.classList.toggle('active'); });
-    document.addEventListener('click', () => mainDropdown.classList.remove('active'));
-    dropdownLogin.addEventListener('click', () => { loginModal.classList.add('active'); loginError.style.display = 'none'; mainDropdown.classList.remove('active'); });
-    dropdownNewBeat.addEventListener('click', () => { openFormModal(null); });
-    dropdownToggleEdit.addEventListener('click', function() {
+    // Menu
+    document.getElementById('menuBtn').addEventListener('click', (e) => { e.stopPropagation(); document.getElementById('mainDropdown').classList.toggle('active'); });
+    document.addEventListener('click', () => document.getElementById('mainDropdown').classList.remove('active'));
+    
+    // Login
+    document.getElementById('dropdownLogin').addEventListener('click', () => { document.getElementById('loginModal').classList.add('active'); document.getElementById('loginError').style.display = 'none'; document.getElementById('mainDropdown').classList.remove('active'); });
+    document.getElementById('loginCancel').addEventListener('click', () => document.getElementById('loginModal').classList.remove('active'));
+    document.getElementById('loginForm').addEventListener('submit', doLogin);
+    
+    // Beat Form
+    document.getElementById('dropdownNewBeat').addEventListener('click', () => openFormModal(null));
+    document.getElementById('formCancel').addEventListener('click', closeFormModal);
+    document.getElementById('beatForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const title = document.getElementById('fTitle').value.trim();
+      const artist = document.getElementById('fArtist').value.trim();
+      const genre = document.getElementById('fGenre').value.trim();
+      const price = document.getElementById('fPrice').value.trim();
+      const bpm = document.getElementById('fBpm').value.trim();
+      const key = document.getElementById('fKey').value.trim();
+      if (!title || !artist || !genre || !price) { showToast('Campos obrigatórios', 'Preencha todos os campos marcados.', 'error'); return; }
+      if (!editingId && !selectedAudioFile) { showToast('Áudio obrigatório', 'Para lançar um novo beat, você precisa enviar um arquivo de áudio.', 'error'); return; }
+      await saveBeatToSupabase({ title, artist, genre, price, bpm, key, plays: 0 }, selectedCoverFile, selectedAudioFile);
+    });
+    document.getElementById('fCoverFile').addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (file) { selectedCoverFile = file; document.getElementById('coverStatus').textContent = `📷 ${file.name} (${(file.size/1024).toFixed(1)} KB)`; }
+      else { selectedCoverFile = null; document.getElementById('coverStatus').textContent = 'Selecionar'; }
+    });
+    document.getElementById('fAudioFile').addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (file) { selectedAudioFile = file; document.getElementById('audioStatus').textContent = `🎵 ${file.name} (${(file.size/1024).toFixed(1)} KB)`; }
+      else { selectedAudioFile = null; document.getElementById('audioStatus').textContent = 'Selecionar'; }
+    });
+    
+    // Toggle Edit
+    document.getElementById('dropdownToggleEdit').addEventListener('click', function() {
       if (!isLoggedIn) return;
       editMode = !editMode;
       this.innerHTML = editMode ? '<i class="fas fa-edit"></i> Desativar Edição' : '<i class="fas fa-edit"></i> Editar';
@@ -1683,43 +2538,136 @@
         if (editMode && isLoggedIn) btn.style.display = 'flex';
         else btn.style.display = 'none';
       });
-      mainDropdown.classList.remove('active');
+      document.getElementById('mainDropdown').classList.remove('active');
     });
-    dropdownPlaylist.addEventListener('click', openPlaylistModal);
-    dropdownLogout.addEventListener('click', doLogout);
-
-    // ============================================================
-    // 17. OUTROS EVENTOS
-    // ============================================================
-    document.getElementById('loginCancel').addEventListener('click', () => loginModal.classList.remove('active'));
-    document.getElementById('formCancel').addEventListener('click', closeFormModal);
-    document.getElementById('playlistCancel').addEventListener('click', () => {
-      if (playlistAudio) { playlistAudio.pause(); playlistAudio = null; playlistAudioId = null; }
-      document.getElementById('playlistModal').classList.remove('active');
+    
+    // Logout
+    document.getElementById('dropdownLogout').addEventListener('click', doLogout);
+    
+    // Playlist
+    document.getElementById('dropdownPlaylist').addEventListener('click', openPlaylistModal);
+    document.getElementById('playlistCancel').addEventListener('click', () => { if (playlistAudio) { playlistAudio.pause(); playlistAudio = null; playlistAudioId = null; } document.getElementById('playlistModal').classList.remove('active'); });
+    
+    // Cart
+    document.getElementById('cartBtn').addEventListener('click', openCartModal);
+    document.getElementById('cartCancel').addEventListener('click', () => document.getElementById('cartModal').classList.remove('active'));
+    document.getElementById('cartCheckout').addEventListener('click', () => {
+      const cartBeats = getCartBeats();
+      if (cartBeats.length === 0) { showToast('Carrinho vazio', 'Adicione beats ao carrinho antes de finalizar.', 'error'); return; }
+      const msg = encodeURIComponent(`Olá! Gostaria de comprar os seguintes beats:\n${cartBeats.map(b => `- ${b.title} (${b.artist}) - ${b.price}`).join('\n')}\nTotal: Kz ${getCartTotal().toFixed(2)}`);
+      window.open(`https://wa.me/5511999999999?text=${msg}`, '_blank');
+      document.getElementById('cartModal').classList.remove('active');
     });
-    formModal.addEventListener('click', (e) => { if (e.target === formModal) closeFormModal(); });
-    loginModal.addEventListener('click', (e) => { if (e.target === loginModal) loginModal.classList.remove('active'); });
-    document.getElementById('playlistModal').addEventListener('click', (e) => {
-      if (e.target === document.getElementById('playlistModal')) {
-        if (playlistAudio) { playlistAudio.pause(); playlistAudio = null; playlistAudioId = null; }
-        document.getElementById('playlistModal').classList.remove('active');
-      }
+    
+    // Dashboard
+    document.getElementById('dropdownDashboard').addEventListener('click', openDashboard);
+    document.getElementById('dashboardCancel').addEventListener('click', () => document.getElementById('dashboardModal').classList.remove('active'));
+    
+    // Profile
+    document.getElementById('dropdownProfile').addEventListener('click', () => {
+      const saved = JSON.parse(localStorage.getItem('bestBeatsProfile') || '{"name":"","bio":"","social":""}');
+      document.getElementById('profName').value = saved.name || '';
+      document.getElementById('profBio').value = saved.bio || '';
+      document.getElementById('profSocial').value = saved.social || '';
+      document.getElementById('profileModal').classList.add('active');
+      document.getElementById('mainDropdown').classList.remove('active');
     });
-    loginForm.addEventListener('submit', doLogin);
+    document.getElementById('profileCancel').addEventListener('click', () => document.getElementById('profileModal').classList.remove('active'));
+    document.getElementById('profileForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const profile = {
+        name: document.getElementById('profName').value.trim(),
+        bio: document.getElementById('profBio').value.trim(),
+        social: document.getElementById('profSocial').value.trim()
+      };
+      localStorage.setItem('bestBeatsProfile', JSON.stringify(profile));
+      showToast('Perfil salvo', 'Suas informações foram atualizadas.', 'success');
+      document.getElementById('profileModal').classList.remove('active');
+    });
+    
+    // About
+    document.getElementById('dropdownAbout').addEventListener('click', () => {
+      document.getElementById('aboutModal').classList.add('active');
+      document.getElementById('mainDropdown').classList.remove('active');
+    });
+    document.getElementById('aboutCancel').addEventListener('click', () => document.getElementById('aboutModal').classList.remove('active'));
+    
+    // Rating
+    document.getElementById('ratingCancel').addEventListener('click', () => document.getElementById('ratingModal').classList.remove('active'));
+    document.getElementById('ratingSubmit').addEventListener('click', () => {
+      const beatId = parseInt(document.getElementById('ratingBeatId').value);
+      const rating = parseInt(document.getElementById('ratingValue').value);
+      if (rating === 0) { showToast('Avaliação', 'Selecione uma nota de 1 a 5.', 'info'); return; }
+      rateBeat(beatId, rating);
+      document.getElementById('ratingModal').classList.remove('active');
+      showToast('Avaliação enviada', 'Obrigado pela sua avaliação!', 'success');
+    });
+    document.querySelectorAll('#ratingStars span').forEach(star => {
+      star.addEventListener('click', function() {
+        const val = parseInt(this.dataset.value);
+        document.getElementById('ratingValue').value = val;
+        document.querySelectorAll('#ratingStars span').forEach(s => {
+          if (parseInt(s.dataset.value) <= val) s.style.color = 'var(--gold)';
+          else s.style.color = 'var(--text-muted)';
+        });
+      });
+      star.addEventListener('mouseenter', function() {
+        const val = parseInt(this.dataset.value);
+        document.querySelectorAll('#ratingStars span').forEach(s => {
+          if (parseInt(s.dataset.value) <= val) s.style.color = 'var(--gold)';
+          else s.style.color = 'var(--text-muted)';
+        });
+      });
+      star.addEventListener('mouseleave', function() {
+        const current = parseInt(document.getElementById('ratingValue').value) || 0;
+        document.querySelectorAll('#ratingStars span').forEach(s => {
+          if (parseInt(s.dataset.value) <= current) s.style.color = 'var(--gold)';
+          else s.style.color = 'var(--text-muted)';
+        });
+      });
+    });
+    
+    // Search
+    document.getElementById('searchInput').addEventListener('input', applyFilters);
+    document.getElementById('filterGenre').addEventListener('change', applyFilters);
+    document.getElementById('sortBy').addEventListener('change', applyFilters);
+    document.getElementById('clearSearch').addEventListener('click', () => {
+      document.getElementById('searchInput').value = '';
+      document.getElementById('clearSearch').classList.remove('visible');
+      applyFilters();
+    });
+    document.getElementById('searchInput').addEventListener('input', function() {
+      document.getElementById('clearSearch').classList.toggle('visible', this.value.length > 0);
+    });
+    
+    // Logo
     document.getElementById('logoLink').addEventListener('click', (e) => {
       e.preventDefault();
       window.location.href = window.location.pathname;
     });
+    
+    // Theme
+    document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+    
+    // Modal close on overlay click
+    document.querySelectorAll('.modal-overlay').forEach(modal => {
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal) modal.classList.remove('active');
+      });
+    });
 
     // ============================================================
-    // 18. INICIALIZAÇÃO
+    // 18. INIT
     // ============================================================
     async function init() {
+      loadTheme();
       await checkSession();
       await loadBeats();
       updateUI();
-      console.log('Best Beats conectado ao Supabase');
-      console.log('Playlist salva no localStorage com player integrado');
+      initGlobalPlayer();
+      console.log('Best Beats v10.0 - Todas as funcionalidades implementadas!');
+      console.log('🔍 Pesquisa | 🏷️ Filtros | 📊 Dashboard | 🛒 Carrinho | ⭐ Avaliações');
+      console.log('🎧 Player Global | 📖 Página do Beat | 👤 Perfil do Produtor');
     }
     init();
 
