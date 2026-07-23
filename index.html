@@ -68,20 +68,14 @@
     }
     .app { max-width: 1100px; width: 100%; }
 
-    /* ============================================================
-       MENU FIXO (apenas o botão hambúrguer)
-       ============================================================ */
+    /* ----- MENU FIXO ----- */
     .menu-fixed {
       position: fixed;
       top: 1rem;
       right: 1rem;
       z-index: 999;
     }
-
-    .hamburger-menu {
-      position: relative;
-      display: inline-block;
-    }
+    .hamburger-menu { position: relative; display: inline-block; }
     .hamburger-btn {
       background: var(--bg-card);
       backdrop-filter: blur(12px);
@@ -99,15 +93,9 @@
       font-family: 'Inter', sans-serif;
       box-shadow: var(--shadow);
     }
-    .hamburger-btn:hover {
-      border-color: var(--gold);
-      background: var(--gold-glow);
-    }
+    .hamburger-btn:hover { border-color: var(--gold); background: var(--gold-glow); }
     .hamburger-btn i { color: var(--gold); }
-    .hamburger-btn .btn-label {
-      font-size: 0.8rem;
-      font-weight: 400;
-    }
+    .hamburger-btn .btn-label { font-size: 0.8rem; font-weight: 400; }
     .admin-avatar-small {
       width: 26px;
       height: 26px;
@@ -116,7 +104,6 @@
       border: 2px solid var(--gold);
       margin-right: 0.1rem;
     }
-
     .hamburger-dropdown {
       position: absolute;
       top: 115%;
@@ -131,14 +118,8 @@
       box-shadow: var(--shadow);
       z-index: 100;
     }
-    .hamburger-dropdown.active {
-      display: block;
-      animation: dropdownIn 0.2s ease forwards;
-    }
-    @keyframes dropdownIn {
-      from { opacity: 0; transform: translateY(-10px) scale(0.95); }
-      to { opacity: 1; transform: translateY(0) scale(1); }
-    }
+    .hamburger-dropdown.active { display: block; animation: dropdownIn 0.2s ease forwards; }
+    @keyframes dropdownIn { from { opacity: 0; transform: translateY(-10px) scale(0.95); } to { opacity: 1; transform: translateY(0) scale(1); } }
     .hamburger-dropdown .dropdown-item {
       display: flex;
       align-items: center;
@@ -156,28 +137,12 @@
       text-align: left;
       font-family: 'Inter', sans-serif;
     }
-    .hamburger-dropdown .dropdown-item:hover {
-      background: var(--gold-glow);
-      color: var(--gold);
-    }
-    .hamburger-dropdown .dropdown-item i {
-      width: 20px;
-      color: var(--gold);
-    }
-    .hamburger-dropdown .dropdown-item.danger {
-      color: #ff6b6b;
-    }
-    .hamburger-dropdown .dropdown-item.danger i {
-      color: #ff6b6b;
-    }
-    .hamburger-dropdown .dropdown-item.danger:hover {
-      background: rgba(255, 70, 70, 0.06);
-    }
-    .hamburger-dropdown .dropdown-divider {
-      height: 1px;
-      background: var(--border-color);
-      margin: 0.3rem 0.8rem;
-    }
+    .hamburger-dropdown .dropdown-item:hover { background: var(--gold-glow); color: var(--gold); }
+    .hamburger-dropdown .dropdown-item i { width: 20px; color: var(--gold); }
+    .hamburger-dropdown .dropdown-item.danger { color: #ff6b6b; }
+    .hamburger-dropdown .dropdown-item.danger i { color: #ff6b6b; }
+    .hamburger-dropdown .dropdown-item.danger:hover { background: rgba(255, 70, 70, 0.06); }
+    .hamburger-dropdown .dropdown-divider { height: 1px; background: var(--border-color); margin: 0.3rem 0.8rem; }
     .user-info-display {
       display: flex;
       align-items: center;
@@ -186,30 +151,12 @@
       border-bottom: 1px solid var(--border-color);
       margin-bottom: 0.3rem;
     }
-    .user-info-display .admin-avatar {
-      width: 36px;
-      height: 36px;
-      border-radius: 50%;
-      object-fit: cover;
-      border: 2px solid var(--gold);
-    }
-    .user-info-display .user-details {
-      display: flex;
-      flex-direction: column;
-    }
-    .user-info-display .user-name {
-      font-weight: 600;
-      font-size: 0.85rem;
-      color: var(--text-primary);
-    }
-    .user-info-display .user-email {
-      font-size: 0.7rem;
-      color: var(--text-muted);
-    }
+    .user-info-display .admin-avatar { width: 36px; height: 36px; border-radius: 50%; object-fit: cover; border: 2px solid var(--gold); }
+    .user-info-display .user-details { display: flex; flex-direction: column; }
+    .user-info-display .user-name { font-weight: 600; font-size: 0.85rem; color: var(--text-primary); }
+    .user-info-display .user-email { font-size: 0.7rem; color: var(--text-muted); }
 
-    /* ============================================================
-       HEADER (rola com a página)
-       ============================================================ */
+    /* ----- HEADER ----- */
     .header {
       display: flex;
       flex-direction: column;
@@ -253,9 +200,7 @@
       display: inline-block;
     }
 
-    /* ============================================================
-       ADMIN TOOLBAR (rola com a página)
-       ============================================================ */
+    /* ----- ADMIN TOOLBAR ----- */
     .admin-toolbar {
       display: flex;
       justify-content: space-between;
@@ -279,7 +224,6 @@
       flex-wrap: wrap;
     }
 
-    /* ----- SEARCH & FILTERS ----- */
     .search-container {
       display: flex;
       align-items: center;
@@ -335,7 +279,6 @@
     .filter-select:focus, .sort-select:focus { border-color: var(--gold); }
     .filter-select option, .sort-select option { background: var(--bg-secondary); }
 
-    /* ----- CART BUTTON ----- */
     .cart-btn {
       background: var(--bg-card);
       backdrop-filter: blur(8px);
@@ -364,9 +307,7 @@
       text-align: center;
     }
 
-    /* ============================================================
-       TOAST
-       ============================================================ */
+    /* ----- TOAST ----- */
     .toast-container {
       position: fixed;
       top: 5rem;
@@ -416,9 +357,7 @@
     @keyframes slideIn { to { transform: translateX(0); } }
     @keyframes slideOut { to { transform: translateX(120%); opacity: 0; } }
 
-    /* ============================================================
-       LOADING
-       ============================================================ */
+    /* ----- LOADING ----- */
     .loading-wrapper {
       display: flex;
       flex-direction: column;
@@ -467,9 +406,7 @@
     }
     @keyframes progress { 0% { width: 0%; } 50% { width: 70%; } 100% { width: 100%; } }
 
-    /* ============================================================
-       BEATS LIST
-       ============================================================ */
+    /* ----- BEATS LIST ----- */
     .beats-list { display: flex; flex-direction: column; gap: 1.5rem; margin-top: 0.5rem; }
     .beat-card {
       background: var(--bg-card);
@@ -749,6 +686,12 @@
       flex-wrap: wrap;
     }
     .beat-stats i { color: var(--gold); margin-right: 2px; }
+    .beat-plays {
+      transition: color 0.3s;
+    }
+    .beat-plays.highlight {
+      color: var(--gold);
+    }
     .beat-rating {
       display: flex;
       align-items: center;
@@ -822,9 +765,7 @@
     .btn-cart:hover { background: var(--gold-glow); border-color: var(--gold); color: var(--gold); }
     .btn-cart.in-cart { background: rgba(37, 211, 102, 0.1); color: #25D366; border-color: rgba(37, 211, 102, 0.15); }
 
-    /* ============================================================
-       FOOTER
-       ============================================================ */
+    /* ----- FOOTER ----- */
     .footer {
       margin-top: 3rem;
       padding: 1.5rem 0 0.5rem;
@@ -850,9 +791,7 @@
     }
     .social-icons .social-link:hover { color: var(--gold); transform: translateY(-2px); }
 
-    /* ============================================================
-       MODALS
-       ============================================================ */
+    /* ----- MODALS ----- */
     .modal-overlay {
       display: none;
       position: fixed;
@@ -1256,7 +1195,14 @@
 </head>
 <body>
 
-<!-- MENU FIXO (APENAS O HAMBÚRGUER) -->
+<!-- ANALYTICS -->
+<script type="text/javascript">
+    aclib.runAutoTag({
+        zoneId: '5oy6a7uemm',
+    });
+</script>
+
+<!-- MENU FIXO -->
 <div class="menu-fixed">
   <div class="hamburger-menu">
     <button class="hamburger-btn" id="menuBtn">
@@ -1705,7 +1651,7 @@
     }
 
     // ============================================================
-    // 6. RATING
+    // 6. RATING - CORRIGIDO
     // ============================================================
     async function loadRatings() {
       try {
@@ -1803,7 +1749,74 @@
     }
 
     // ============================================================
-    // 9. CRUD
+    // 9. PLAYS - CORRIGIDO
+    // ============================================================
+    async function incrementPlays(beatId) {
+      try {
+        console.log('🎵 Incrementando plays para beat:', beatId);
+        
+        // Busca o beat atual
+        const { data, error } = await supabase
+          .from('beats')
+          .select('plays')
+          .eq('id', beatId)
+          .single();
+        
+        if (error) throw error;
+        
+        const currentPlays = data?.plays || 0;
+        const newPlays = currentPlays + 1;
+        
+        console.log(`📊 Plays: ${currentPlays} → ${newPlays}`);
+        
+        // Atualiza no banco
+        const { error: updateError } = await supabase
+          .from('beats')
+          .update({ plays: newPlays })
+          .eq('id', beatId);
+        
+        if (updateError) throw updateError;
+        
+        // Atualiza localmente
+        const beat = beatsData.find(b => b.id === beatId);
+        if (beat) {
+          beat.plays = newPlays;
+        }
+        
+        // Atualiza a interface imediatamente
+        updateBeatPlaysDisplay(beatId, newPlays);
+        
+        // Recarrega os beats para manter sincronizado
+        await loadBeats();
+        
+      } catch (error) {
+        console.error('❌ Erro ao incrementar plays:', error);
+        showToast('Erro', 'Não foi possível registrar a reprodução.', 'error');
+      }
+    }
+
+    function updateBeatPlaysDisplay(beatId, newPlays) {
+      const cards = document.querySelectorAll('.beat-card');
+      cards.forEach(card => {
+        if (parseInt(card.dataset.id) === beatId) {
+          const stats = card.querySelector('.beat-stats');
+          if (stats) {
+            const playSpan = stats.querySelector('.beat-plays');
+            if (playSpan) {
+              playSpan.innerHTML = `<i class="fas fa-headphones"></i> ${newPlays} plays`;
+              // Animação de destaque
+              playSpan.classList.add('highlight');
+              setTimeout(() => {
+                playSpan.classList.remove('highlight');
+              }, 800);
+            }
+          }
+        }
+      });
+    }
+
+    // ============================================================
+    // 10. CRUD
     // ============================================================
     async function loadBeats() {
       try {
@@ -1896,21 +1909,8 @@
       }
     }
 
-    async function incrementPlays(beatId) {
-      try {
-        const beat = beatsData.find(b => b.id === beatId);
-        if (!beat) return;
-        const newPlays = (beat.plays || 0) + 1;
-        const { error } = await supabase.from('beats').update({ plays: newPlays }).eq('id', beatId);
-        if (error) throw error;
-        beat.plays = newPlays;
-      } catch (error) {
-        console.error('Erro ao incrementar plays:', error);
-      }
-    }
-
     // ============================================================
-    // 10. FILTERS
+    // 11. FILTERS
     // ============================================================
     function applyFilters() {
       const search = document.getElementById('searchInput').value.toLowerCase();
@@ -1935,7 +1935,7 @@
     }
 
     // ============================================================
-    // 11. GLOBAL PLAYER
+    // 12. GLOBAL PLAYER
     // ============================================================
     function initGlobalPlayer() {
       const gp = document.getElementById('globalPlayer');
@@ -2026,7 +2026,7 @@
     }
 
     // ============================================================
-    // 12. RENDER
+    // 13. RENDER - CORRIGIDO (PLAYS E ÁUDIO DUPLICADO)
     // ============================================================
     function renderBeats() {
       const container = document.getElementById('beatsContainer');
@@ -2183,7 +2183,7 @@
       const statsDiv = document.createElement('div');
       statsDiv.className = 'beat-stats';
       statsDiv.innerHTML = `
-        <span><i class="fas fa-headphones"></i> ${beat.plays || 0} plays</span>
+        <span class="beat-plays"><i class="fas fa-headphones"></i> ${beat.plays || 0} plays</span>
         <span class="beat-rating">
           <i class="fas fa-star"></i> 
           <span class="stars">${'★'.repeat(starsFull)}${'☆'.repeat(starsEmpty)}</span>
@@ -2249,18 +2249,53 @@
       card.appendChild(playerWrapper);
       card.appendChild(infoDiv);
 
-      // AUDIO
-      const audio = new Audio(beat.audio || '');
-      audio.volume = 0.7;
+      // ÁUDIO - CORRIGIDO PARA NÃO DUPLICAR
+      let audio = null;
       let isPlaying = false;
-      playBtn.addEventListener('click', () => {
-        if (!beat.audio) { showToast('Áudio indisponível', 'Este beat não possui um arquivo de áudio.', 'error'); return; }
-        if (isPlaying) { audio.pause(); playBtn.innerHTML = '<i class="fas fa-play"></i>'; isPlaying = false; }
-        else { 
+
+      playBtn.addEventListener('click', function() {
+        if (!beat.audio) { 
+          showToast('Áudio indisponível', 'Este beat não possui um arquivo de áudio.', 'error'); 
+          return; 
+        }
+        
+        // Cria o áudio apenas se não existir
+        if (!audio) {
+          audio = new Audio(beat.audio);
+          audio.volume = 0.7;
+          
+          audio.addEventListener('timeupdate', () => {
+            if (audio.duration) {
+              const percent = (audio.currentTime / audio.duration) * 100;
+              progress.value = percent;
+              const mins = Math.floor(audio.currentTime / 60);
+              const secs = Math.floor(audio.currentTime % 60);
+              timeDisplay.textContent = `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+            }
+          });
+          
+          audio.addEventListener('ended', () => {
+            playBtn.innerHTML = '<i class="fas fa-play"></i>';
+            isPlaying = false;
+            progress.value = 0;
+            timeDisplay.textContent = '0:00';
+          });
+        }
+        
+        if (isPlaying) { 
+          audio.pause(); 
+          playBtn.innerHTML = '<i class="fas fa-play"></i>'; 
+          isPlaying = false; 
+        } else { 
           audio.play().catch(() => {});
           playBtn.innerHTML = '<i class="fas fa-pause"></i>';
           isPlaying = true;
+          
+          // INCREMENTA PLAYS
+          console.log('▶️ Play iniciado para beat:', beat.id);
           incrementPlays(beat.id);
+          
+          // Adiciona à fila do global player
           if (!gpPlaylist.includes(beat.id)) {
             gpPlaylist.push(beat.id);
             gpCurrentIndex = gpPlaylist.indexOf(beat.id);
@@ -2268,37 +2303,39 @@
           playGlobalBeat(beat.id);
         }
       });
-      nextBtn.addEventListener('click', () => {
+
+      nextBtn.addEventListener('click', function() {
         if (!beat.audio) return;
+        if (!audio) {
+          audio = new Audio(beat.audio);
+          audio.volume = 0.7;
+        }
         audio.currentTime = 0;
-        if (!isPlaying) { audio.play().catch(() => {}); playBtn.innerHTML = '<i class="fas fa-pause"></i>'; isPlaying = true; }
-      });
-      audio.addEventListener('timeupdate', () => {
-        if (audio.duration) {
-          const percent = (audio.currentTime / audio.duration) * 100;
-          progress.value = percent;
-          const mins = Math.floor(audio.currentTime / 60);
-          const secs = Math.floor(audio.currentTime % 60);
-          timeDisplay.textContent = `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+        if (!isPlaying) { 
+          audio.play().catch(() => {}); 
+          playBtn.innerHTML = '<i class="fas fa-pause"></i>'; 
+          isPlaying = true; 
         }
       });
-      progress.addEventListener('input', () => { if (audio.duration) audio.currentTime = (progress.value / 100) * audio.duration; });
-      volSlider.addEventListener('input', () => {
-        audio.volume = volSlider.value / 100;
-        volIcon.className = audio.volume === 0 ? 'fas fa-volume-mute' : 'fas fa-volume-low';
+
+      progress.addEventListener('input', function() { 
+        if (audio && audio.duration) {
+          audio.currentTime = (progress.value / 100) * audio.duration; 
+        }
       });
-      audio.addEventListener('ended', () => {
-        playBtn.innerHTML = '<i class="fas fa-play"></i>';
-        isPlaying = false;
-        progress.value = 0;
-        timeDisplay.textContent = '0:00';
+
+      volSlider.addEventListener('input', function() {
+        if (audio) {
+          audio.volume = volSlider.value / 100;
+          volIcon.className = audio.volume === 0 ? 'fas fa-volume-mute' : 'fas fa-volume-low';
+        }
       });
 
       return card;
     }
 
     // ============================================================
-    // 13. MODALS
+    // 14. MODALS
     // ============================================================
     function openFormModal(beat = null) {
       if (!isLoggedIn) return;
@@ -2333,7 +2370,7 @@
     function openEditModal(id) { const beat = beatsData.find(b => b.id === id); if (beat) openFormModal(beat); }
 
     // ============================================================
-    // 14. UI UPDATE
+    // 15. UI UPDATE
     // ============================================================
     function updateUI() {
       if (isLoggedIn && currentUser) {
@@ -2388,7 +2425,7 @@
     }
 
     // ============================================================
-    // 15. PLAYLIST MODAL
+    // 16. PLAYLIST MODAL
     // ============================================================
     function openPlaylistModal() {
       const container = document.getElementById('playlistContainer');
@@ -2469,7 +2506,7 @@
     }
 
     // ============================================================
-    // 16. CART MODAL
+    // 17. CART MODAL
     // ============================================================
     function openCartModal() {
       const container = document.getElementById('cartContainer');
@@ -2507,7 +2544,7 @@
     }
 
     // ============================================================
-    // 17. DASHBOARD
+    // 18. DASHBOARD
     // ============================================================
     function openDashboard() {
       const totalBeats = beatsData.length;
@@ -2535,7 +2572,7 @@
     }
 
     // ============================================================
-    // 18. URL DETECT
+    // 19. URL DETECT
     // ============================================================
     function detectBeatFromUrl() {
       const params = new URLSearchParams(window.location.search);
@@ -2559,7 +2596,7 @@
     }
 
     // ============================================================
-    // 19. AUTH
+    // 20. AUTH
     // ============================================================
     async function doLogin(e) {
       e.preventDefault();
@@ -2600,7 +2637,7 @@
     }
 
     // ============================================================
-    // 20. EVENTOS
+    // 21. EVENTOS
     // ============================================================
     document.getElementById('menuBtn').addEventListener('click', (e) => { e.stopPropagation(); document.getElementById('mainDropdown').classList.toggle('active'); });
     document.addEventListener('click', () => document.getElementById('mainDropdown').classList.remove('active'));
@@ -2748,7 +2785,7 @@
     });
 
     // ============================================================
-    // 21. INIT
+    // 22. INIT
     // ============================================================
     async function init() {
       loadTheme();
@@ -2756,7 +2793,7 @@
       await loadBeats();
       updateUI();
       initGlobalPlayer();
-      console.log('Best Beats v10.0 - Menu fixo, avaliações permanentes!');
+      console.log('Best Beats v10.0 - Correções: Plays e áudio duplicado!');
       console.log('📱 WhatsApp: +244 926 261 011');
       console.log('📧 Email: agtbeatsxpalha@email.com');
     }
