@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Best Beats · ouça & compre</title>
+  <title>Best Beats</title>
   
   <!-- Favicon usando logo1.png -->
   <link rel="icon" type="image/png" href="logo1.png">
@@ -216,6 +216,12 @@
       align-items: center;
       gap: 0.75rem;
       margin-bottom: 0.25rem;
+      cursor: pointer;
+      transition: opacity 0.2s;
+      text-decoration: none;
+    }
+    .logo-wrapper:hover {
+      opacity: 0.8;
     }
     .logo {
       width: 80px;
@@ -280,6 +286,16 @@
     .hamburger-btn .btn-label {
       font-size: 0.85rem;
       font-weight: 400;
+    }
+
+    /* Avatar do admin no botão */
+    .admin-avatar-small {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid #f7c948;
+      margin-right: 0.2rem;
     }
 
     .hamburger-dropdown {
@@ -351,16 +367,35 @@
       background: rgba(255,255,255,0.04);
       margin: 0.3rem 0.8rem;
     }
-    .hamburger-dropdown .user-email-display {
+
+    /* User info com avatar no dropdown */
+    .user-info-display {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
       padding: 0.6rem 1.2rem;
-      font-size: 0.8rem;
-      color: #7a7a8a;
       border-bottom: 1px solid rgba(255,255,255,0.04);
       margin-bottom: 0.3rem;
     }
-    .hamburger-dropdown .user-email-display i {
-      margin-right: 0.5rem;
-      color: #f7c948;
+    .user-info-display .admin-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid #f7c948;
+    }
+    .user-info-display .user-details {
+      display: flex;
+      flex-direction: column;
+    }
+    .user-info-display .user-name {
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: #f0f0f0;
+    }
+    .user-info-display .user-email {
+      font-size: 0.75rem;
+      color: #7a7a8a;
     }
 
     /* === BEATS LIST === */
@@ -896,7 +931,7 @@
       color: #f7c948;
     }
 
-    /* === SHARE TOAST CUSTOM === */
+    /* === SHARE TOAST === */
     .share-toast {
       position: fixed;
       bottom: 2rem;
@@ -942,6 +977,7 @@
       .brand { font-size: 1.8rem; }
       .player-wrapper { flex: 0 0 150px; width: 150px; height: 150px; }
       .hamburger-btn .btn-label { display: none; }
+      .logo { width: 60px; height: 60px; }
     }
   </style>
 </head>
@@ -958,10 +994,10 @@
 <div class="app">
 
   <header class="header">
-    <div class="logo-wrapper">
+    <a href="?" class="logo-wrapper" id="logoLink">
       <img src="logo.png" alt="Best Beats" class="logo">
       <span class="brand">Best Beats</span>
-    </div>
+    </a>
     <div class="subtitle">ouça e compre</div>
   </header>
 
@@ -969,24 +1005,29 @@
     <!-- MENU HAMBURGUER ÚNICO -->
     <div class="hamburger-menu">
       <button class="hamburger-btn" id="menuBtn">
+        <span id="avatarContainer"></span>
         <i class="fas fa-bars"></i>
         <span class="btn-label" id="menuLabel">Menu</span>
       </button>
       <div class="hamburger-dropdown" id="mainDropdown">
-        <!-- Email do usuário (aparece quando logado) -->
-        <div class="user-email-display" id="dropdownUserEmail" style="display:none;">
-          <i class="fas fa-user"></i> <span id="userEmailText">usuario@email.com</span>
+        <!-- User info com avatar (aparece quando logado) -->
+        <div class="user-info-display" id="userInfoDisplay" style="display:none;">
+          <img src="eu.jpg" alt="Admin" class="admin-avatar" id="adminAvatar">
+          <div class="user-details">
+            <span class="user-name" id="userNameDisplay">Administrador</span>
+            <span class="user-email" id="userEmailDisplay">usuario@email.com</span>
+          </div>
         </div>
         <div class="dropdown-divider" id="dividerAfterUser" style="display:none;"></div>
         
         <!-- Login (aparece quando deslogado) -->
         <button class="dropdown-item" id="dropdownLogin" style="display:flex;">
-          <i class="fas fa-sign-in-alt"></i> Acessar como Admin
+          <i class="fas fa-sign-in-alt"></i> Admin
         </button>
         
         <!-- Opções de admin (aparecem quando logado) -->
         <button class="dropdown-item" id="dropdownNewBeat" style="display:none;">
-          <i class="fas fa-plus"></i> Lançar Beat
+          <i class="fas fa-plus"></i> Lançar
         </button>
         <button class="dropdown-item" id="dropdownToggleEdit" style="display:none;">
           <i class="fas fa-edit"></i> Editar
@@ -998,7 +1039,7 @@
         
         <!-- Rodapé informativo -->
         <div style="padding: 0.6rem 1.2rem; font-size: 0.65rem; color: #4a4a5a; border-top: 1px solid rgba(255,255,255,0.03); margin-top: 0.2rem;">
-          Best Beats v2.0
+          Best Beats v9.0
         </div>
       </div>
     </div>
@@ -1030,7 +1071,7 @@
 <!-- MODAL LOGIN -->
 <div class="modal-overlay" id="loginModal">
   <div class="modal">
-    <h2><i class="fas fa-lock"></i> Acesso Admin</h2>
+    <h2><i class="fas fa-lock"></i> Administrador</h2>
     <form id="loginForm">
       <label for="loginEmail">Email</label>
       <input type="email" id="loginEmail" placeholder="seu@email.com" required>
@@ -1064,11 +1105,11 @@
       
       <label for="fCoverFile">Imagem de Capa</label>
       <input type="file" id="fCoverFile" accept="image/*">
-      <div class="file-status" id="coverStatus">Nenhum arquivo selecionado</div>
+      <div class="file-status" id="coverStatus">Selecionar</div>
       
       <label for="fAudioFile">Áudio (MP3)</label>
       <input type="file" id="fAudioFile" accept="audio/*">
-      <div class="file-status" id="audioStatus">Nenhum arquivo selecionado</div>
+      <div class="file-status" id="audioStatus">Selecionar</div>
       
       <div class="preview-container" id="previewContainer"></div>
       
@@ -1140,7 +1181,6 @@
     // ============================================================
     function showShareToast(message = 'Link copiado para a área de transferência') {
       const toast = document.getElementById('shareToast');
-      toast.querySelector('i').className = 'fas fa-check-circle';
       toast.innerHTML = `<i class="fas fa-check-circle"></i> ${message}`;
       toast.classList.add('visible');
       setTimeout(() => {
@@ -1149,7 +1189,6 @@
     }
 
     function shareBeat(beat) {
-      // Gera URL amigável
       const baseUrl = window.location.origin + window.location.pathname;
       const slug = beat.title.toLowerCase()
         .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
@@ -1157,12 +1196,10 @@
         .replace(/^-|-$/g, '');
       const shareUrl = `${baseUrl}?beat=${slug}`;
       
-      // Copia para área de transferência
       if (navigator.clipboard && navigator.clipboard.writeText) {
         navigator.clipboard.writeText(shareUrl).then(() => {
           showShareToast('Link do beat copiado para a área de transferência');
         }).catch(() => {
-          // Fallback
           fallbackCopy(shareUrl);
         });
       } else {
@@ -1187,13 +1224,12 @@
     }
 
     // ============================================================
-    // 4. URL AMIGÁVEL - Detectar beat na URL
+    // 4. URL AMIGÁVEL
     // ============================================================
     function detectBeatFromUrl() {
       const params = new URLSearchParams(window.location.search);
       const slug = params.get('beat');
       if (slug) {
-        // Aguarda os beats carregarem e rola até o beat
         setTimeout(() => {
           const cards = document.querySelectorAll('.beat-card');
           for (let card of cards) {
@@ -1255,8 +1291,11 @@
     const menuBtn = document.getElementById('menuBtn');
     const mainDropdown = document.getElementById('mainDropdown');
     const menuLabel = document.getElementById('menuLabel');
-    const dropdownUserEmail = document.getElementById('dropdownUserEmail');
-    const userEmailText = document.getElementById('userEmailText');
+    const avatarContainer = document.getElementById('avatarContainer');
+    const userInfoDisplay = document.getElementById('userInfoDisplay');
+    const userNameDisplay = document.getElementById('userNameDisplay');
+    const userEmailDisplay = document.getElementById('userEmailDisplay');
+    const adminAvatar = document.getElementById('adminAvatar');
     const dividerAfterUser = document.getElementById('dividerAfterUser');
     const dropdownLogin = document.getElementById('dropdownLogin');
     const dropdownNewBeat = document.getElementById('dropdownNewBeat');
@@ -1646,9 +1685,14 @@
     // ============================================================
     function updateUI() {
       if (isLoggedIn && currentUser) {
-        // Mostra opções de admin
-        dropdownUserEmail.style.display = 'block';
-        userEmailText.textContent = currentUser.email || 'usuario@email.com';
+        // Mostra info do usuário com avatar
+        userInfoDisplay.style.display = 'flex';
+        userNameDisplay.textContent = currentUser.user_metadata?.name || 'Administrador';
+        userEmailDisplay.textContent = currentUser.email || 'usuario@email.com';
+        
+        // Avatar no botão
+        avatarContainer.innerHTML = `<img src="eu.jpg" alt="Admin" class="admin-avatar-small">`;
+        
         dividerAfterUser.style.display = 'block';
         dropdownLogin.style.display = 'none';
         dropdownNewBeat.style.display = 'flex';
@@ -1656,7 +1700,6 @@
         dividerBeforeLogout.style.display = 'block';
         dropdownLogout.style.display = 'flex';
         
-        // Atualiza texto do botão de editar
         dropdownToggleEdit.innerHTML = editMode 
           ? '<i class="fas fa-edit"></i> Desativar Edição' 
           : '<i class="fas fa-edit"></i> Editar';
@@ -1664,7 +1707,8 @@
         menuLabel.textContent = 'Admin';
       } else {
         // Mostra opção de login
-        dropdownUserEmail.style.display = 'none';
+        userInfoDisplay.style.display = 'none';
+        avatarContainer.innerHTML = '';
         dividerAfterUser.style.display = 'none';
         dropdownLogin.style.display = 'flex';
         dropdownNewBeat.style.display = 'none';
@@ -1691,8 +1735,8 @@
       selectedAudioFile = null;
       fCoverFile.value = '';
       fAudioFile.value = '';
-      coverStatus.textContent = 'Nenhum arquivo selecionado';
-      audioStatus.textContent = 'Nenhum arquivo selecionado';
+      coverStatus.textContent = 'Selecionar';
+      audioStatus.textContent = 'Selecionar';
       previewContainer.innerHTML = '';
       
       if (beat) {
@@ -1897,6 +1941,12 @@
     });
 
     loginForm.addEventListener('submit', doLogin);
+
+    // Logo clicável - volta para a página inicial
+    document.getElementById('logoLink').addEventListener('click', (e) => {
+      e.preventDefault();
+      window.location.href = window.location.pathname;
+    });
 
     // ============================================================
     // 16. INICIALIZAÇÃO
